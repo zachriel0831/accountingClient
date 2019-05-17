@@ -16,16 +16,8 @@ app.use(express.static(__dirname));
 //   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 // });
 
-app.get('/*', (req, res) => {
-    let url = path.join(__dirname, '../client/build', 'index.html');
-    if (!url.startsWith('/app/')) // we're on local windows
-      url = url.substring(1);
-
-
-      console.log('url ' + url);
-      console.log('__dirname ' + __dirname);
-
-    res.sendFile(url);
-  });
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'index.html'));
+});
 
   app.listen(port);

@@ -8,7 +8,8 @@
     "test": "echo \"Error:no test specified\" && exit 1",
     "watch": "webpack-dev-server",
     "build": "webpack",
-    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "dev": "webpack-dev-server --mode development --open",
+    "start": "node server.js",
     "buildCommon": "webpack --config webpack.vendor.js",
     "eject": "react-scripts eject",
     "heroku-postbuild": "npm run build"
