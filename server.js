@@ -21,7 +21,7 @@ app.get('/*', (req, res) => {
   if (!url.startsWith('/app/')) // we're on local windows
     url = url.substring(1);
     console.log('url ' + url);
-  res.sendFile(url);
+  res.sendFile(url, { root: __dirname });
 });
 
 app.listen(port);
