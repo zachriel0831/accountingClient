@@ -10,7 +10,7 @@ app.use(cors());
 
 app.options('*', cors());
 
-app.use(express.static(path.join(__dirname,'dist')));
+app.use(express.static(path.join(__dirname,'dist/index.html')));
 // app.use(express.static(path.join(__dirname, 'js/build')));
 
 app.get('*', (req, res) => {
