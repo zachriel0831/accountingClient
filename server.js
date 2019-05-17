@@ -17,12 +17,15 @@ app.use(express.static(__dirname));
 // });
 
 app.get('/*', (req, res) => {
-    let url = path.join(__dirname, 'index.html');
-    if (!url.startsWith('/app/')) { // we're on local windows
-        url = url.substring(1);
-        console.log('__dirname ' + __dirname);
-        console.log('url ' + url);
-    }
-    res.sendFile(url, { root: __dirname });
-});
-app.listen(port);
+    let url = path.join(__dirname, '../client/build', 'index.html');
+    if (!url.startsWith('/app/')) // we're on local windows
+      url = url.substring(1);
+
+
+      console.log('url ' + url);
+      console.log('__dirname ' + __dirname);
+
+    res.sendFile(url);
+  });
+
+  app.listen(port);
