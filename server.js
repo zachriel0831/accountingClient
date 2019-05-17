@@ -7,14 +7,11 @@ const app = express();
 
 
 app.use(cors());
-app.use(express.static(path.join(__dirname, 'js/build')));
 
 app.options('*', cors());
 
 app.use(express.static(__dirname));
 
-app.get('*', (req, res) => {
-	res.sendFile(path.join(__dirname+'/js/build/index.html'));
-});
+res.sendFile(path.resolve(__dirname, './index.html'));
 
-  app.listen(port);
+app.listen(port);

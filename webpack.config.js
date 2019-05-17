@@ -17,6 +17,7 @@ var config = {
     },
     devServer:{
         historyApiFallback: true,
+        contentBase: './',
         inline:true,
         port:8080
     },
