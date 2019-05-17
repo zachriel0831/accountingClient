@@ -8,11 +8,11 @@
     "test": "echo \"Error:no test specified\" && exit 1",
     "watch": "webpack-dev-server",
     "build": "webpack",
+    "heroku-postbuild": "npm run build",
     "dev": "webpack-dev-server --mode development --open",
     "start": "node server.js",
     "buildCommon": "webpack --config webpack.vendor.js",
-    "eject": "react-scripts eject",
-    "heroku-postbuild": "npm run build"
+    "eject": "react-scripts eject"
   },
   "devDependencies": {
     "babel-core": "6.26.0",
