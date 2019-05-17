@@ -13,7 +13,6 @@
     "eject": "react-scripts eject",
     "heroku-postbuild": "npm run build"
   },
-  "proxy": "http://localhost:3000",
   "devDependencies": {
     "babel-core": "6.26.0",
     "babel-eslint": "8.1.2",
@@ -62,6 +61,8 @@
     "react-dom": "latest",
     "react-redux": "^7.0.3",
     "react-router-dom": "latest",
+    "express": "^4.16.4",
+    "cors": "^2.8.5",
     "redux": "^3.5.2",
     "redux-logger": "^2.6.1",
     "redux-promise-middleware": "^3.2.0",
