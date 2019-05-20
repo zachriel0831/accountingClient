@@ -4,6 +4,9 @@
   "description": "a thunderous ui framework",
   "main": "index.js",
   "author": "Zack",
+  "engines": {
+    "node": "8.9.4"
+  },
   "scripts": {
     "test": "echo \"Error:no test specified\" && exit 1",
     "watch": "webpack-dev-server",
