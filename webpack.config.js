@@ -47,16 +47,21 @@ var config = {
         //   new webpack.optimize.UglifyJsPlugin(), //最小化一切
           new webpack.optimize.AggressiveMergingPlugin(),//合并块
         HTMLWebpackPluginConfig,
-        // new webpack.DllReferencePlugin({
-        //     context: __dirname,
-        //     manifest: require('./vendor/Vendor_manifest.json'),
-        //   }),        
+        new webpack.DllReferencePlugin({
+            context: __dirname,
+            manifest: require('./vendor/Vendor_manifest.json'),
+          }),        
        
-        // new AddAssetHtmlPlugin({
-        //     filepath: require.resolve(`${__dirname}/vendor/Vendor.dll.js`),
-        //     hash: true,
-        //     includeSourcemap: false
-        // }),
+        new AddAssetHtmlPlugin({
+            filepath: require.resolve(`${__dirname}/vendor/Vendor.dll.js`),
+            hash: true,
+            includeSourcemap: false
+        }),
+        new AddAssetHtmlPlugin({
+            filepath: require.resolve(`${__dirname}/js/constants/constants.js`),
+            hash: true,
+            includeSourcemap: false
+        }),
         new webpack.ProvidePlugin({
             $:"jquery",
             jQuery:"jquery",
