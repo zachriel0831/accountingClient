@@ -39,10 +39,7 @@ var config = {
             {
                 test: /\.s[ac]ss$/,
                 include:  path.resolve(__dirname, '/app'),
-                loaders: [
-                    require.resolve('style-loader'),
-                    require.resolve('css-loader'),
-                    require.resolve('sass-loader')
+                loaders: ['style-loader','css-loader','sass-loader'
                 ]
             }, , {
                 test: /\.html$/,
