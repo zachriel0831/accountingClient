@@ -1,10 +1,15 @@
 import fetch from 'cross-fetch'
+import utils from '../common/utils/utils'
 
 export function fetchUser(data) {
+
     return {
+
         type: 'FETCH_USER',
         payload:
-            fetch('https://zachriel-accountting.herokuapp.com/getUserDetailByName', {
+            // fetch('https://zachriel-accountting.herokuapp.com/getUserDetailByName', {
+            fetch('http://localhost:3000/getUserDetailByName', {
+
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 headers: {
@@ -23,21 +28,12 @@ export function fetchUser(data) {
 
                     }
 
-
                 }
                 ).catch((error) => {
                     console.log(error);
                 })
 
     }
-    // return  {
-    //         type: 'FETCH_USER_FULFILLED',
-    //         payload: {
-    //             id: '@zachriel31',
-    //             name: 'zack',
-    //             email: 'tc101fubonzack@gmail.com',
-    //         }
-    //     }
 }
 
 
@@ -51,40 +47,48 @@ export function fetchUserComplete(type, payload) {
 
 export function submitLogin(type, payload) {
     let completeFlag = false;
-
     return {
         type: type,
-        payload: 
-        fetch(`https://zachriel-accountting.herokuapp.com/user/login`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload),
-            mode: 'cors'
-        }).then((response) => {
+        payload:
+            // fetch(`https://zachriel-accountting.herokuapp.com/user/login`, {
+            fetch(`http://localhost:3000/user/login`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload),
+                mode: 'cors'
+            }).then((response) => {
                 if (!response.ok) {
                     throw Error(response.statusText);
                 }
                 return response.json();
             }).then((respData) => {
+                if (respData.data.userData.user_id) {
+                    let userInfo = {};
+                    userInfo.name = respData.data.userData.name;
+                    userInfo.email = respData.data.userData.email;
+                    userInfo.id = respData.data.userData.user_id;
 
+                    utils.setCookie('userInfo', JSON.stringify(userInfo), 1)
+                }
+
+                localStorage.setItem('user_id',  respData.data.userData.user_id);
                 localStorage.setItem('username', respData.data.userData.name);
                 localStorage.setItem('token', respData.data.tokenID);
 
                 console.log(respData);
                 completeFlag = true;
-                return respData.data.userData;
+                return respData.data;
 
             }).catch((e) => console.log(e))
-            .finally(() => {
-                
+                .finally(() => {
 
-                if (completeFlag) {
-                    window.location.hash = '/Home'
-                }
-            }),
+                    if (completeFlag) {
+                        window.location.hash = '/Home'
+                    }
+                }),
     }
 }
 
@@ -93,7 +97,9 @@ export function subscribeUser(type, payload) {
     return {
         type: type,
         payload:
-            fetch('https://zachriel-accountting.herokuapp.com/user/registering', {
+            // fetch('https://zachriel-accountting.herokuapp.com/user/registering', {
+            fetch('http://localhost:3000/user/registering', {
+
                 method: "POST",
                 headers: {
                     'Accept': 'application/json',
@@ -105,13 +111,13 @@ export function subscribeUser(type, payload) {
                 .then((respData) => {
                     localStorage.setItem('username', respData.data.userData.name);
                     localStorage.setItem('token', respData.data.tokenID);
-
                     console.log(respData);
                     completeFlag = true;
                     return respData.data.userData;
                 }
                 ).catch((error) => {
                     console.log(error);
+                    alert(error)
                     return {
                         type: 'USER_SUBSCRIBE_REJECTED',
                         user_id: ''

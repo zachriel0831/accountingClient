@@ -1,17 +1,23 @@
 import React, { Suspense } from 'react';
 import { connect } from 'react-redux';
 import { HashRouter as Router, Route, Link } from 'react-router-dom';
-import Menu from '../component/view/Menu'
+
+const Menu = React.lazy(() => import('../component/view/Menu'));
+
 import MainRouter from '../utils/Router';
-import { changeView } from '../../actions/userAction';
+import { changeView, fetchUser } from '../../actions/userAction';
+
+import { fetchInitCall, fetchAction } from '../../actions/fetchAction';
+
 import utils from '../utils/utils'
+import 'react-table/react-table.css'
+
 @connect((store) => {
 
   return {
     user: store.userReducer.user,
     userStatus: store.userReducer,
     navs: store.visibilityReducers.navs
-    // newAccount:store.newAccountingReducer
   };
 })
 class Index extends React.Component {
@@ -23,31 +29,113 @@ class Index extends React.Component {
     this.navs = [];
 
 
-    let loggedOutView = utils.changeView('GET_lOGGEDOUT_VIEW');
-    this.props.dispatch(changeView('SET_VISIBILITY_FILTER', loggedOutView, this.props.userStatus.loggedIn));
-
+    this.setView();
     for (var r in MainRouter) {
-      console.log(r);
       this.routers.push(
-        <Route path={r} key={r} component={MainRouter[r]} />
+        <Route path={r} key={r} component={this.HOCBundle(MainRouter[r], this.props.dispatch)} />
       )
     }
+
+  }
+
+  routing(e,action){
+    let pageValue = e.currentTarget.attributes[1].value;
+
+    let pageId = (pageValue.replace('/', '')).toLowerCase();
+    let txnId = (pageId.replace('/', '')).toLowerCase();
+
+    if (txnId.indexOf('_') != -1) {
+      txnId = txnId.split('_')[0];
+    }
+
+    let storage = localStorage
+
+    let data = {};
+    data.token = storage.token;
+    data.username = storage.username;
+
+    let type = `${(pageId).toUpperCase()}_INITIALIZING`;
+    
+    action(fetchAction(data, txnId, pageId, pageId));
+
+}
+
+setView() {
+    let storage = localStorage;
+    let loggedView = [];
+
+    if (storage.token && storage.username) {
+
+      loggedView = utils.changeMenuView('GET_lOGGEDIN_VIEW', MainRouter,this.routing,this.props.dispatch);
+
+    } else {
+      this.navs = [];
+      utils.clearAllSession();
+      loggedView = utils.changeMenuView('GET_lOGGEDOUT_VIEW', MainRouter,this.routing,this.props.dispatch);
+
+    }
+
+    this.props.dispatch(changeView('SET_VISIBILITY_FILTER', loggedView, this.props.userStatus.loggedIn));
+  }
+
+  HOCBundle(WrappedComponent, action) {
+    let customerFunc = {
+      goToPage: (url) => {
+
+        window.location.hash = `/${url}`;
+      },
+
+    }
+
+    return class extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+        };
+
+        let pageId = (this.props.location.pathname.replace('/', '')).toLowerCase();
+        let txnId = (pageId.replace('/', '')).toLowerCase();
+
+        if (txnId.indexOf('_') != -1) {
+          txnId = txnId.split('_')[0];
+        }
+
+        let type = `${(pageId).toUpperCase()}_INITIALIZING`;
+        let storage = localStorage
+
+        let data = {};
+        data.token = storage.token;
+        data.username = storage.username;
+
+        if (!(['register', 'login'].includes(txnId))) {
+          if (pageId === 'home') {
+            action(fetchInitCall(type, txnId, pageId, data));
+          }
+        }
+      }
+
+      componentDidMount() {
+      }
+
+      componentWillUnmount() {
+      }
+
+
+
+      render() {
+        let functions = {
+          action: action
+        }
+        return <Suspense fallback={<div>Loading...</div>}>
+                  <WrappedComponent {...this.props} {...functions} {...customerFunc} />
+               </Suspense>;
+      }
+    };
   }
 
   componentDidUpdate(prevProps, preState) {
     if (prevProps.userStatus.loggedIn != this.props.userStatus.loggedIn) {
-      let storage = localStorage;
-      if (storage.token && storage.username) {
-        window.location.hash = '/Home'
-
-        let loggedView = utils.changeView('GET_lOGGEDIN_VIEW');
-        this.props.dispatch(changeView('SET_VISIBILITY_FILTER', loggedView, this.props.userStatus.loggedIn));
-      } else {
-        this.navs = [];
-        utils.clearAllSession();
-        let loggedOutView = utils.changeView('GET_lOGGEDOUT_VIEW');
-        this.props.dispatch(changeView('SET_VISIBILITY_FILTER', loggedOutView, this.props.userStatus.loggedIn));
-      }
+      this.setView();
     }
 
   }
@@ -59,19 +147,68 @@ class Index extends React.Component {
   render() {
 
     let navs = this.props.navs;
+
     return (
-      <Router>
-        <div>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Menu nav={navs} />
-            <div>
-              {this.routers}
-            </div>
-          </Suspense>
-        </div>
-      </Router>
+      <ErrorBoundary>
+        <Router>
+          <div>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Menu nav={navs} />
+              <div>
+                {this.routers}
+              </div>
+            </Suspense>
+          </div>
+        </Router>
+      </ErrorBoundary>
     )
 
+  }
+}
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null, errorInfo: null };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    let data = {};
+    console.log(error.stack);
+    data.log = error.stack;
+
+
+    this.setState({
+      error: error,
+      errorInfo: errorInfo
+    })
+  }
+  onClick() {
+
+    window.location.hash = "/Home";
+    window.location.reload();
+  }
+  render() {
+    if (this.state.errorInfo) {
+      // Error path
+      return (
+        <div>
+          <div className="PopoverMsg">
+            親愛的客戶，您好：無法完成您的交易，<br />
+            歡迎電洽客服中心(02)8073-1166，<br />
+            我們將竭誠為您服務。
+
+        </div>
+
+          <div className={"LargeDocBtn"} >
+            <button id="btnID" onClick={() => { this.onClick() }}>回首頁</button>
+          </div>
+
+        </div>
+      );
+    }
+    // Normally, just render children
+    return this.props.children;
   }
 }
 

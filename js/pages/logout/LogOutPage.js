@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {logoutUser} from '../../actions/userAction'
-
+import utils from '../../common/utils/utils'
 @connect()
 class LogOutPage extends React.Component {
     constructor(props) {
@@ -9,7 +9,7 @@ class LogOutPage extends React.Component {
         this.state = {
         }
         this.props.dispatch(logoutUser());
-
+        utils.deleteCookie();
     }
 
     componentDidUpdate(prevProps, preState) {

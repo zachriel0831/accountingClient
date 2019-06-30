@@ -1,18 +1,19 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import { Field, ErrorMessage } from 'formik';
 import {  yup  } from 'yup';
 
 @connect()
-class Text extends React.Component {
+class Amount extends React.Component {
     static defaultProps = {
         placeholder: '',
         required: false,
-    }
-
+        isEmail: false,
+      }
+      
     constructor(props) {
         super(props);
-        this.state = {
+        this.state={
         }
     }
 
@@ -33,7 +34,6 @@ class Text extends React.Component {
         }
     }
     changeValue(e) {
-
         console.log(e.currentTarget.value)
         if (typeof this.props.onChange == 'function') {
             this.props.onChange(event);
@@ -41,24 +41,20 @@ class Text extends React.Component {
     }
 
     render() {
-
         return (
             <div>
-                <Field type={this.props.type} name={this.props.name} autocomplete="new-password" ng-hide="true" >
-                    {({ field, form }) => (
-                        <div>
-                            <input type="password" {...field} placeholder={this.props.placeholder} />
-                            {/* {form.touched[field.name] &&
-                        form.errors[field.name] && <div className="error">{form.errors[field.name]}</div>} */}
+            <Field  type={this.props.type} name={this.props.name} >
+                {({ field, form }) => (
+                    <div>
+                    <input type="tel" {...field} placeholder={this.props.placeholder}/>
                     <small className="form-text text-muted"><ErrorMessage name={this.props.name} component="div" render={msg => <div className='errorMsg'>{msg}</div>} /></small>   
-                        </div>
-                    )}
-                </Field>
-
+                    </div>
+                )}          
+            </Field>
             </div>
-        )
+            )
 
     }
 }
 
-export default Text;
+export default Amount;

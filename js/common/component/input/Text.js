@@ -1,6 +1,7 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { Field, ErrorMessage } from 'formik';
+import { yup } from 'yup';
 
 @connect()
 class Text extends React.Component {
@@ -8,11 +9,11 @@ class Text extends React.Component {
         placeholder: '',
         required: false,
         isEmail: false,
-      }
-      
+    }
+
     constructor(props) {
         super(props);
-        this.state={
+        this.state = {
         }
     }
 
@@ -33,7 +34,6 @@ class Text extends React.Component {
         }
     }
     changeValue(e) {
-
         console.log(e.currentTarget.value)
         if (typeof this.props.onChange == 'function') {
             this.props.onChange(event);
@@ -43,10 +43,18 @@ class Text extends React.Component {
     render() {
         return (
             <div>
-            <Field  type={this.props.type} name={this.props.name} />
-            <ErrorMessage name={this.props.name} component="div" />  
+                <Field type={this.props.type} name={this.props.name} >
+                    {({ field, form }) => (
+                        <div>
+                            <input type="text" maxlength={this.props.maxlength} {...field} placeholder={this.props.placeholder} />
+                            <small className="form-text text-muted">
+                                <ErrorMessage name={this.props.name} component="div" render={msg => <div className='errorMsg'>{msg}</div>} />
+                            </small>
+                        </div>
+                    )}
+                </Field>
             </div>
-            )
+        )
 
     }
 }

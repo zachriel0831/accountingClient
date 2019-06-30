@@ -3,11 +3,37 @@ import { connect } from 'react-redux';
 import { Field, ErrorMessage } from 'formik';
 import { yup } from 'yup';
 
+// Radio input
+const RadioButton = ({
+    field: { name, value, onChange, onBlur },
+    id,
+    label,
+    className,
+    ...props
+  }) => {
+    return (
+      <div>
+        <input
+          name={name}
+          id={id}
+          type="radio"
+          value={id} // could be something else for output?
+          checked={id === value}
+          onChange={onChange}
+          onBlur={onBlur}
+          className="radio-button"
+          {...props}
+        />
+        <label htmlFor={id}>{label}</label>
+      </div>
+    );
+  };
+
 @connect()
-class Number extends React.Component {
+class RadioBtn extends React.Component {
     static defaultProps = {
         placeholder: '',
-        maxlength:20,
+        required: false,
     }
 
     constructor(props) {
@@ -44,25 +70,24 @@ class Number extends React.Component {
             <div>
                 <Field type={this.props.type} name={this.props.name} >
                     {({ field, form }) => (
-
                         <div>
                             <input
-                                type="tel"
                                 {...field}
-                                name={this.props.name}
-                                maxlength={this.props.maxlength}
-                                placeholder={this.props.placeholder}
+                                type="radio"
+                                onChange={()=>{form.setFieldValue(field.name,this.props.value,true)}}
+                                onBlur={(e)=>this.onBlur(e)}
+                                className="radio-button"
                             />
-                            {/* {form.touched[field.name] &&
-                              form.errors[field.name] && <div className="error">{form.errors[field.name]}</div>} */}
+                            <label htmlFor={this.props.id}>{this.props.label}</label>
                             <small className="form-text text-muted"><ErrorMessage name={this.props.name} component="div" render={msg => <div className='errorMsg'>{msg}</div>} /></small>
                         </div>
                     )}
                 </Field>
+
             </div>
         )
 
     }
 }
 
-export default Number;
+export default RadioBtn;
