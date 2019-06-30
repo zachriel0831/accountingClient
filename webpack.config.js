@@ -71,6 +71,9 @@ var config = {
                 },
             {
                 test: /\.css$/,
+                include: [
+                    path.resolve(__dirname, "app/css/styles")
+                  ],
                 use:ExtractTextPlugin.extract({
                     fallback:"style-loader",
                     use:"css-loader"
@@ -79,6 +82,9 @@ var config = {
             
             {
                 test: /\.scss$/,
+                include: [
+                    path.resolve(__dirname, "app/css/styles")
+                  ],
                 use:ExtractTextPlugin.extract({
                     fallback:"style-loader",
                     use:[{
