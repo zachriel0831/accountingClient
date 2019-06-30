@@ -38,7 +38,7 @@ var config = {
             },
             {
                 test: /\.s[ac]ss$/,
-                include: paths.appSrc,
+                include:  `/${__dirname}/`,
                 loaders: [
                     require.resolve('style-loader'),
                     require.resolve('css-loader'),
