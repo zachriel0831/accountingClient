@@ -34,7 +34,7 @@ var config = {
             },
             {
                 test: /\.css$/,
-                loaders: ['style', 'css']
+                use: [ 'style-loader', 'css-loader' ]
             }, {
                 test: /\.html$/,
                 loaders: ['raw-loader']
@@ -69,7 +69,7 @@ var config = {
                 test: /\.css$/,
                 use:ExtractTextPlugin.extract({
                     fallback:"style-loader",
-                    use:"css-loader"
+                    use: [ 'style-loader', 'css-loader' ]
                 })
             },
             
@@ -78,7 +78,7 @@ var config = {
                 use:ExtractTextPlugin.extract({
                     fallback:"style-loader",
                     use:[{
-                        loader:"css-loader"
+                        use: [ 'style-loader', 'css-loader' ]
                     },{
                         loader:"sass-loader",
                         options: {
