@@ -15,6 +15,10 @@ var config = {
         path:`${__dirname}/dist`,
         filename:'[name].[chunkhash:8].js',
     },
+    resolve:{
+        extensions: ['.css', '.scss', '.js', '.json']
+
+    },
     devServer:{
         historyApiFallback: true,
         contentBase: './',
