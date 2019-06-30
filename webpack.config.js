@@ -13,7 +13,7 @@ var config = {
             },
     output:{
         path:`${__dirname}/dist`,
-        filename:'[name].js'
+        filename:'[name].[chunkhash:8].js',
     },
     devServer:{
         historyApiFallback: true,
@@ -31,7 +31,88 @@ var config = {
                     presets: ['es2015', 'react', 'stage-2'],
                     plugins:['babel-plugin-transform-decorators-legacy']
                 }
+            },
+            {
+                test: /\.css$/,
+                loaders: ['style', 'css']
+            }, {
+                test: /\.html$/,
+                loaders: ['raw-loader']
             }
+        ],
+        rules: [
+            {
+                test: /.*/,
+                include: path.resolve(__dirname, '/js'),
+                use: {
+                    loader: 'babel-loader',
+                    query: {
+                        presets: ['es2015', 'react', 'stage-2'],
+                        plugins:['babel-plugin-transform-decorators-legacy']
+                    }
+    
+                        },
+            },
+
+            {
+                test: /(\.jsx|\.js)$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: "babel-loader",
+                    query: {
+                        presets: ['es2015', 'react', 'stage-2'],
+                        plugins:['babel-plugin-transform-decorators-legacy']
+                    }
+                        },
+                },
+            {
+                test: /\.css$/,
+                use:ExtractTextPlugin.extract({
+                    fallback:"style-loader",
+                    use:"css-loader"
+                })
+            },
+            
+            {
+                test: /\.scss$/,
+                use:ExtractTextPlugin.extract({
+                    fallback:"style-loader",
+                    use:[{
+                        loader:"css-loader"
+                    },{
+                        loader:"sass-loader",
+                        options: {
+                            outputStyle: "compressed" 
+                        }
+                    }, ]
+                })
+            },
+            {
+                test: /\.less$/,
+                use:ExtractTextPlugin.extract({
+                    fallback:"style-loader",
+                    use:[{
+                        loader:"css-loader"
+                    },{
+                        loader:"less-loader",
+                        options:{
+                            compress:true   
+                        }
+                    }]
+                })
+            },
+            {
+                test: /\.(svg|woff2?|ttf|eot|jpe?g|png|gif)$/i,
+                use :
+                  {
+                    loader: "url-loader",
+                    query: {
+                      // inline base64 DataURL for <=2KB images, direct URLs for the rest
+                      limit: 2048,
+                      name: "[name].[ext]"
+                    }
+                  }
+              }
         ]
     },
     plugins: [       
@@ -44,8 +125,9 @@ var config = {
               'NODE_ENV': JSON.stringify('production')
             }
           }),
-        //   new webpack.optimize.UglifyJsPlugin(), //最小化一切
-          new webpack.optimize.AggressiveMergingPlugin(),//合并块
+          new ExtractTextPlugin('./css/index.[chunkhash:8].css'), //css scss less文件打包
+        //   new webpack.optimize.UglifyJsPlugin(), 
+          new webpack.optimize.AggressiveMergingPlugin(),
         HTMLWebpackPluginConfig,
         // new webpack.DllReferencePlugin({
         //     context: __dirname,
