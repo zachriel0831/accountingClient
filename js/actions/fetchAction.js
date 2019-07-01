@@ -2,7 +2,9 @@ import fetch from 'cross-fetch'
 import utils from '../common/utils/utils'
 export function fetchInitCall(type, txnId, pageId, data) {
     let completeFlag = false;
-    let url = `http://localhost:3000/${txnId}/${pageId}_initView`;
+    // let url = `http://localhost:3000/${txnId}/${pageId}_initView`;
+    let url = `https://zachriel-accountting.herokuapp.com/${txnId}/${pageId}_initView`;
+
     const token = localStorage.getItem('token');
 
     return {
@@ -44,7 +46,9 @@ export function fetchAction(data, url, type) {
     let completeFlag = false;
 
     const token = localStorage.getItem('token');
-    let fixUrl = `http://localhost:3000${url}`;
+    // let fixUrl = `http://localhost:3000${url}`;
+    let fixUrl = `https://zachriel-accountting.herokuapp.com/${url}`;
+
     let user_id = localStorage.getItem('user_id');
     data.user_id = user_id;
 
