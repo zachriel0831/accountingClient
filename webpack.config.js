@@ -17,7 +17,7 @@ var config = {
     },
     resolve: {
         extensions: ['.css', '.scss', '.js', '.json'],
-        root: __dirname 
+        root: __dirname
     },
     devServer: {
         historyApiFallback: true,
@@ -38,8 +38,9 @@ var config = {
             },
             {
                 test: /\.css$/,
-                loaders: ['style', 'css']
-            }, {
+                loader: "style-loader!css-loader"
+            },
+            {
                 test: /\.html$/,
                 loaders: ['raw-loader']
             }
@@ -73,7 +74,7 @@ var config = {
                 test: /\.css$/,
                 use: ExtractTextPlugin.extract({
                     fallback: "style-loader",
-                    use: ['style-loader',"css-loader"]
+                    use: "css-loader"
                 })
             },
 
@@ -82,7 +83,7 @@ var config = {
                 use: ExtractTextPlugin.extract({
                     fallback: "style-loader",
                     use: [{
-                        use: ['style-loader',"css-loader"]
+                        loader: "css-loader"
                     }, {
                         loader: "sass-loader",
                         options: {
@@ -131,7 +132,7 @@ var config = {
             }
         }),
         new ExtractTextPlugin('./css/index.[chunkhash:8].css'), //css scss less文件打包
-          new webpack.optimize.UglifyJsPlugin(), 
+        new webpack.optimize.UglifyJsPlugin(),
         new webpack.optimize.AggressiveMergingPlugin(),
         HTMLWebpackPluginConfig,
         // new webpack.DllReferencePlugin({
