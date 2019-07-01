@@ -10,7 +10,9 @@ import { changeView, fetchUser } from '../../actions/userAction';
 import { fetchInitCall, fetchAction } from '../../actions/fetchAction';
 
 import utils from '../utils/utils'
-// import 'react-table/react-table.css'
+import 'react-table/react-table.css'
+import css from  '../../../app/css/style.css';
+import scss from '../../../app/css/custom.scss'
 
 @connect((store) => {
 
@@ -38,7 +40,7 @@ class Index extends React.Component {
 
   }
 
-  routing(e,action){
+  routing(e, action) {
     let pageValue = e.currentTarget.attributes[1].value;
 
     let pageId = (pageValue.replace('/', '')).toLowerCase();
@@ -55,23 +57,23 @@ class Index extends React.Component {
     data.username = storage.username;
 
     let type = `${(pageId).toUpperCase()}_INITIALIZING`;
-    
+
     action(fetchAction(data, txnId, pageId, pageId));
 
-}
+  }
 
-setView() {
+  setView() {
     let storage = localStorage;
     let loggedView = [];
 
     if (storage.token && storage.username) {
 
-      loggedView = utils.changeMenuView('GET_lOGGEDIN_VIEW', MainRouter,this.routing,this.props.dispatch);
+      loggedView = utils.changeMenuView('GET_lOGGEDIN_VIEW', MainRouter, this.routing, this.props.dispatch);
 
     } else {
       this.navs = [];
       utils.clearAllSession();
-      loggedView = utils.changeMenuView('GET_lOGGEDOUT_VIEW', MainRouter,this.routing,this.props.dispatch);
+      loggedView = utils.changeMenuView('GET_lOGGEDOUT_VIEW', MainRouter, this.routing, this.props.dispatch);
 
     }
 
@@ -127,8 +129,8 @@ setView() {
           action: action
         }
         return <Suspense fallback={<div>Loading...</div>}>
-                  <WrappedComponent {...this.props} {...functions} {...customerFunc} />
-               </Suspense>;
+          <WrappedComponent {...this.props} {...functions} {...customerFunc} />
+        </Suspense>;
       }
     };
   }
