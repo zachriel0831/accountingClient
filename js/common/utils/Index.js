@@ -10,9 +10,6 @@ import { changeView, fetchUser } from '../../actions/userAction';
 import { fetchInitCall, fetchAction } from '../../actions/fetchAction';
 
 import utils from '../utils/utils'
-// import 'react-table/react-table.css'
-// import css from  '../../../app/css/style.css';
-// import scss from '../../../app/css/custom.scss'
 
 @connect((store) => {
 
