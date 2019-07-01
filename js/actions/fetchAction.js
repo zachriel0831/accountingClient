@@ -47,7 +47,7 @@ export function fetchAction(data, url, type) {
 
     const token = localStorage.getItem('token');
     // let fixUrl = `http://localhost:3000${url}`;
-    let fixUrl = `https://zachriel-accountting.herokuapp.com/${url}`;
+    let fixUrl = `https://zachriel-accountting.herokuapp.com${url}`;
 
     let user_id = localStorage.getItem('user_id');
     data.user_id = user_id;
