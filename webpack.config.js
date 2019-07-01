@@ -16,8 +16,8 @@ var config = {
         filename: '[name].[chunkhash:8].js',
     },
     resolve: {
-        extensions: ['.css', '.scss', '.js', '.json']
-
+        extensions: ['.css', '.scss', '.js', '.json'],
+        root: __dirname 
     },
     devServer: {
         historyApiFallback: true,
@@ -73,7 +73,7 @@ var config = {
                 test: /\.css$/,
                 use: ExtractTextPlugin.extract({
                     fallback: "style-loader",
-                    use: "css-loader"
+                    use: ['style-loader',"css-loader"]
                 })
             },
 
@@ -82,7 +82,7 @@ var config = {
                 use: ExtractTextPlugin.extract({
                     fallback: "style-loader",
                     use: [{
-                        loader: "css-loader"
+                        use: ['style-loader',"css-loader"]
                     }, {
                         loader: "sass-loader",
                         options: {
