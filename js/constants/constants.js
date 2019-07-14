@@ -4,5 +4,5 @@ const LOGGED_OUT_PAGE = ['/Login','/Register'];
 
 const CATEGORY = ['food','travel','insurance','3C','home','gwen deposit','zack deposit'];
 
-// const CONNECTION_CONFIG = 'https://zachriel-accountting.herokuapp.com';
-const CONNECTION_CONFIG = 'http://localhost:3000';
+const CONNECTION_CONFIG = 'https://zachriel-accountting.herokuapp.com';
+// const CONNECTION_CONFIG = 'http://localhost:3000';
