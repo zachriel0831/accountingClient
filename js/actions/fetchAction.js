@@ -3,10 +3,10 @@ import utils from '../common/utils/utils'
 export function fetchInitCall(type, txnId, pageId, data) {
     let completeFlag = false;
     // let url = `http://localhost:3000/${txnId}/${pageId}_initView`;
-    let url = `https://zachriel-accountting.herokuapp.com/${txnId}/${pageId}_initView`;
+    let url = `${CONNECTION_CONFIG}/${txnId}/${pageId}_initView`;
 
     const token = localStorage.getItem('token');
-
+    //debugger
     return {
         type: type,
         payload:
@@ -23,6 +23,7 @@ export function fetchInitCall(type, txnId, pageId, data) {
                 mode: 'cors',
             }).then(response => response.json())
                 .then((respData) => {
+                    //debugger
                     completeFlag = true;
 
                     if (respData.data.length === 0) {
@@ -35,6 +36,7 @@ export function fetchInitCall(type, txnId, pageId, data) {
                     console.log(error);
                 })
                 .finally(() => {
+                    //debugger
                     if (completeFlag) {
                         console.log('fetching complete')
                     }
@@ -44,14 +46,14 @@ export function fetchInitCall(type, txnId, pageId, data) {
 
 export function fetchAction(data, url, type) {
     let completeFlag = false;
-
+    //debugger
     const token = localStorage.getItem('token');
     // let fixUrl = `http://localhost:3000${url}`;
-    let fixUrl = `https://zachriel-accountting.herokuapp.com${url}`;
+    let fixUrl = `${CONNECTION_CONFIG}${url}`;
 
     let user_id = localStorage.getItem('user_id');
     data.user_id = user_id;
-
+    
     let proccessingData = {
         // method: "POST",
         // url: url,

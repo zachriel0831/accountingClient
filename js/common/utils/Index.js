@@ -5,18 +5,18 @@ import { HashRouter as Router, Route, Link } from 'react-router-dom';
 const Menu = React.lazy(() => import('../component/view/Menu'));
 
 import MainRouter from '../utils/Router';
-import { changeView, fetchUser } from '../../actions/userAction';
+// import { changeView, fetchUser } from '../../actions/userAction';
 
 import { fetchInitCall, fetchAction } from '../../actions/fetchAction';
 
-import utils from '../utils/utils'
+// import utils from '../utils/utils'
 
 @connect((store) => {
 
   return {
     user: store.userReducer.user,
     userStatus: store.userReducer,
-    navs: store.visibilityReducers.navs
+    // navs: store.visibilityReducers.navs
   };
 })
 class Index extends React.Component {
@@ -28,7 +28,7 @@ class Index extends React.Component {
     this.navs = [];
 
 
-    this.setView();
+    // this.setView();
     for (var r in MainRouter) {
       this.routers.push(
         <Route path={r} key={r} component={this.HOCBundle(MainRouter[r], this.props.dispatch)} />
@@ -54,28 +54,32 @@ class Index extends React.Component {
     data.username = storage.username;
 
     let type = `${(pageId).toUpperCase()}_INITIALIZING`;
-
-    action(fetchAction(data, txnId, pageId, pageId));
-
-  }
-
-  setView() {
-    let storage = localStorage;
-    let loggedView = [];
-
-    if (storage.token && storage.username) {
-
-      loggedView = utils.changeMenuView('GET_lOGGEDIN_VIEW', MainRouter, this.routing, this.props.dispatch);
-
+    if ((['register', 'login'].includes(pageId))) {
+      return;
     } else {
-      this.navs = [];
-      utils.clearAllSession();
-      loggedView = utils.changeMenuView('GET_lOGGEDOUT_VIEW', MainRouter, this.routing, this.props.dispatch);
+      action(fetchAction(data, txnId, pageId, pageId));
 
     }
 
-    this.props.dispatch(changeView('SET_VISIBILITY_FILTER', loggedView, this.props.userStatus.loggedIn));
   }
+
+  // setView() {
+  //   let storage = localStorage;
+  //   let loggedView = [];
+
+  //   if (storage.token && storage.username) {
+
+  //     loggedView = utils.changeMenuView('GET_lOGGEDIN_VIEW', MainRouter, this.routing, this.props.dispatch);
+
+  //   } else {
+  //     this.navs = [];
+  //     utils.clearAllSession();
+  //     loggedView = utils.changeMenuView('GET_lOGGEDOUT_VIEW', MainRouter, this.routing, this.props.dispatch);
+
+  //   }
+
+  //   this.props.dispatch(changeView('SET_VISIBILITY_FILTER', loggedView, this.props.userStatus.loggedIn));
+  // }
 
   HOCBundle(WrappedComponent, action) {
     let customerFunc = {
@@ -105,9 +109,11 @@ class Index extends React.Component {
         let data = {};
         data.token = storage.token;
         data.username = storage.username;
-
+        //debugger
         if (!(['register', 'login'].includes(txnId))) {
           if (pageId === 'home') {
+
+            //TODO
             action(fetchInitCall(type, txnId, pageId, data));
           }
         }
@@ -133,9 +139,9 @@ class Index extends React.Component {
   }
 
   componentDidUpdate(prevProps, preState) {
-    if (prevProps.userStatus.loggedIn != this.props.userStatus.loggedIn) {
-      this.setView();
-    }
+    // if (prevProps.userStatus.loggedIn != this.props.userStatus.loggedIn) {
+    //   this.setView();
+    // }
 
   }
 
@@ -152,7 +158,7 @@ class Index extends React.Component {
         <Router>
           <div>
             <Suspense fallback={<div>Loading...</div>}>
-              <Menu nav={navs} />
+              <Menu nav={navs} MainRouter={MainRouter} routing={this.routing} />
               <div>
                 {this.routers}
               </div>

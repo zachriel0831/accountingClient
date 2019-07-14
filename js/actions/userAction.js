@@ -7,7 +7,7 @@ export function fetchUser(data) {
 
         type: 'FETCH_USER',
         payload:
-            fetch('https://zachriel-accountting.herokuapp.com/getUserDetailByName', {
+            fetch(`${CONNECTION_CONFIG}/getUserDetailByName`, {
             // fetch('http://localhost:3000/getUserDetailByName', {
 
                 method: "POST",
@@ -50,7 +50,7 @@ export function submitLogin(type, payload) {
     return {
         type: type,
         payload:
-            fetch(`https://zachriel-accountting.herokuapp.com/user/login`, {
+            fetch(`${CONNECTION_CONFIG}/user/login`, {
             // fetch(`http://localhost:3000/user/login`, {
                 method: 'POST',
                 headers: {
@@ -97,7 +97,7 @@ export function subscribeUser(type, payload) {
     return {
         type: type,
         payload:
-            fetch('https://zachriel-accountting.herokuapp.com/user/registering', {
+            fetch(`${CONNECTION_CONFIG}/user/registering`, {
             // fetch('http://localhost:3000/user/registering', {
 
                 method: "POST",

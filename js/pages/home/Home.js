@@ -13,7 +13,7 @@ import model from '../../model/index';
 import Table from '../../common/component/view/Table'
 
 @connect((store) => {
-
+    //debugger
     return {
         userReducer: store.userReducer,
         accountingReducer: store.accountingReducer,
@@ -59,6 +59,29 @@ class Home extends React.Component {
         console.log(data);
     }
 
+    getDerivedStateFromProps(props, state){
+        //debugger
+    }
+
+    shouldComponentUpdate(nextProps, nextState){
+        //debugger
+        // if(nextProps.userReducer.accountDetail.length !== this.props.userReducer.accountDetail.length){
+
+        //     if(nextProps.userReducer.userDetail[0].user_id !=  this.props.userReducer.userDetail[0].user_id){
+        //         return true;
+        //     }else{
+
+        //         return false;
+        //     }
+        // }else{
+
+        //     return false;
+        // }
+        return true;
+    }
+
+
+
     handleSubmit(requestData) {
         console.log(requestData);
         let date = new Date();
@@ -76,7 +99,7 @@ class Home extends React.Component {
 
     render() {
         console.log(this.props)
-
+        //debugger
         const { userDetail } = this.props.userReducer;
         let { accountDetail } = this.props.userReducer;
         if (accountDetail !== '' && accountDetail.length === 0) {
@@ -85,7 +108,7 @@ class Home extends React.Component {
         let userName = (userDetail) ? userDetail[0].name : '';
         let accounts = (accountDetail) ? accountDetail : [];
 
-        if (this.props.accountingReducer.accountDetail.length !== 0) {
+        if (this.props.accountingReducer.accountDetail[0].user_id !== '') {
             accounts = this.props.accountingReducer.accountDetail;
         }
 

@@ -4,10 +4,29 @@ export default function reducer(
         user: {
             user_id: '',
             name: '',
-            phone:'',
+            phone: '',
             email: '',
             password: ''
         },
+        accountDetail: [{
+            user_id: '',
+            itemName: '',
+            date: '',
+            displayYear: '',
+            displayMonth: '',
+            displayDay: '',
+            category: '',
+            amount: '',
+            sourceFlag: '',
+            remark: '',
+
+        }],
+        userDetail: [{
+            id: '',
+            name: '',
+            password: '',
+            email: ''
+        }],
         fetching: false,
         fetched: false,
         error: null,
@@ -18,22 +37,29 @@ export default function reducer(
     switch (action.type) {
 
         case 'HOME_INITIALIZING': {
-            return { ...state,userDetail:'',accountDetail:'', fetching: true, fetched: true };
+            //debugger
+
+            return { ...state, userDetail: state.userDetail, accountDetail: state.accountDetail, fetching: true, fetched: true };
         }
 
         case 'HOME_INITIALIZING_REJECTED': {
+            //debugger
 
             return { ...state, fetched: false, error: action.payload };
         }
 
         case 'HOME_INITIALIZING_PENDING': {
+            //debugger
 
-            return { ...state,userDetail:'',accountDetail:'', fetching: true, fetched: false };
+            return { ...state, fetching: true, fetched: false };
         }
         case 'HOME_INITIALIZING_FULFILLED': {
+            //debugger
 
-            return { ...state, fetching: false, fetched: true,
-                 userDetail: action.payload.userDetail,accountDetail: action.payload.accountDetail, loggedIn: true }
+            return {
+                ...state, fetching: false, fetched: true,
+                userDetail: action.payload.userDetail, accountDetail: action.payload.accountDetail, loggedIn: true
+            }
         }
         case 'SUBSCRIBE_USER': {
 
@@ -62,7 +88,7 @@ export default function reducer(
         }
         case 'USER_LOGGEDIN_FULFILLED':
 
-        return { ...state, fetching: false, fetched: true, data: action.payload, loggedIn: true }
+            return { ...state, fetching: false, fetched: true, data: action.payload, loggedIn: true }
 
         case 'USER_LOGOUT':
             return {
@@ -71,8 +97,8 @@ export default function reducer(
                     name: '',
                     email: '',
                     password: '',
-                    phone:''
-                },userDetail:'',accountDetail:'', loggedIn: false
+                    phone: ''
+                }, userDetail: '', accountDetail: '', loggedIn: false
             }
         case 'USER_SUBSCRIBE_REJECTED': {
             return { ...state, fetched: false, error: action.payload, loggedIn: false };
