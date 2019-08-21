@@ -74,10 +74,6 @@ class Table extends React.Component {
                 Cell: this.renderEditable
             },
             {
-                Header: 'item name',
-                accessor: 'itemName',
-            },
-            {
                 Header: 'category',
                 accessor: 'category',
             },
