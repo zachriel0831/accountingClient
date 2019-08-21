@@ -88,7 +88,6 @@ class RegisterPage extends React.Component {
                 >
                     <h1>this is subscribe page</h1>
 
-                    <label htmlFor="user_id">id:</label>
                     <Text
                         placeholder='please type your id'
                         type="id"

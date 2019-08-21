@@ -198,12 +198,7 @@ class ErrorBoundary extends React.Component {
       // Error path
       return (
         <div>
-          <div className="PopoverMsg">
-            親愛的客戶，您好：無法完成您的交易，<br />
-            歡迎電洽客服中心(02)8073-1166，<br />
-            我們將竭誠為您服務。
-
-        </div>
+            Oops!! Something Went Wrong!!
 
           <div className={"LargeDocBtn"} >
             <button id="btnID" onClick={() => { this.onClick() }}>回首頁</button>
