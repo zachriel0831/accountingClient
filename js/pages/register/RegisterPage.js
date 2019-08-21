@@ -95,35 +95,29 @@ class RegisterPage extends React.Component {
                         maxlength={10}
                         required
                     />
-                    <label htmlFor="password">password:</label>
                     <Password
-                        placeholder='please type your password'
+                        placeholder='PASSWORD'
                         type="password"
                         name="password"
                     />
-                    <label htmlFor="phone">phone:</label>
                     <Number
-                        placeholder='please type your phone'
+                        placeholder='PHONE'
                         name="phone"                    
                     />
-                    <label htmlFor="name">name:</label>
                     <Text
-                        placeholder='please type your name'
+                        placeholder='NAME'
                         type="name"
                         name="name"
                     />
-                    <label htmlFor="user.email">email:</label>
                     <Text
                         type="email"
                         name="email"
                         onChange={(e) => this.customOnchange(e)}
                         // onBlur={(e) => this.onEmailBlur(e)}
-                        placeholder="please type your email"
+                        placeholder="EMAIL"
                     />
 
-                    <button  className="btn btn-primary" type="submit">
-                        Subscribe!
-                    </button>
+                    <ConfirmBtn displayName='Subscribe!' />
 
                 </AccountForm>
             </div>

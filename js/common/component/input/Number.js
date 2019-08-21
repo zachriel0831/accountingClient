@@ -45,8 +45,9 @@ class Number extends React.Component {
                 <Field type={this.props.type} name={this.props.name} >
                     {({ field, form }) => (
 
-                        <div>
+                        <div className="form-group col-xs-2">
                             <input
+                                className="form-control"
                                 type="tel"
                                 {...field}
                                 name={this.props.name}
