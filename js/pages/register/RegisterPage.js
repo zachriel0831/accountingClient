@@ -6,6 +6,7 @@ import Password from '../../common/component/input/Password'
 import { connect } from 'react-redux';
 import { subscribeUser } from '../../actions/userAction'
 import * as Yup from "yup";
+import ConfirmBtn from '../../common/component/button/ConfirmBtn';
 
 @connect((store) => {
     return {
