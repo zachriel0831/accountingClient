@@ -5,6 +5,7 @@ import Password from '../../common/component/input/Password'
 import { connect } from 'react-redux';
 import { submitLogin } from '../../actions/userAction'
 import * as Yup from "yup";
+import ConfirmBtn from '../../common/component/button/ConfirmBtn';
 
 @connect((store) => {
     return {
@@ -73,25 +74,20 @@ class Login extends React.Component {
                             .required('Required'),
                     })}
                 >
-                    <h1>this is login page</h1>
-
-                    <label htmlFor="user_id">id:</label>
+                     <h1 id="websiteTitle">FOUNDARY</h1>
                     <Text
-                        placeholder='please type your id'
+                        placeholder='USERNAME'
                         type="id"
                         name="user_id"
                     />
                     <br />
-                    <label htmlFor="password">password:</label>
                     <Password
-                        placeholder='please type your password'
+                        placeholder='PASSWORD'
                         type="password"
                         name="password"
                     />
 
-                    <button type="submit">
-                        login!
-                    </button>
+                    <ConfirmBtn displayName='login!' />
 
                 </AccountForm>
             </div>

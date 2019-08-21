@@ -20,8 +20,8 @@ class ConfirmBtn extends React.Component{
 
     render(){
         return(
-            <div>  
-                <button type='button' onClick={(e)=>this.clicking(e)} >
+            <div className="input-group-append">
+                <button type='submit' className="btn btn-outline-secondary btn-block" onClick={(e)=>this.clicking(e)} >
                     {this.props.displayName}
                 </button>                                
             </div>

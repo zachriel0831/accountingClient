@@ -45,8 +45,9 @@ class Text extends React.Component {
             <div>
                 <Field type={this.props.type} name={this.props.name} >
                     {({ field, form }) => (
-                        <div>
-                            <input type="text" maxlength={this.props.maxlength} {...field} placeholder={this.props.placeholder} />
+                        <div className="form-group col-xs-2">
+
+                            <input type="text" className="form-control" maxlength={this.props.maxlength} {...field} placeholder={this.props.placeholder} />
                             <small className="form-text text-muted">
                                 <ErrorMessage name={this.props.name} component="div" render={msg => <div className='errorMsg'>{msg}</div>} />
                             </small>

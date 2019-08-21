@@ -21,7 +21,6 @@ class Table extends React.Component {
                 columnData: this.props.columnData,
             })
         }
-
     }
 
     componentDidMount() {
@@ -110,7 +109,6 @@ class Table extends React.Component {
         let accountDetail = this.props.columnData;
         if (accountDetail) {
             accountDetail.map((k, v) => {
-
                 if (k.sourceFlag === 'expenditure') {
                     totalExpenditure += parseInt(k.amount);
                 }
