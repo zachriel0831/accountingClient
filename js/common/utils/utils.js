@@ -18,10 +18,10 @@ module.exports = {
                     if (LOGGED_IN_PAGE.includes(r)) {
                       if((['/Home', '/LogOut'].includes(r))){
 
-                        this.navs.push(<li className="nav-item"><Link className="nav-link" to={r}>{r.replace('/', '')}</Link></li>);
+                        this.navs.push(<Link className="item" to={r}>{r.replace('/', '')}</Link>);
 
                       }else{
-                        this.navs.push(<li className="nav-item"><Link className="nav-link" value={r} onClick={(e)=>routing(e,dispatch)}>{r.replace('/', '')}</Link></li>);
+                        this.navs.push(<Link className="item" value={r} onClick={(e)=>routing(e,dispatch)}>{r.replace('/', '')}</Link>);
                       }
                     }
                 }
@@ -32,7 +32,7 @@ module.exports = {
                 
                 for (var r in MainRouter) {
                     if (LOGGED_OUT_PAGE.includes(r)) {
-                        this.navs.push(<li className="nav-item"><Link className="nav-link " to={r} value={r} onClick={(e)=>routing(e,dispatch)}>{r.replace('/', '')}</Link></li>);
+                        this.navs.push(<Link className="item " to={r} value={r} onClick={(e)=>routing(e,dispatch)}>{r.replace('/', '')}</Link>);
                     }
                 }
 
@@ -41,7 +41,7 @@ module.exports = {
             default:
 
                 for (var r in MainRouter) {
-                    this.navs.push(<li className="nav-item"><Link className="nav-link" value={r} onClick={(e)=>routing(e,dispatch)}>{r.replace('/', '')}</Link></li>)
+                    this.navs.push(<Link className="item" value={r} onClick={(e)=>routing(e,dispatch)}>{r.replace('/', '')}</Link>)
                 }
                 break;
         }

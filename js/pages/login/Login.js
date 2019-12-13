@@ -21,15 +21,6 @@ class Login extends React.Component {
 
     }
 
-    componentDidUpdate(prevProps, preState) {
-    }
-
-
-
-    componentDidMount() {
-
-    }
-
     handleSubmit(user) {
         console.log(user);
         this.props.dispatch(submitLogin('USER_LOGGEDIN',
@@ -58,7 +49,7 @@ class Login extends React.Component {
 
     render() {
         let user = this.props.user
-
+        
         return (
             <div>
                 <AccountForm model={user}
@@ -67,9 +58,12 @@ class Login extends React.Component {
                         password: Yup.string()
                             .matches(/[a-zA-Z]/, 'password can only contain Latin letters.')
                             .required('Required')
-                            .min(4, 'password is too short'),
+                            .min(4, 'password is too short!')
+                            .max(15,'password is too long!')
+                            ,
                         user_id: Yup.string()
                             .min(3, 'id is too short')
+                            .max(10, 'id is too long')
                             .matches(/[a-zA-Z]/, 'user_id can only contain Latin letters.')
                             .required('Required'),
                     })}
@@ -77,7 +71,7 @@ class Login extends React.Component {
                      <h1 id="websiteTitle">FOUNDARY</h1>
                     <Text
                         placeholder='USERNAME'
-                        type="id"
+                        type="text"
                         name="user_id"
                     />
                     <br />

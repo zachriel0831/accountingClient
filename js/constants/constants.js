@@ -1,4 +1,4 @@
-const LOGGED_IN_PAGE = ['/LogOut','/Home','/NtdTransfer_1'];
+const LOGGED_IN_PAGE = ['/LogOut','/Home'];
 
 const LOGGED_OUT_PAGE = ['/Login','/Register'];
 

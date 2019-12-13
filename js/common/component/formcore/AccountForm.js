@@ -1,14 +1,13 @@
 import React from 'react';
 
 import { Formik, Form } from 'formik';
-import * as Yup from "yup";
 
 export default class AccountForm extends React.Component {
 
     handleSubmit(val, handleReset) {
         this.props.onSubmit(val);
+        //submit後 reset form 
         handleReset.resetForm(this.refs.formik.initialValues);
-
     }
 
     render() {
@@ -29,10 +28,9 @@ export default class AccountForm extends React.Component {
                     values
                 }) => (
                         <Form>
-                            <div className="form-group">
-
+                            <div className="ui form error">
                                 {this.props.children}
-                                {/* <ul>
+                                <ul>
                                     <li>errors: {JSON.stringify(errors)}</li>
                                     <li>isValid: {JSON.stringify(isValid)}</li>
                                     <li>dirty: {JSON.stringify(dirty)}</li>
@@ -41,7 +39,7 @@ export default class AccountForm extends React.Component {
                                     <li>status: {JSON.stringify(status)}</li>
                                     <li>values: {JSON.stringify(values)}</li>
 
-                                </ul> */}
+                                </ul>
                             </div>
                             {/* <button  type="reset" onClick={handleReset}>
                         Reset

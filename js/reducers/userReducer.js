@@ -37,24 +37,24 @@ export default function reducer(
     switch (action.type) {
 
         case 'HOME_INITIALIZING': {
-            //debugger
+            
 
             return { ...state, userDetail: state.userDetail, accountDetail: state.accountDetail, fetching: true, fetched: true };
         }
 
         case 'HOME_INITIALIZING_REJECTED': {
-            //debugger
+            
 
             return { ...state, fetched: false, error: action.payload };
         }
 
         case 'HOME_INITIALIZING_PENDING': {
-            //debugger
+            
 
             return { ...state, fetching: true, fetched: false };
         }
         case 'HOME_INITIALIZING_FULFILLED': {
-            //debugger
+            
 
             return {
                 ...state, fetching: false, fetched: true,

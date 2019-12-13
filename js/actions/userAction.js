@@ -99,7 +99,6 @@ export function subscribeUser(type, payload) {
         payload:
             fetch(`${CONNECTION_CONFIG}/user/registering`, {
             // fetch('http://localhost:3000/user/registering', {
-
                 method: "POST",
                 headers: {
                     'Accept': 'application/json',
@@ -158,9 +157,7 @@ export function logoutUser() {
     }
 }
 
-
 export function deleteUser() {
-
     return {
         type: 'DELETE_USER',
         payload: {

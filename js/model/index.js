@@ -3,7 +3,7 @@ import accounting from './accounting/accounting'
 const user = {
   id: '',
   name: '',
-  password:'',
+  password: '',
   email: ''
   //ip:''
 }

@@ -17,39 +17,17 @@ class Text extends React.Component {
         }
     }
 
-
-    componentDidMount() {
-
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-    }
-
-    onBlur(e) {
-
-        console.log(e.currentTarget.value)
-
-        if (typeof this.props.onBlur == 'function') {
-            this.props.onBlur();
-        }
-    }
-    changeValue(e) {
-        console.log(e.currentTarget.value)
-        if (typeof this.props.onChange == 'function') {
-            this.props.onChange(event);
-        }
-    }
-
     render() {
         return (
             <div>
                 <Field type={this.props.type} name={this.props.name} >
-                    {({ field, form }) => (
-                        <div className="form-group col-xs-2">
-
-                            <input type="text" className="form-control" maxlength={this.props.maxlength} {...field} placeholder={this.props.placeholder} />
-                            <small className="form-text text-muted">
-                                <ErrorMessage name={this.props.name} component="div" render={msg => <div className='errorMsg'>{msg}</div>} />
+                    {({ field }) => (
+                        
+                        <div className="field">
+                            <input type="text"  maxlength={this.props.maxlength} {...field} placeholder={this.props.placeholder} />
+                            <small>
+                                <ErrorMessage name={this.props.name} component="div" render={(msg) => {
+                                    return ( <div className='ui error message'><p>{msg}</p></div>)}} />
                             </small>
                         </div>
                     )}

@@ -21,30 +21,21 @@ export default function reducer(
     switch (action.type) {
 
         case 'FETCH_ACCOUNT': {
-            //debugger
 
             return {...state,fetching:true,accountDetail:[]};
         }
         case 'FETCH_ACCOUNT_REJECTED': {
-            //debugger
-
             return {...state,fetched:false,error:action.payload,accountDetail:[]};
         }
         case 'FETCH_ACCOUNT_FULLFILLED': {
-            //debugger
-
             return {...state,fetching:false,feched:true,accountDetail:action.payload}
         }
 
         case 'NEW_ACCOUNT':{
-            //debugger
-
             return {...state,fetching:true,accountDetail:[]};
         }
 
         case 'NEW_ACCOUNT_PENDING':{
-            //debugger
-
             return {...state,fetched:false,error:action.payload};
 
         }
@@ -54,7 +45,6 @@ export default function reducer(
         }
 
         case 'NEW_ACCOUNT_FULFILLED':{
-            //debugger
 
             return {...state,fetching:false,feched:true,accountDetail:action.payload}
         }

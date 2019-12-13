@@ -9,16 +9,7 @@ class AnotherPage extends React.Component {
         this.state = {
         }
     }
-
-    componentDidUpdate(prevProps, preState) {
-    }
-
-
-
-    componentDidMount() {
-
-    }
-
+    
     render() {
         return (
             <div>
