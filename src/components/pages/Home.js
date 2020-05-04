@@ -63,8 +63,13 @@ const Home = (props) => {
     const [checkBoxListState, setCheckBoxListState] = useState([]);
     const [dateState, setDateState] = useState(new Date());
     const [queriesState, setQueriesState] = useState({});
-    const [totalExpenditureState, setTotalExpenditureState] = useState('');
-    const [totalIncomeState, setTotalIncomeState] = useState('');
+    const [totalExpenditureState, setTotalExpenditureState] = useState(0);
+    const [totalIncomeState, setTotalIncomeState] = useState(0);
+    const [annualIncomeState, setAnnualIncomeState] = useState(0);
+    const [annualExpenditureState, setAnnualExpenditureState] = useState(0);
+
+    const [monthlyIncomeState, setMonthlyIncomeState] = useState(0);
+    const [monthlyExpenditureState, setMonthlyExpenditureState] = useState(0);
 
 
 
@@ -171,35 +176,57 @@ const Home = (props) => {
 
             let annualDatas = accountQueriesData.queries.filter((items, index, array) => {
 
-                debugger
+
                 return items.year === thisYear;
             });
 
             let monthlyDatas = accountQueriesData.queries.filter((items, index, array) => {
 
-                debugger
+
                 return items.month === thisMonth;
-            })
-            _.each(accountQueriesData.queries, (v, k) => {
+            });
 
+            _.each(annualDatas, (v, k) => {
                 if (v.type === 'expenditure') {
+                    annualExpenditure += parseInt(v.amount);
 
+                } else if (v.type === 'income') {
+                    annualIncome += parseInt(v.amount);
+                }
+                // console.log(v);
+            });
+
+            _.each(monthlyDatas, (v, k) => {
+                if (v.type === 'expenditure') {
+                    monthlyExpenditure += parseInt(v.amount);
+
+                } else if (v.type === 'income') {
+                    monthlyIncome += parseInt(v.amount);
+                }
+                // console.log(v);
+            });
+
+
+            _.each(accountQueriesData.queries, (v, k) => {
+                if (v.type === 'expenditure') {
                     totalExpenditure += parseInt(v.amount);
 
                 } else if (v.type === 'income') {
-
                     totalIncome += parseInt(v.amount);
                 }
-
-
-
-                console.log(v);
+                // console.log(v);
             })
+
+            setAnnualExpenditureState(annualExpenditure);
+            setAnnualIncomeState(annualIncome);
+
+            setMonthlyExpenditureState(monthlyExpenditure);
+            setMonthlyIncomeState(monthlyIncome);
 
             setTotalExpenditureState(totalExpenditure);
             setTotalIncomeState(totalIncome);
 
-            debugger
+
             setQueriesState(accountQueriesData);
         });
     }
@@ -208,19 +235,33 @@ const Home = (props) => {
 
         if (checked) {
             checkBoxListState.push(val);
+
+            setCheckBoxListState(checkBoxListState);
+
         } else {
 
-            var newArray = checkBoxListState.filter(function (item, index, array) {
+            let newArray = checkBoxListState.filter(function (item, index, array) {
                 console.log(item[0]);
 
                 return checkedTarget[0] !== item[0];
             });
-            checkBoxListState = newArray;
+            // checkBoxListState = [...newArray];
+            setCheckBoxListState(newArray);
+
         }
-        setCheckBoxListState(checkBoxListState);
     }
 
     const getAllCheckBoxVal = (val) => {
+        debugger
+
+        if(_.isEmpty(val)){
+            checkBoxListState.splice(0,checkBoxListState.length)
+
+            setCheckBoxListState(checkBoxListState);
+            return;
+        }
+        checkBoxListState.push(...val);
+        setCheckBoxListState(checkBoxListState);
 
         console.log('getAllcheckBoxVal ', val);
     }
@@ -278,13 +319,13 @@ const Home = (props) => {
                     <br />
                     <span>Total Expenditure: {totalExpenditureState}</span>
                     <br />
-                    <span>Monthly Income: </span>
+                    <span>Monthly Income: : {monthlyIncomeState}</span>
                     <br />
-                    <span>Monthly Expenditure: </span>
+                    <span>Monthly Expenditure:: {monthlyExpenditureState} </span>
                     <br />
-                    <span>Annual Income: </span>
+                    <span>Annual Income: : {annualIncomeState}</span>
                     <br />
-                    <span>Annual Expenditure: </span>
+                    <span>Annual Expenditure: : {annualExpenditureState}</span>
                     {/* <span>Weekly Income: </span>
                     <span>Weekly Expenditure: </span> */}
 
@@ -337,7 +378,7 @@ const Home = (props) => {
                     onClick={(e) => deleteItems(e)}
 
                 />
-                <PureCheckBox name='checkBox' label='全選' onClick={(e) => selectAllCheckBox(e)} />
+                <PureCheckBox name='checkBox' label='select all' onClick={(e) => selectAllCheckBox(e)} />
 
                 <AccountingTable
                     // ref='accountingTable'
