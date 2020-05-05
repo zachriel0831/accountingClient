@@ -17,7 +17,6 @@ const useForm = (resetCallback, callback, initialState) => {
     const handleChange = (event) => {
         //讓值可以非同步的存取
         event.persist();
-
         setValues(values => ({ ...values, [event.target.name]: event.target.value }));
     };
 

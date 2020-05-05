@@ -44,14 +44,14 @@ const Amount = (props) => {
 
     const changeValue = (e) => {
         let currentValue = e.currentTarget.value;
+
         if (currentValue.indexOf('.') <= -1) {
             currentValue = transferToAmountFormat(currentValue, 1);
-
         }
-
 
         var acceptDeciaml = 0;
         var regObject = '';
+
         if (props.decimal) {
             acceptDeciaml = props.decimalLength;
             regObject = new RegExp(`^(?!0\\.00)[0-9]\\d{0,2}(,\\d{3})*(\\.\\d{0,${acceptDeciaml}})?$`);
@@ -65,13 +65,6 @@ const Amount = (props) => {
             console.log('[' + currentValue + '] is not amount!!')
             return false;
         }
-
-        // let validateResult = props.doValidate(currentValue, props);
-
-        // if (!validateResult.status) {
-
-        //     alert(validateResult.msg)
-        // }
 
         setState(currentValue);
         //若有Change事件，在此時觸發

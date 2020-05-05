@@ -351,6 +351,12 @@ const AccountingTable = React.memo((props) => {
                 _.each(item, (v, k) => {
                     tdValue = v;
                     tdKey = k;
+
+                    if(tdKey === 'amount'){
+                        tdValue = utils.transferToAmountFormat(tdValue);
+
+                    }
+
                     // header key值與data key值做比對
                     if (h.id === tdKey) {
                         // 此欄位是否有定義ColumnSpec
@@ -364,7 +370,7 @@ const AccountingTable = React.memo((props) => {
                                 queryHeader = col.headerSpec ? col.headerSpec : [];
                                 tableDetails = col.tableDetails ? col.tableDetails : {};
                                 style = col.style ? col.style : style;
-
+                                
                                 switch (col.type) {
                                     case 'Button':
                                         _.each(col.displayValue, (c) => {

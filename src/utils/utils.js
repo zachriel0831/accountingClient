@@ -460,7 +460,7 @@ const utils = {
             }
         }
     },
-    isMoreRangeText:function (param1, param2) {
+    isMoreRangeText: function (param1, param2) {
         var reg = /[0-9]/;
         //判斷是否沒有數字
         if (!reg.test(param1) || !reg.test(param2)) {
@@ -564,6 +564,30 @@ const utils = {
         }
 
         return flag;
+    },
+    transferToAmountFormat: function (val, decimalPoint) {
+        val = val.toString();
+        let justNumbers = val.replace(/[^01234567890\.]/g, "");
+        // let newVal = parseFloat(justNumbers);
+        let decimalRegex = /(\d{0,})(\.(\d{1,})?)?/g
+
+        let decimalPartMatches = decimalRegex.exec(justNumbers);
+        // let decimalPart = "";
+
+        //先把小數點分隔出來
+        // if (decimalPartMatches[2]) {
+        //   decimalPart = decimalPartMatches[2];
+        // }
+        let withoutDecimal = decimalPartMatches[1];
+        let final = '';
+
+        //加上千分位
+        final += withoutDecimal.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        // final += decimalPart ? decimalPart : '.00';
+
+        // final = (val).toFixed(decimalPoint).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+
+        return final;
     }
 };
 export default utils; 

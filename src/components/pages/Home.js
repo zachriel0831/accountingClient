@@ -18,7 +18,7 @@ import PureCheckBox from '../PureCheckBox';
 import { Modal } from 'semantic-ui-react';
 import EditPanel from '../modals/EditPanel';
 import validateThis from '../../validationSet/validations';
-
+import utils from '../../utils/utils';
 const radioGroupItem = {
     "items": [{
         "label": "expenditure",
@@ -71,7 +71,7 @@ const Home = (props) => {
     const [monthlyIncomeState, setMonthlyIncomeState] = useState(0);
     const [monthlyExpenditureState, setMonthlyExpenditureState] = useState(0);
 
-
+    
 
 
     let radioBtnInitVal = [];
@@ -103,7 +103,7 @@ const Home = (props) => {
         values.id = itemId;
         values.type = type;
         values.date = date;
-        values.amount = amount;
+        values.amount = amount.replace(/,/g,'');
         values.category = category;
 
 
@@ -124,7 +124,7 @@ const Home = (props) => {
             return;
         }
 
-        add({ id: itemId, type: type, date: date, amount: amount, month: month, day: day, year: year, category: category, remark: remark }).then(
+        add(values).then(
             event => {
                 console.log('ID Generated: ', event.target);
             },
@@ -216,15 +216,15 @@ const Home = (props) => {
                 }
                 // console.log(v);
             })
+            
+            setAnnualExpenditureState(utils.transferToAmountFormat(annualExpenditure));
+            setAnnualIncomeState(utils.transferToAmountFormat(annualIncome));
 
-            setAnnualExpenditureState(annualExpenditure);
-            setAnnualIncomeState(annualIncome);
+            setMonthlyExpenditureState(utils.transferToAmountFormat(monthlyExpenditure));
+            setMonthlyIncomeState(utils.transferToAmountFormat(monthlyIncome));
 
-            setMonthlyExpenditureState(monthlyExpenditure);
-            setMonthlyIncomeState(monthlyIncome);
-
-            setTotalExpenditureState(totalExpenditure);
-            setTotalIncomeState(totalIncome);
+            setTotalExpenditureState(utils.transferToAmountFormat(totalExpenditure));
+            setTotalIncomeState(utils.transferToAmountFormat(totalIncome));
 
 
             setQueriesState(accountQueriesData);
@@ -252,7 +252,7 @@ const Home = (props) => {
     }
 
     const getAllCheckBoxVal = (val) => {
-        debugger
+        
 
         if(_.isEmpty(val)){
             checkBoxListState.splice(0,checkBoxListState.length)
