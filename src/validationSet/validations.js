@@ -5,7 +5,7 @@ const validateThis = ((values, type) => {
 
     switch (type) {
         case 'id':
-             result = _.isEmpty(values);
+            result = _.isEmpty(values);
 
             if (result) {
 
@@ -17,7 +17,7 @@ const validateThis = ((values, type) => {
 
 
         case 'type':
-             result = _.isEmpty(values);
+            result = _.isEmpty(values);
 
             if (result) {
 
@@ -28,7 +28,7 @@ const validateThis = ((values, type) => {
             break;
 
         case 'amount':
-             result = _.isEmpty(values);
+            result = _.isEmpty(values);
 
             if (result) {
 
@@ -39,7 +39,7 @@ const validateThis = ((values, type) => {
             break;
 
         case 'category':
-             result = _.isEmpty(values);
+            result = _.isEmpty(values);
 
             if (result) {
 
@@ -50,7 +50,7 @@ const validateThis = ((values, type) => {
             break;
 
         case 'date':
-             result = _.isEmpty(values);
+            result = _.isEmpty(values);
 
             if (result) {
 
@@ -71,6 +71,9 @@ const validateThis = ((values, type) => {
 
             break;
 
+        default:
+            return true;
+            break
 
     }
 

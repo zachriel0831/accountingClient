@@ -105,8 +105,11 @@ const Home = (props) => {
         values.date = date;
         values.amount = amount.replace(/,/g,'');
         values.category = category;
-
-
+        values.remark = remark ? remark : '';
+        values.month = month;
+        values.day = day;
+        values.year = year;
+        
         let validateResult = true;
 
         _.each(values, (v, k) => {
