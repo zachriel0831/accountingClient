@@ -7,8 +7,12 @@ import HOCBundle from './components/hocs/HOCBundle';
 import config from './configs/config';
 import './index.css';
 import App from './App';
+import { initDB, useIndexedDB } from 'react-indexed-db';
+import { DBConfig } from './service/DBConfig';
 
 import * as serviceWorker from './serviceWorker';
+//DB initializing
+initDB(DBConfig);
 
 const routersData = config.routersData;
 const browserHistory = createBrowserHistory();
@@ -16,15 +20,14 @@ const browserHistory = createBrowserHistory();
 let route = [];
 _.each(routersData, (v, k) => {
   const txnComponent = lazy(() => import(`./components/pages${v}`));
-  console.log('path ', v);
+  // console.log('path ', v);
   route.push(<Route exact sensitive={true} path={v} key={v} component={HOCBundle(txnComponent)} />);
 })
 
 ReactDOM.render(
   <React.StrictMode>
     <Suspense fallback={<>loading...</>}>
-      <HashRouter history={browserHistory}>
-
+      <HashRouter>
         <App routersData={routersData}>
           <Switch>
             {route}

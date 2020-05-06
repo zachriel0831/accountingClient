@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import moment from 'moment';
 import DatePicker from './DatePicker';
 import validateThis from '../validationSet/validations';
+import utils from '../utils/utils';
 const radioGroupItem = {
     "items": [{
         "label": "expenditure",
@@ -163,6 +164,7 @@ const LargeTableExtendModal = React.memo((props) => {
         <Modal ref={modalRef} open={largeTableOpen} trigger={
             // <td>
             <tr id={props.rowKey}
+                key={utils.generateUID()}
                 name={props.rowKey + '-largeModal'}
                 style={props.style}
                 onDoubleClick={(e) => openModal(e)}
@@ -172,7 +174,7 @@ const LargeTableExtendModal = React.memo((props) => {
             //  </td>
         }>
             <Modal.Header className="header">
-                ({props.rowKey})
+                item details
                 <div className="ui horizontal list right floated">
                     <div className="item">
                         <a href="javascript:void(0)" className="btn-close-modal"><i className="external alternate icon" onClick={(e) => enLargeModal(e)}></i></a>
@@ -216,7 +218,7 @@ const LargeTableExtendModal = React.memo((props) => {
                         <div className="input-group">
                             <Text icon='sticky note' value={values.remark} name='remark' label='remark' onChange={handleChange} />
                         </div>
-                        <Button type='button' displayName='submit' className='ui button btn-primary btn-search' icon='icon search' onClick={(e) => submit(e, {})} />
+                        <Button type='button' displayName='update' className='ui button btn-primary btn-search' icon='icon search' onClick={(e) => submit(e, {})} />
                         <Button type='cancel' displayName='cancel' className="ui cancel button" onClick={(e) => closeModal(e)} />
 
                     </Form>

@@ -1,37 +1,37 @@
 import React, { Suspense } from 'react';
 // import AjaxWrapper from '../utils/AjaxWrapper';
 // import utils from '../util/utils';
-import config from '../../configs/config'
+// import config from '../../configs/config'
 // import { TxnContextProvider } from '../../../contexts/TxnContext';
 // import { RoutingCheckerLayer } from './RoutingCheckerLayer';
 import { Dimmer, Loader } from 'semantic-ui-react';
 // import SystemAlertMessageModal from '../SystemAlertMessageModal';
 // import CommonAlertMessageModal from '../CommonAlertMessageModal';
 import _ from 'lodash';
-import { useIndexedDB } from 'react-indexed-db';
+// import { useIndexedDB } from 'react-indexed-db';
 
 const HOCBundle = (WrappedComponent) => {
     return class extends React.PureComponent {
         constructor(props) {
             super(props);
             this.state = {
-                result: this.getInitData(),
+                // result: this.getInitData(),
                 resetKey: Math.random(),
             };
 
         }
-        getInitData() {
+        // getInitData() {
 
-            //TODO 
-            const { getAll } = useIndexedDB('Accountings');
-            getAll().then(Accountings => {
-                
+        //     //TODO 
+        //     const { getAll } = useIndexedDB('Accountings');
+        //     getAll().then(Accountings => {
 
-              });
-          
-            console.log('getInitData');
 
-        }
+        //       });
+
+        //     console.log('getInitData');
+
+        // }
 
         setAlertMsg = (errors) => {
             this.refs.alertThis.openModal(errors)
@@ -58,23 +58,23 @@ const HOCBundle = (WrappedComponent) => {
         }
 
         render() {
-            let result = this.state.result;
-            let current_page = (window.location.hash).replace('#', '');
+            // let result = this.state.result;
+            // let current_page = (window.location.hash).replace('#', '');
 
             //錯誤頁要能通過
-            let releaseList = ['/Errors/CommonErrorPage', '/Errors/SystemErrorPage'];
-            let releaseResult = releaseList.indexOf(current_page);
-            let _this = this;
+            // let releaseList = ['/Errors/CommonErrorPage', '/Errors/SystemErrorPage'];
+            // let releaseResult = releaseList.indexOf(current_page);
+            // let _this = this;
             let customerFunc = {
-                submitFormToSerevr: async (url, values, callback) => {
+                // submitFormToSerevr: async (url, values, callback) => {
 
-                },
-                queryDataFromServer: async (url, values, callback) => {
+                // },
+                // queryDataFromServer: async (url, values, callback) => {
 
-                },
-                gotoPage: () => {
-                    //TODO
-                },
+                // },
+                // gotoPage: () => {
+                //     //TODO
+                // },
 
                 resetKey: () => {
                     this.resetKey()
@@ -95,7 +95,7 @@ const HOCBundle = (WrappedComponent) => {
                                 <Loader>Loading</Loader>
                             </Dimmer></div>
                     }>
-                        <WrappedComponent key={this.state.resetKey} {...this.props} {...customerFunc} state={result} alert={this.setAlertMsg} alertCommonMsg={(msg, refreshWhenClose) => this.setCommonMsg(msg, refreshWhenClose)} />
+                        <WrappedComponent key={this.state.resetKey} {...this.props} {...customerFunc} alert={this.setAlertMsg} alertCommonMsg={(msg, refreshWhenClose) => this.setCommonMsg(msg, refreshWhenClose)} />
                         {/* <SystemAlertMessageModal headerTitle='Information' ref='alertThis' />
                             <CommonAlertMessageModal ref='commonAlert' /> */}
 

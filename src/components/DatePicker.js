@@ -34,9 +34,9 @@ const DatePicker = (props) => {
                     }
                 }
             }}
-                style={props.labelStyle} for="">{props.label}</label>
+                style={props.labelStyle} htmlFor="">{props.label}</label>
 
-            <div class="six wide field">
+            <div className="six wide field">
 
                 <Datepicker
                     name='datepicker'

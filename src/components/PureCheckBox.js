@@ -27,26 +27,27 @@ class PureCheckBox extends React.Component {
     render() {
         return (
             <div className={`ui ${this.props.disabled ? 'disabled' : ''} checkbox`}>
-                <input type="checkbox"
+                <input 
+                    type="checkbox"
                     checked={this.state.active}
                     disabled={this.props.disabled}
                     name={this.props.name}
                     value={this.props.value}
                     onClick={(e) => this.clickValue(e)} />
 
-                <label for={this.props.id}>{this.props.label}</label>
+                <label htmlFor={this.props.id}>{this.props.label}</label>
             </div>
         )
     }
 
 
-    defaultProps = {
-        name: '',
-        disabled: false,
-        label: '',
-        value: '',
-        checked:false,
-    }
+    // defaultProps = {
+    //     name: '',
+    //     disabled: false,
+    //     label: '',
+    //     value: '',
+    //     checked:false,
+    // }
 }
 
 export default PureCheckBox;

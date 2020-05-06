@@ -15,3 +15,7 @@ code {
 .input-group{
   padding: 5px
 }
+
+.amount-label{
+  font-family:monospace
+}

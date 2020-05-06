@@ -98,7 +98,7 @@ const Amount = (props) => {
                     size={props.size}
                     style={{ textAlign: 'right' }}
                 />
-                <i aria-hidden="true" class={`${props.icon} icon`}></i>
+                <i aria-hidden="true" className={`${props.icon} icon`}></i>
 
             </div>
         </>

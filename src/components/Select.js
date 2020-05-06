@@ -3,19 +3,20 @@ import React, { useEffect, useRef } from 'react';
 import HOCCommon from './hocs/HOCCommon';
 import _ from 'lodash';
 import { useTranslation } from "react-i18next";
+import utils from '../utils/utils';
 
 const Select = (props) => {
     const { t } = useTranslation();
     const selectRefs = useRef();
     let options = [];
-    options.push(<option value=''>{t("select")}</option>);
+    options.push(<option key={utils.generateUID()} value=''>{t("select")}</option>);
 
     _.each(props.options.items, (v, k) => {
         if (props.value === v.value) {
-            options.push(<option value={v.value} selected>{v.label}</option>)
+            options.push(<option key={utils.generateUID()} value={v.value} selected>{v.label}</option>)
 
         } else {
-            options.push(<option value={v.value}>{v.label}</option>)
+            options.push(<option key={utils.generateUID()} value={v.value}>{v.label}</option>)
         }
     });
 
@@ -48,8 +49,8 @@ const Select = (props) => {
                     }
                 }
             }}
-                style={props.labelStyle} for="">{props.label}</label>
-            <div class="six wide field">
+                style={props.labelStyle} htmlFor="">{props.label}</label>
+            <div className="six wide field">
                 <select
                     defaultValue={props.value}
                     ref={selectRefs}

@@ -9,14 +9,14 @@ const NavBar = (props) => {
     const [activeItemState, setActiveItemState] = useState('home');
     let history = useHistory();
 
-    const handleItemClick = (e, { name ,link}) => {
+    const handleItemClick = (e, { name ,menulink}) => {
 
         setActiveItemState(name);
-        history.push(link);
+        history.push(menulink);
 
     }
 
-    const { activeItem } = activeItemState
+    // const { activeItem } = activeItemState
 
     let routersData = props.routersData;
     let menuItem = [];
@@ -46,8 +46,9 @@ const NavBar = (props) => {
         
         menuItem.push(
             <Menu.Item
+                key={k}
                 name={name}
-                link={v}
+                menulink={v}
                 active={activeItemState === name}
                 onClick={handleItemClick}
             >

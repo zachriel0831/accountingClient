@@ -32,7 +32,7 @@ const RadioBtn = React.memo((props) => {
                     name={props.name}
                     value={props.value}
                     onClick={clickValue} />
-                <label for={props.value}>{props.label}</label>
+                <label htmlFor={props.value}>{props.label}</label>
             </div>
         </div>
 
@@ -62,6 +62,7 @@ const RadioGroup = React.memo((props) => {
             let checked = props.radioData.selectedValue === v.value ? true : false;
             radioContents.push(
                 <RadioBtn
+                    key={k+'_radio'}
                     value={v.value}
                     label={v.label}
                     name={props.name}

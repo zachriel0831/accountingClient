@@ -111,14 +111,14 @@ const AccountingTable = React.memo((props) => {
         _.assign(headerStyle, { cursor: 'pointer' });
         return (
 
-            <th  ref={(node) => {
-                if(node){
-                    _.each(headerStyle,(v,k)=>{
+            <th ref={(node) => {
+                if (node) {
+                    _.each(headerStyle, (v, k) => {
                         node.style.setProperty(k, v, "important");
                     })
 
                 }
-              }} onClick={(e) => {
+            }} onClick={(e) => {
 
                 setShowContent(!showContent);
                 setSortingType(e.currentTarget.textContent)
@@ -185,20 +185,21 @@ const AccountingTable = React.memo((props) => {
                     queryHeader={props.queryHeader}
                     style={props.style}
                     rowKey={props.rowKey}
+                    key={utils.generateUID()}
                 >
                     {props.children}
                 </TableExtendModal>
             )
         } else {
             return (
-                <td ref={(node)=>{
-                    if(node){
-                        _.each(props.style,(v,k)=>{
+                <td ref={(node) => {
+                    if (node) {
+                        _.each(props.style, (v, k) => {
                             node.style.setProperty(k, v, "important");
                         })
-    
+
                     }
-    
+
                 }} style={props.style}>{props.children}</td>
             )
         }
@@ -262,6 +263,7 @@ const AccountingTable = React.memo((props) => {
 
                 ths.push(
                     <Header
+                        key={utils.generateUID()}
                         showContent={(sortingType === h.headerName) ? true : false}
                         angleDirection={showContent ? `icon angle down` : `icon angle up`}
                         id={h.id}
@@ -278,6 +280,7 @@ const AccountingTable = React.memo((props) => {
             if (props.headerSpec.selectable) {
                 ths.unshift(
                     <Header
+                        key={utils.generateUID()}
                         showContent={(sortingType === props.headerSpec.selectableDisplayName.headerName) ? true : false}
                         angleDirection={showContent ? `icon angle down` : `icon angle up`}
                         id={props.headerSpec.selectableDisplayName.id}
@@ -352,7 +355,7 @@ const AccountingTable = React.memo((props) => {
                     tdValue = v;
                     tdKey = k;
 
-                    if(tdKey === 'amount'){
+                    if (tdKey === 'amount') {
                         tdValue = utils.transferToAmountFormat(tdValue);
 
                     }
@@ -370,7 +373,7 @@ const AccountingTable = React.memo((props) => {
                                 queryHeader = col.headerSpec ? col.headerSpec : [];
                                 tableDetails = col.tableDetails ? col.tableDetails : {};
                                 style = col.style ? col.style : style;
-                                
+
                                 switch (col.type) {
                                     case 'Button':
                                         _.each(col.displayValue, (c) => {
@@ -440,12 +443,13 @@ const AccountingTable = React.memo((props) => {
                                     modal={modal}
                                     style={style}
                                     rowKey={rowKey}
+                                    key={utils.generateUID()}
                                 >{content}
 
                                 </TDdata>);
 
                         } else {
-                            tds.push(<TDdata style={style} rowKey={rowKey}>{content}</TDdata>);
+                            tds.push(<TDdata style={style} rowKey={rowKey} key={utils.generateUID()}>{content}</TDdata>);
                         }
                         tdValueBox.push(tdValue);
 
@@ -459,11 +463,11 @@ const AccountingTable = React.memo((props) => {
                 if (props.headerSpec.selectable) {
                     //塞到第一組
                     tds.unshift(
-                        <td><PureCheckBox checked={checkBoxSelectAllState} onClick={checkBoxClick} /></td>);
+                        <td key={utils.generateUID()}><PureCheckBox key={utils.generateUID()} checked={checkBoxSelectAllState} onClick={checkBoxClick} /></td>);
                 }
                 let trElements = tdValueBox;
 
-                trs.push(<TRdata {...props} trElements={trElements} rowKey={rowKey} onDoubleClick={trClick}>{tds}</TRdata>);
+                trs.push(<TRdata key={utils.generateUID()} {...props} trElements={trElements} rowKey={rowKey} onDoubleClick={trClick}>{tds}</TRdata>);
                 tds = [];
             }
         });
@@ -520,9 +524,9 @@ const AccountingTable = React.memo((props) => {
     let queryResult = [];
     if (rowCounts === 0) {
         // queryResult.push(<div className="">***無顯示資料***</div>)
-        queryResult.push(<div className="">***{t("tableNoData")}***</div>)
+        queryResult.push(<div key={utils.generateUID()} className="">***{t("tableNoData")}***</div>)
     } else {
-        queryResult.push(<div className="">{t("tableNumData")} <span className="query__sum">{props.count ? props.count : 0}</span> {t("tableCount")}</div>);
+        queryResult.push(<div key={utils.generateUID()} className="">{t("tableNumData")} <span className="query__sum">{props.count ? props.count : 0}</span> {t("tableCount")}</div>);
     }
 
     return (

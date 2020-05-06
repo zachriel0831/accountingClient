@@ -13,7 +13,6 @@ const validateThis = ((values, type) => {
             }
 
             return true;
-            break;
 
 
         case 'type':
@@ -25,8 +24,6 @@ const validateThis = ((values, type) => {
             }
             return true;
 
-            break;
-
         case 'amount':
             result = _.isEmpty(values);
 
@@ -35,8 +32,6 @@ const validateThis = ((values, type) => {
                 return false;
             }
             return true;
-
-            break;
 
         case 'category':
             result = _.isEmpty(values);
@@ -47,8 +42,6 @@ const validateThis = ((values, type) => {
             }
             return true;
 
-            break;
-
         case 'date':
             result = _.isEmpty(values);
 
@@ -57,9 +50,6 @@ const validateThis = ((values, type) => {
                 return false;
             }
             return true;
-
-            break;
-
         case 'remark':
             //  result = _.isEmpty(values);
 
@@ -69,11 +59,8 @@ const validateThis = ((values, type) => {
             // }
             return true;
 
-            break;
-
         default:
             return true;
-            break
 
     }
 

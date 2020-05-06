@@ -71,7 +71,10 @@ const Home = (props) => {
     const [monthlyIncomeState, setMonthlyIncomeState] = useState(0);
     const [monthlyExpenditureState, setMonthlyExpenditureState] = useState(0);
 
-    
+    const [totalAssets, setTotalAssets] = useState(0);
+    const [annualBalance, setAnnualBalance] = useState(0);
+    const [monthlyBalance, setMonthlyBalance] = useState(0);
+
 
 
     let radioBtnInitVal = [];
@@ -103,13 +106,13 @@ const Home = (props) => {
         values.id = itemId;
         values.type = type;
         values.date = date;
-        values.amount = amount.replace(/,/g,'');
+        values.amount = amount.replace(/,/g, '');
         values.category = category;
         values.remark = remark ? remark : '';
         values.month = month;
         values.day = day;
         values.year = year;
-        
+
         let validateResult = true;
 
         _.each(values, (v, k) => {
@@ -219,7 +222,7 @@ const Home = (props) => {
                 }
                 // console.log(v);
             })
-            
+
             setAnnualExpenditureState(utils.transferToAmountFormat(annualExpenditure));
             setAnnualIncomeState(utils.transferToAmountFormat(annualIncome));
 
@@ -228,7 +231,10 @@ const Home = (props) => {
 
             setTotalExpenditureState(utils.transferToAmountFormat(totalExpenditure));
             setTotalIncomeState(utils.transferToAmountFormat(totalIncome));
-
+            debugger
+            setTotalAssets(utils.transferToAmountFormat((totalIncome - totalExpenditure)))
+            setAnnualBalance(utils.transferToAmountFormat((annualIncome - annualExpenditure)))
+            setMonthlyBalance(utils.transferToAmountFormat((monthlyIncome - monthlyExpenditure)))
 
             setQueriesState(accountQueriesData);
         });
@@ -255,10 +261,10 @@ const Home = (props) => {
     }
 
     const getAllCheckBoxVal = (val) => {
-        
 
-        if(_.isEmpty(val)){
-            checkBoxListState.splice(0,checkBoxListState.length)
+
+        if (_.isEmpty(val)) {
+            checkBoxListState.splice(0, checkBoxListState.length)
 
             setCheckBoxListState(checkBoxListState);
             return;
@@ -318,20 +324,26 @@ const Home = (props) => {
         <>
             <Form title='Home' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
                 <div className="input-group">
-                    <span>Total Income: {totalIncomeState}</span>
+                    <span className='amount-label'>Total Income: {totalIncomeState}</span>
                     <br />
-                    <span>Total Expenditure: {totalExpenditureState}</span>
+                    <span className='amount-label'>Total Expenditure: {totalExpenditureState}</span>
                     <br />
-                    <span>Monthly Income: : {monthlyIncomeState}</span>
+                    <span className='amount-label'>Monthly Income: {monthlyIncomeState}</span>
                     <br />
-                    <span>Monthly Expenditure:: {monthlyExpenditureState} </span>
+                    <span className='amount-label'>Monthly Expenditure: {monthlyExpenditureState} </span>
                     <br />
-                    <span>Annual Income: : {annualIncomeState}</span>
+                    <span className='amount-label'>Annual Income: {annualIncomeState}</span>
                     <br />
-                    <span>Annual Expenditure: : {annualExpenditureState}</span>
-                    {/* <span>Weekly Income: </span>
-                    <span>Weekly Expenditure: </span> */}
+                    <span className='amount-label'>Annual Expenditure:{annualExpenditureState}</span>
+                    <br />
+                    <span className='amount-label'>Total Assets: {totalAssets} </span>
+                    <br />
 
+                    <span className='amount-label'>Annual Balance: {annualBalance}</span>
+                    <br />
+
+                    <span className='amount-label'>Monthly Balance: {monthlyBalance}</span>
+                    <br />
 
                 </div>
 

@@ -1,16 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect } from 'react';
+// import logo from './logo.svg';
 import './App.css';
-import config from './configs/config';
+// import config from './configs/config';
 
-import { initDB, useIndexedDB } from 'react-indexed-db';
-import { DBConfig } from './service/DBConfig';
 import NavBar from './components/blocks/NavBar';
-initDB(DBConfig);
-const db = useIndexedDB('Accountings');
-console.log(JSON.stringify(db));
+import { createBrowserHistory } from 'history';
+
+const browserHistory = createBrowserHistory();
+const currentUrl = window.location.href;
 
 function App(props) {
+
+  useEffect(() => {
+
+    let path = browserHistory.location.pathname;
+
+
+    if (path === '/') {
+
+      window.location.hash = 'Home'
+    }
+
+
+
+  }, [currentUrl])
+
+
   return (
     <div>
       <NavBar routersData={props.routersData} />
