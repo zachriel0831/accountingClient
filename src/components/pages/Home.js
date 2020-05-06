@@ -19,6 +19,8 @@ import { Modal } from 'semantic-ui-react';
 import EditPanel from '../modals/EditPanel';
 import validateThis from '../../validationSet/validations';
 import utils from '../../utils/utils';
+import { Segment, Divider } from 'semantic-ui-react';
+
 const radioGroupItem = {
     "items": [{
         "label": "expenditure",
@@ -36,18 +38,19 @@ const radioGroupItem = {
 }
 
 const dataFilterRadioGroupItem = {
-    "items": [{
-        "label": "this year",
-        "value": "year",
-        "groupKey": "_none",
-        "disabled": false
-    },
-    {
-        "label": "this month",
-        "value": "month",
-        "groupKey": "_none",
-        "disabled": false
-    },],
+    "items": [
+        {
+            "label": "this month",
+            "value": "month",
+            "groupKey": "_none",
+            "disabled": false
+        }, {
+            "label": "this year",
+            "value": "year",
+            "groupKey": "_none",
+            "disabled": false
+        },
+    ],
     "selectedValue": "month"
 }
 
@@ -106,7 +109,7 @@ const Home = (props) => {
     let dataFilterRadioBtnInitVal = [];
     if (dataFilterRadioGroupItem) {
         _.each(dataFilterRadioGroupItem.items, (v, k) => {
-            
+
             if (v.value === dataFilterRadioGroupItem.selectedValue) {
                 dataFilterRadioBtnInitVal.push(v.value);
             }
@@ -276,7 +279,7 @@ const Home = (props) => {
                 accountQueriesData.queries = [...annualDatas];
 
             }
-            
+
 
             setQueriesState(accountQueriesData);
         });
@@ -372,84 +375,84 @@ const Home = (props) => {
         <>
             <Form title='Home' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
                 <div className="input-group">
-                    <span className='amount-label'>Total Income: {totalIncomeState}</span>
-                    <br />
-                    <span className='amount-label'>Total Expenditure: {totalExpenditureState}</span>
-                    <br />
-                    <span className='amount-label'>Monthly Income: {monthlyIncomeState}</span>
-                    <br />
-                    <span className='amount-label'>Monthly Expenditure: {monthlyExpenditureState} </span>
-                    <br />
-                    <span className='amount-label'>Annual Income: {annualIncomeState}</span>
-                    <br />
-                    <span className='amount-label'>Annual Expenditure:{annualExpenditureState}</span>
-                    <br />
-                    <span className='amount-label'>Total Assets: {totalAssets} </span>
-                    <br />
+                    <Segment>
+                        <div className="input-group">
+                            <RadioGroup
+                                name='data filter'
+                                radioData={dataFilterRadioGroupItem}
+                                onClick={(val) => {
+                                    setDataFilterRadioGroupState(val)
+                                }} />
+                        </div>
 
-                    <span className='amount-label'>Annual Balance: {annualBalance}</span>
-                    <br />
+                        <div className="input-group">
+                            <RadioGroup
+                                name='type'
+                                radioData={radioGroupItem}
+                                onClick={(val) => {
+                                    setRadioGroupState(val)
+                                }} />
+                        </div>
 
-                    <span className='amount-label'>Monthly Balance: {monthlyBalance}</span>
-                    <br />
+                        <div className="input-group">
+                            <DatePicker
+                                label={t("date")}
+                                selected={dateState}
+                                onChange={(date) => {
+                                    setDateState(date);
+                                }}
+                            />
 
+                        </div>
+                        <div className="input-group">
+                            <Select value={values.category} name='category' label='category' options={selectOptions} onChange={handleChange} />
+                        </div>
+
+                        <div className="input-group">
+                            <Amount icon='dollar sign' value={values.amount} name='amount' label='amount' onChange={handleChange} />
+                        </div>
+
+                        <div className="input-group">
+                            <Text icon='sticky note' value={values.remark} name='remark' label='remark' onChange={handleChange} />
+                        </div>
+
+                        <Button
+                            type='submit'
+                            displayName={t("submit")}
+                            className='ui button btn-primary btn-search'
+                            icon='icon search'
+
+                        />
+                        <Button
+                            type='button'
+                            displayName={t("delete")}
+                            className='ui button btn-primary '
+                            icon='icon times circle'
+                            onClick={(e) => deleteItems(e)}
+
+                        />
+                    </Segment>
+
+                    <Segment>
+                        <span className='amount-label'>Total Income: {totalIncomeState}</span>
+                        <br />
+                        <span className='amount-label'>Total Expenditure: {totalExpenditureState}</span>
+                        <br />
+                        <span className='amount-label'>Total Assets: {totalAssets} </span>
+                        <Divider section />
+                        <span className='amount-label'>Monthly Income: {monthlyIncomeState}</span>
+                        <br />
+                        <span className='amount-label'>Monthly Expenditure: {monthlyExpenditureState} </span>
+                        <br />
+                        <span className='amount-label'>Monthly Balance: {monthlyBalance}</span>
+                        <Divider section />
+                        <span className='amount-label'>Annual Income: {annualIncomeState}</span>
+                        <br />
+                        <span className='amount-label'>Annual Expenditure:{annualExpenditureState}</span>
+                        <br />
+                        <span className='amount-label'>Annual Balance: {annualBalance}</span>
+                    </Segment>
                 </div>
-
-                <div className="input-group">
-                    <RadioGroup
-                        name='data filter'
-                        radioData={dataFilterRadioGroupItem}
-                        onClick={(val) => {
-                            setDataFilterRadioGroupState(val)
-                        }} />
-                </div>
-
-                <div className="input-group">
-                    <RadioGroup
-                        name='type'
-                        radioData={radioGroupItem}
-                        onClick={(val) => {
-                            setRadioGroupState(val)
-                        }} />
-                </div>
-
-                <div className="input-group">
-                    <DatePicker
-                        label={t("date")}
-                        selected={dateState}
-                        onChange={(date) => {
-                            setDateState(date);
-                        }}
-                    />
-
-                </div>
-                <div className="input-group">
-                    <Select value={values.category} name='category' label='category' options={selectOptions} onChange={handleChange} />
-                </div>
-
-                <div className="input-group">
-                    <Amount icon='dollar sign' value={values.amount} name='amount' label='amount' onChange={handleChange} />
-                </div>
-
-                <div className="input-group">
-                    <Text icon='sticky note' value={values.remark} name='remark' label='remark' onChange={handleChange} />
-                </div>
-
-                <Button
-                    type='submit'
-                    displayName={t("submit")}
-                    className='ui button btn-primary btn-search'
-                    icon='icon search'
-
-                />
-                <Button
-                    type='button'
-                    displayName={t("delete")}
-                    className='ui button btn-primary '
-                    icon='icon times circle'
-                    onClick={(e) => deleteItems(e)}
-
-                />
                 <PureCheckBox name='checkBox' label='select all' onClick={(e) => selectAllCheckBox(e)} />
 
                 <AccountingTable
