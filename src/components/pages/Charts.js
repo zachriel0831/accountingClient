@@ -4,7 +4,7 @@ const Charts = (props) =>{
 
 
 
-    return <>Charts</>
+    return <>still working on it... sorry...</>
 }
 
 export default Charts;

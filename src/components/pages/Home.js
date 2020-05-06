@@ -35,6 +35,22 @@ const radioGroupItem = {
     "selectedValue": "expenditure"
 }
 
+const dataFilterRadioGroupItem = {
+    "items": [{
+        "label": "this year",
+        "value": "year",
+        "groupKey": "_none",
+        "disabled": false
+    },
+    {
+        "label": "this month",
+        "value": "month",
+        "groupKey": "_none",
+        "disabled": false
+    },],
+    "selectedValue": "month"
+}
+
 let categories = config.categories;
 let categoryBox = [];
 
@@ -85,8 +101,24 @@ const Home = (props) => {
             }
         })
     }
+
+
+    let dataFilterRadioBtnInitVal = [];
+    if (dataFilterRadioGroupItem) {
+        _.each(dataFilterRadioGroupItem.items, (v, k) => {
+            
+            if (v.value === dataFilterRadioGroupItem.selectedValue) {
+                dataFilterRadioBtnInitVal.push(v.value);
+            }
+        })
+    }
+
+
     //radioGroup state
     const [radioGroupState, setRadioGroupState] = useState(radioBtnInitVal[0]);
+
+    const [dataFilterRadioGroupState, setDataFilterRadioGroupState] = useState(dataFilterRadioBtnInitVal[0]);
+
 
     function resetForm(e, formRef) {
         props.resetKey();
@@ -231,10 +263,20 @@ const Home = (props) => {
 
             setTotalExpenditureState(utils.transferToAmountFormat(totalExpenditure));
             setTotalIncomeState(utils.transferToAmountFormat(totalIncome));
-            debugger
+
             setTotalAssets(utils.transferToAmountFormat((totalIncome - totalExpenditure)))
             setAnnualBalance(utils.transferToAmountFormat((annualIncome - annualExpenditure)))
             setMonthlyBalance(utils.transferToAmountFormat((monthlyIncome - monthlyExpenditure)))
+            let dateFilter = dataFilterRadioGroupState;
+
+
+            if (dateFilter === 'month') {
+                accountQueriesData.queries = [...monthlyDatas];
+            } else {
+                accountQueriesData.queries = [...annualDatas];
+
+            }
+            
 
             setQueriesState(accountQueriesData);
         });
@@ -298,6 +340,12 @@ const Home = (props) => {
         getAllData();
     }, [])
 
+    useEffect(() => {
+
+        getAllData();
+
+    }, [dataFilterRadioGroupState])
+
     let columnSpec = [
         {
             header: 'id',
@@ -345,6 +393,15 @@ const Home = (props) => {
                     <span className='amount-label'>Monthly Balance: {monthlyBalance}</span>
                     <br />
 
+                </div>
+
+                <div className="input-group">
+                    <RadioGroup
+                        name='data filter'
+                        radioData={dataFilterRadioGroupItem}
+                        onClick={(val) => {
+                            setDataFilterRadioGroupState(val)
+                        }} />
                 </div>
 
                 <div className="input-group">

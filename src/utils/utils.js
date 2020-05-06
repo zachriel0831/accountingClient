@@ -566,6 +566,11 @@ const utils = {
         return flag;
     },
     transferToAmountFormat: function (val, decimalPoint) {
+        let negativeMark = false;
+        if (parseInt(val) < 0) {
+            negativeMark = true;
+        }
+
         val = val.toString();
         let justNumbers = val.replace(/[^01234567890\.]/g, "");
         // let newVal = parseFloat(justNumbers);
@@ -586,6 +591,10 @@ const utils = {
         // final += decimalPart ? decimalPart : '.00';
 
         // final = (val).toFixed(decimalPoint).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+        if (negativeMark) {
+
+            final = '-' + final;
+        }
 
         return final;
     }

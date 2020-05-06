@@ -4,7 +4,7 @@ const Details = (props) =>{
 
 
 
-    return <>Details</>
+    return <>still working on it...</>
 }
 
 export default Details;
