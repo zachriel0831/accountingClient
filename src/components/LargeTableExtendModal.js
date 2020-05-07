@@ -110,6 +110,7 @@ const LargeTableExtendModal = React.memo((props) => {
                 return false;
             }
         });
+        values.amount = values.amount.replace(/,/g, '');
         values.month = moment(values.date).format('MM');
         values.day = moment(values.date).format('DD');
         values.year = moment(values.date).format('YYYY');

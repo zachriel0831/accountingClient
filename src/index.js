@@ -15,7 +15,7 @@ import * as serviceWorker from './serviceWorker';
 initDB(DBConfig);
 
 const routersData = config.routersData;
-const browserHistory = createBrowserHistory();
+// const browserHistory = createBrowserHistory();
 
 let route = [];
 _.each(routersData, (v, k) => {

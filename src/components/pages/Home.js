@@ -331,7 +331,7 @@ const Home = (props) => {
 
         ],
         selectable: true, //開啟checkbox
-        selectableDisplayName: { id: 'select', headerName: '勾選' },
+        selectableDisplayName: { id: 'select', headerName: 'check' },
         onCheckBoxClick: selectedCheckBoxClick,
         getAllCheckBoxVal: (val) => getAllCheckBoxVal(val),
         amountSortingHeaderKey: ["amount"],
