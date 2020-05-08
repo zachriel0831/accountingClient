@@ -37,23 +37,23 @@ const radioGroupItem = {
     "selectedValue": "expenditure"
 }
 
-const dataFilterRadioGroupItem = {
-    "items": [
-        {
-            "label": "this month",
-            "value": "month",
-            "groupKey": "_none",
-            "disabled": false
-        }, {
-            "label": "this year",
-            "value": "year",
-            "groupKey": "_none",
-            "disabled": false
-        },
-    ],
-    "selectedValue": "month"
-}
-
+// const dataFilterRadioGroupItem = {
+//     "items": [
+//         {
+//             "label": "this month",
+//             "value": "month",
+//             "groupKey": "_none",
+//             "disabled": false
+//         }, {
+//             "label": "this year",
+//             "value": "year",
+//             "groupKey": "_none",
+//             "disabled": false
+//         },
+//     ],
+//     "selectedValue": "month"
+// }
+//TODO 拉去db
 let categories = config.categories;
 let categoryBox = [];
 
@@ -82,16 +82,16 @@ const Home = (props) => {
     const [checkBoxListState, setCheckBoxListState] = useState([]);
     const [dateState, setDateState] = useState(new Date());
     const [queriesState, setQueriesState] = useState({});
-    const [totalExpenditureState, setTotalExpenditureState] = useState(0);
-    const [totalIncomeState, setTotalIncomeState] = useState(0);
-    const [annualIncomeState, setAnnualIncomeState] = useState(0);
-    const [annualExpenditureState, setAnnualExpenditureState] = useState(0);
+    // const [totalExpenditureState, setTotalExpenditureState] = useState(0);
+    // const [totalIncomeState, setTotalIncomeState] = useState(0);
+    // const [annualIncomeState, setAnnualIncomeState] = useState(0);
+    // const [annualExpenditureState, setAnnualExpenditureState] = useState(0);
 
     const [monthlyIncomeState, setMonthlyIncomeState] = useState(0);
     const [monthlyExpenditureState, setMonthlyExpenditureState] = useState(0);
 
-    const [totalAssets, setTotalAssets] = useState(0);
-    const [annualBalance, setAnnualBalance] = useState(0);
+    // const [totalAssets, setTotalAssets] = useState(0);
+    // const [annualBalance, setAnnualBalance] = useState(0);
     const [monthlyBalance, setMonthlyBalance] = useState(0);
 
 
@@ -106,21 +106,21 @@ const Home = (props) => {
     }
 
 
-    let dataFilterRadioBtnInitVal = [];
-    if (dataFilterRadioGroupItem) {
-        _.each(dataFilterRadioGroupItem.items, (v, k) => {
+    // let dataFilterRadioBtnInitVal = [];
+    // if (dataFilterRadioGroupItem) {
+    //     _.each(dataFilterRadioGroupItem.items, (v, k) => {
 
-            if (v.value === dataFilterRadioGroupItem.selectedValue) {
-                dataFilterRadioBtnInitVal.push(v.value);
-            }
-        })
-    }
+    //         if (v.value === dataFilterRadioGroupItem.selectedValue) {
+    //             dataFilterRadioBtnInitVal.push(v.value);
+    //         }
+    //     })
+    // }
 
 
     //radioGroup state
     const [radioGroupState, setRadioGroupState] = useState(radioBtnInitVal[0]);
 
-    const [dataFilterRadioGroupState, setDataFilterRadioGroupState] = useState(dataFilterRadioBtnInitVal[0]);
+    // const [dataFilterRadioGroupState, setDataFilterRadioGroupState] = useState(dataFilterRadioBtnInitVal[0]);
 
 
     function resetForm(e, formRef) {
@@ -215,27 +215,26 @@ const Home = (props) => {
             accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS')
             accountQueriesData.count = AccountingData.length;
 
-            let annualDatas = accountQueriesData.queries.filter((items, index, array) => {
+            // let annualDatas = accountQueriesData.queries.filter((items, index, array) => {
 
 
-                return items.year === thisYear;
-            });
+            //     return items.year === thisYear;
+            // });
 
             let monthlyDatas = accountQueriesData.queries.filter((items, index, array) => {
-
 
                 return items.month === thisMonth;
             });
 
-            _.each(annualDatas, (v, k) => {
-                if (v.type === 'expenditure') {
-                    annualExpenditure += parseInt(v.amount);
+            // _.each(annualDatas, (v, k) => {
+            //     if (v.type === 'expenditure') {
+            //         annualExpenditure += parseInt(v.amount);
 
-                } else if (v.type === 'income') {
-                    annualIncome += parseInt(v.amount);
-                }
-                // console.log(v);
-            });
+            //     } else if (v.type === 'income') {
+            //         annualIncome += parseInt(v.amount);
+            //     }
+            //     // console.log(v);
+            // });
 
             _.each(monthlyDatas, (v, k) => {
                 if (v.type === 'expenditure') {
@@ -248,37 +247,37 @@ const Home = (props) => {
             });
 
 
-            _.each(accountQueriesData.queries, (v, k) => {
-                if (v.type === 'expenditure') {
-                    totalExpenditure += parseInt(v.amount);
+            // _.each(accountQueriesData.queries, (v, k) => {
+            //     if (v.type === 'expenditure') {
+            //         totalExpenditure += parseInt(v.amount);
 
-                } else if (v.type === 'income') {
-                    totalIncome += parseInt(v.amount);
-                }
-                // console.log(v);
-            })
+            //     } else if (v.type === 'income') {
+            //         totalIncome += parseInt(v.amount);
+            //     }
+            //     // console.log(v);
+            // })
 
-            setAnnualExpenditureState(utils.transferToAmountFormat(annualExpenditure));
-            setAnnualIncomeState(utils.transferToAmountFormat(annualIncome));
+            // setAnnualExpenditureState(utils.transferToAmountFormat(annualExpenditure));
+            // setAnnualIncomeState(utils.transferToAmountFormat(annualIncome));
 
             setMonthlyExpenditureState(utils.transferToAmountFormat(monthlyExpenditure));
             setMonthlyIncomeState(utils.transferToAmountFormat(monthlyIncome));
-
-            setTotalExpenditureState(utils.transferToAmountFormat(totalExpenditure));
-            setTotalIncomeState(utils.transferToAmountFormat(totalIncome));
-
-            setTotalAssets(utils.transferToAmountFormat((totalIncome - totalExpenditure)))
-            setAnnualBalance(utils.transferToAmountFormat((annualIncome - annualExpenditure)))
             setMonthlyBalance(utils.transferToAmountFormat((monthlyIncome - monthlyExpenditure)))
-            let dateFilter = dataFilterRadioGroupState;
+
+            // setTotalExpenditureState(utils.transferToAmountFormat(totalExpenditure));
+            // setTotalIncomeState(utils.transferToAmountFormat(totalIncome));
+
+            // setTotalAssets(utils.transferToAmountFormat((totalIncome - totalExpenditure)))
+            // setAnnualBalance(utils.transferToAmountFormat((annualIncome - annualExpenditure)))
+            // let dateFilter = dataFilterRadioGroupState;
 
 
-            if (dateFilter === 'month') {
+            // if (dateFilter === 'month') {
                 accountQueriesData.queries = [...monthlyDatas];
-            } else {
-                accountQueriesData.queries = [...annualDatas];
+            // } else {
+            //     accountQueriesData.queries = [...annualDatas];
 
-            }
+            // }
 
 
             setQueriesState(accountQueriesData);
@@ -343,11 +342,11 @@ const Home = (props) => {
         getAllData();
     }, [])
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        getAllData();
+    //     getAllData();
 
-    }, [dataFilterRadioGroupState])
+    // }, [dataFilterRadioGroupState])
 
     let columnSpec = [
         {
@@ -376,15 +375,6 @@ const Home = (props) => {
             <Form title='Home' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
                 <div className="input-group">
                     <Segment>
-                        <div className="input-group">
-                            <RadioGroup
-                                name='data filter'
-                                radioData={dataFilterRadioGroupItem}
-                                onClick={(val) => {
-                                    setDataFilterRadioGroupState(val)
-                                }} />
-                        </div>
-
                         <div className="input-group">
                             <RadioGroup
                                 name='type'
@@ -434,38 +424,30 @@ const Home = (props) => {
                     </Segment>
 
                     <Segment>
-                        <span className='amount-label'>Total Income: {totalIncomeState}</span>
-                        <br />
-                        <span className='amount-label'>Total Expenditure: {totalExpenditureState}</span>
-                        <br />
-                        <span className='amount-label'>Total Assets: {totalAssets} </span>
-                        <Divider section />
+
                         <span className='amount-label'>Monthly Income: {monthlyIncomeState}</span>
                         <br />
                         <span className='amount-label'>Monthly Expenditure: {monthlyExpenditureState} </span>
                         <br />
                         <span className='amount-label'>Monthly Balance: {monthlyBalance}</span>
-                        <Divider section />
-                        <span className='amount-label'>Annual Income: {annualIncomeState}</span>
-                        <br />
-                        <span className='amount-label'>Annual Expenditure:{annualExpenditureState}</span>
-                        <br />
-                        <span className='amount-label'>Annual Balance: {annualBalance}</span>
                     </Segment>
                 </div>
-                <PureCheckBox name='checkBox' label='select all' onClick={(e) => selectAllCheckBox(e)} />
 
-                <AccountingTable
-                    // ref='accountingTable'
-                    {...props}
-                    headerSpec={headerSpec}
-                    queriesData={queriesState.queries}
-                    selectAll={selectAllState}
-                    count={queriesState.count}
-                    time={queriesState.time}
-                    columnSpec={columnSpec}
-                    rowSpec={rowSpec}
-                />
+                <Segment style={{width:'140%'}}>
+                    <PureCheckBox name='checkBox' label='select all' onClick={(e) => selectAllCheckBox(e)} />
+                    <AccountingTable
+                        // ref='accountingTable'
+                        {...props}
+                        headerSpec={headerSpec}
+                        queriesData={queriesState.queries}
+                        selectAll={selectAllState}
+                        count={queriesState.count}
+                        time={queriesState.time}
+                        columnSpec={columnSpec}
+                        rowSpec={rowSpec}
+                    />
+                </Segment>
+
             </Form>
         </>)
 }

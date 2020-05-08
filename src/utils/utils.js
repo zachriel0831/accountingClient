@@ -597,6 +597,15 @@ const utils = {
         }
 
         return final;
+    },
+    random_rgba(lastParam,lastParamBorder) {
+        var o = Math.round, r = Math.random, s = 255;
+        var param1 = o(r() * s);
+        var param2 = o(r() * s);
+        var param3 = o(r() * s);
+
+        return [('rgba(' +param1 + ',' +param2 + ',' + param3 + ',' + lastParam + ')'),('rgba(' + param1 + ',' + param2 + ',' + param3 + ',' + lastParamBorder + ')')];
     }
+
 };
 export default utils; 
