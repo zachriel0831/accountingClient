@@ -16,7 +16,6 @@ initDB(DBConfig);
 
 const routersData = config.routersData;
 // const browserHistory = createBrowserHistory();
-
 let route = [];
 _.each(routersData, (v, k) => {
   const txnComponent = lazy(() => import(`./components/pages${v}`));

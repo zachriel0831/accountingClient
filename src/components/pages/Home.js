@@ -37,22 +37,6 @@ const radioGroupItem = {
     "selectedValue": "expenditure"
 }
 
-// const dataFilterRadioGroupItem = {
-//     "items": [
-//         {
-//             "label": "this month",
-//             "value": "month",
-//             "groupKey": "_none",
-//             "disabled": false
-//         }, {
-//             "label": "this year",
-//             "value": "year",
-//             "groupKey": "_none",
-//             "disabled": false
-//         },
-//     ],
-//     "selectedValue": "month"
-// }
 //TODO 拉去db
 let categories = config.categories;
 let categoryBox = [];
@@ -74,25 +58,19 @@ const selectOptions = {
 const Home = (props) => {
     const { add, getAll, deleteRecord } = useIndexedDB('Accountings');
     const { t } = useTranslation();
-    const _this = this;
     // const initState = props.state;
     const initState = {};
     const [dimmerState, setDimmerState] = useState(false);
     const [selectAllState, setSelectAllState] = useState(false);
     const [checkBoxListState, setCheckBoxListState] = useState([]);
     const [dateState, setDateState] = useState(new Date());
-    const [queriesState, setQueriesState] = useState({});
-    // const [totalExpenditureState, setTotalExpenditureState] = useState(0);
-    // const [totalIncomeState, setTotalIncomeState] = useState(0);
-    // const [annualIncomeState, setAnnualIncomeState] = useState(0);
-    // const [annualExpenditureState, setAnnualExpenditureState] = useState(0);
-
-    const [monthlyIncomeState, setMonthlyIncomeState] = useState(0);
-    const [monthlyExpenditureState, setMonthlyExpenditureState] = useState(0);
-
-    // const [totalAssets, setTotalAssets] = useState(0);
-    // const [annualBalance, setAnnualBalance] = useState(0);
-    const [monthlyBalance, setMonthlyBalance] = useState(0);
+    const [queriesState, setQueriesState] = useState(props.initialState);
+    const [monthlyBalance, setMonthlyBalance] = useState({
+        monthlyIncomeState: 0,
+        monthlyExpenditureState: 0,
+        monthlyBalance: 0,
+        monthlyDatas: [],
+    });
 
 
 
@@ -104,18 +82,6 @@ const Home = (props) => {
             }
         })
     }
-
-
-    // let dataFilterRadioBtnInitVal = [];
-    // if (dataFilterRadioGroupItem) {
-    //     _.each(dataFilterRadioGroupItem.items, (v, k) => {
-
-    //         if (v.value === dataFilterRadioGroupItem.selectedValue) {
-    //             dataFilterRadioBtnInitVal.push(v.value);
-    //         }
-    //     })
-    // }
-
 
     //radioGroup state
     const [radioGroupState, setRadioGroupState] = useState(radioBtnInitVal[0]);
@@ -194,91 +160,22 @@ const Home = (props) => {
         });
 
         props.resetKey();
-
-
     }
 
     const getAllData = () => {
         getAll().then(AccountingData => {
             let accountQueriesData = {};
-            let today = moment().format('YYYY/MM/DD');
-            let thisYear = moment().format('YYYY');
             let thisMonth = moment().format('MM');
 
-            let totalIncome = 0;
-            let totalExpenditure = 0;
-            let annualIncome = 0;
-            let annualExpenditure = 0;
-            let monthlyIncome = 0;
-            let monthlyExpenditure = 0;
             accountQueriesData.queries = AccountingData;
             accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS')
             accountQueriesData.count = AccountingData.length;
 
-            // let annualDatas = accountQueriesData.queries.filter((items, index, array) => {
+            let monthlyResult = props.getMonthlyData(accountQueriesData, thisMonth);
 
+            setMonthlyBalance(monthlyResult)
 
-            //     return items.year === thisYear;
-            // });
-
-            let monthlyDatas = accountQueriesData.queries.filter((items, index, array) => {
-
-                return items.month === thisMonth;
-            });
-
-            // _.each(annualDatas, (v, k) => {
-            //     if (v.type === 'expenditure') {
-            //         annualExpenditure += parseInt(v.amount);
-
-            //     } else if (v.type === 'income') {
-            //         annualIncome += parseInt(v.amount);
-            //     }
-            //     // console.log(v);
-            // });
-
-            _.each(monthlyDatas, (v, k) => {
-                if (v.type === 'expenditure') {
-                    monthlyExpenditure += parseInt(v.amount);
-
-                } else if (v.type === 'income') {
-                    monthlyIncome += parseInt(v.amount);
-                }
-                // console.log(v);
-            });
-
-
-            // _.each(accountQueriesData.queries, (v, k) => {
-            //     if (v.type === 'expenditure') {
-            //         totalExpenditure += parseInt(v.amount);
-
-            //     } else if (v.type === 'income') {
-            //         totalIncome += parseInt(v.amount);
-            //     }
-            //     // console.log(v);
-            // })
-
-            // setAnnualExpenditureState(utils.transferToAmountFormat(annualExpenditure));
-            // setAnnualIncomeState(utils.transferToAmountFormat(annualIncome));
-
-            setMonthlyExpenditureState(utils.transferToAmountFormat(monthlyExpenditure));
-            setMonthlyIncomeState(utils.transferToAmountFormat(monthlyIncome));
-            setMonthlyBalance(utils.transferToAmountFormat((monthlyIncome - monthlyExpenditure)))
-
-            // setTotalExpenditureState(utils.transferToAmountFormat(totalExpenditure));
-            // setTotalIncomeState(utils.transferToAmountFormat(totalIncome));
-
-            // setTotalAssets(utils.transferToAmountFormat((totalIncome - totalExpenditure)))
-            // setAnnualBalance(utils.transferToAmountFormat((annualIncome - annualExpenditure)))
-            // let dateFilter = dataFilterRadioGroupState;
-
-
-            // if (dateFilter === 'month') {
-                accountQueriesData.queries = [...monthlyDatas];
-            // } else {
-            //     accountQueriesData.queries = [...annualDatas];
-
-            // }
-
+            accountQueriesData.queries = [...monthlyResult.monthlyDatas];
 
             setQueriesState(accountQueriesData);
         });
@@ -341,12 +238,6 @@ const Home = (props) => {
     useEffect(() => {
         getAllData();
     }, [])
-
-    // useEffect(() => {
-
-    //     getAllData();
-
-    // }, [dataFilterRadioGroupState])
 
     let columnSpec = [
         {
@@ -425,15 +316,15 @@ const Home = (props) => {
 
                     <Segment>
 
-                        <span className='amount-label'>Monthly Income: {monthlyIncomeState}</span>
+                        <span className='amount-label'>Monthly Income: {monthlyBalance.monthlyIncome}</span>
                         <br />
-                        <span className='amount-label'>Monthly Expenditure: {monthlyExpenditureState} </span>
+                        <span className='amount-label'>Monthly Expenditure: {monthlyBalance.monthlyExpenditure} </span>
                         <br />
-                        <span className='amount-label'>Monthly Balance: {monthlyBalance}</span>
+                        <span className='amount-label'>Monthly Balance: {monthlyBalance.monthlyBalance}</span>
                     </Segment>
                 </div>
 
-                <Segment style={{width:'140%'}}>
+                <Segment className='accounting-table'>
                     <PureCheckBox name='checkBox' label='select all' onClick={(e) => selectAllCheckBox(e)} />
                     <AccountingTable
                         // ref='accountingTable'

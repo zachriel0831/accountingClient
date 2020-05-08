@@ -12,6 +12,7 @@ const Select = (props) => {
     options.push(<option key={utils.generateUID()} value=''>{t("select")}</option>);
 
     _.each(props.options.items, (v, k) => {
+        
         if (props.value === v.value) {
             options.push(<option key={utils.generateUID()} value={v.value} selected>{v.label}</option>)
 

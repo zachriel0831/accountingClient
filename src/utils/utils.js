@@ -598,13 +598,26 @@ const utils = {
 
         return final;
     },
-    random_rgba(lastParam,lastParamBorder) {
+    random_rgba(lastParam, lastParamBorder) {
         var o = Math.round, r = Math.random, s = 255;
         var param1 = o(r() * s);
         var param2 = o(r() * s);
         var param3 = o(r() * s);
 
-        return [('rgba(' +param1 + ',' +param2 + ',' + param3 + ',' + lastParam + ')'),('rgba(' + param1 + ',' + param2 + ',' + param3 + ',' + lastParamBorder + ')')];
+        return [('rgba(' + param1 + ',' + param2 + ',' + param3 + ',' + lastParam + ')'), ('rgba(' + param1 + ',' + param2 + ',' + param3 + ',' + lastParamBorder + ')')];
+    },
+    initialYearOptions() {
+        let yearBox = [];
+
+        for (var i = 1977; i <= 3000; i++) {
+            let items = {
+                label: i,
+                value: i + ''
+            }
+            yearBox.push(items);
+        }
+
+        return yearBox;
     }
 
 };
