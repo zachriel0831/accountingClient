@@ -3,6 +3,7 @@ import { initDB, useIndexedDB } from 'react-indexed-db';
 import Form from '../Form';
 import Text from '../Text';
 import Amount from '../Amount';
+import RadioGroup from '../RadioGroup';
 import Select from '../Select'
 import useForm from '../custom-hooks/useForm';
 import _ from 'lodash';
@@ -14,6 +15,22 @@ import DatePicker from '../DatePicker';
 import validateThis from '../../validationSet/validations';
 import utils from '../../utils/utils';
 import { Segment, Divider } from 'semantic-ui-react';
+
+const radioGroupItem = {
+    "items": [{
+        "label": "expenditure",
+        "value": "expenditure",
+        "groupKey": "_none",
+        "disabled": false
+    },
+    {
+        "label": "income",
+        "value": "income",
+        "groupKey": "_none",
+        "disabled": false
+    },],
+    "selectedValue": "expenditure"
+}
 
 let categories = config.categories;
 let categoryBox = [];
@@ -44,10 +61,22 @@ const Installment = (props) => {
     const [totalAssets, setTotalAssets] = useState(0);
     const [queryDisable, setQueryDisabl] = useState(false);
 
+    let radioBtnInitVal = [];
+    if (radioGroupItem) {
+        _.each(radioGroupItem.items, (v, k) => {
+            if (v.value === radioGroupItem.selectedValue) {
+                radioBtnInitVal.push(v.value);
+            }
+        })
+    }
+
+    //radioGroup state
+    const [radioGroupState, setRadioGroupState] = useState(radioBtnInitVal[0]);
+
     function calculate(e, formRef) {
         console.log("calculate");
-        let itemId = `${moment().unix()}_expenditure_${values.category}_${moment(dateState).format('YYYY/MM/DD')}_${values.amount}`;
-        let type = "expenditure";
+        let itemId = `${moment().unix()}_${radioGroupState}_${values.category}_${moment(dateState).format('YYYY/MM/DD')}_${values.amount}`;
+        let type = radioGroupState;
         let date = moment(dateState).format('YYYY/MM/DD');
         let amount = values.amount;
         let month = moment(dateState).format('MM');
@@ -82,12 +111,23 @@ const Installment = (props) => {
             return;
         }
 
-        let installmentExp = 0;
-        installmentExp = amount * times;
-        let testExp = parseInt(totalExpenditureState.replace(/,/g, '')) + parseInt(installmentExp);
-        let testAsset = parseInt(totalIncomeState.replace(/,/g, '')) - testExp;
-        setTotalExpenditureState(utils.transferToAmountFormat(testExp));
-        setTotalAssets(utils.transferToAmountFormat(testAsset));
+        let calExp = 0;
+        let calIncome = 0;
+        let calAsset = 0;
+        let assetTest = 0;
+        assetTest = totalAssets.replace(/,/g, '');
+        let calAmount = amount * times;
+        if (radioGroupState === "expenditure") {
+            calExp = parseInt(calAmount);
+            setTotalExpenditureState(utils.transferToAmountFormat(parseInt(totalExpenditureState.replace(/,/g, '')) + parseInt(calAmount)));
+            
+        } else if (radioGroupState === "income") {
+            calIncome = parseInt(calAmount);
+            setTotalIncomeState(utils.transferToAmountFormat(parseInt(totalIncomeState.replace(/,/g, '')) + parseInt(calAmount)));
+        }
+        
+        calAsset = parseInt(assetTest) + calIncome - calExp;
+        setTotalAssets(utils.transferToAmountFormat(calAsset));
         setQueryDisabl(true);
     }
 
@@ -97,8 +137,8 @@ const Installment = (props) => {
 
     async function submit(e, formRef) {
         console.log("submit");
-        let itemId = `${moment().unix()}_expenditure_${values.category}_${moment(dateState).format('YYYY/MM/DD')}_${values.amount}`;
-        let type = "expenditure";
+        let itemId = `${moment().unix()}_${radioGroupState}_${values.category}_${moment(dateState).format('YYYY/MM/DD')}_${values.amount}`;
+        let type = radioGroupState;
         let date = moment(dateState).format('YYYY/MM/DD');
         let amount = values.amount;
         let month = moment(dateState).format('MM');
@@ -111,7 +151,7 @@ const Installment = (props) => {
         values.id = itemId;
         values.type = type;
         values.date = date;
-        values.amount = amount ? amount.replace(/,/g, '') :'';
+        values.amount = amount ? amount.replace(/,/g, '') : '';
         values.category = category;
         values.remark = remark ? remark : '';
         values.month = month;
@@ -174,7 +214,6 @@ const Installment = (props) => {
                     totalIncome += parseInt(v.amount);
                 }
             })
-
             setTotalExpenditureState(utils.transferToAmountFormat(totalExpenditure));
             setTotalIncomeState(utils.transferToAmountFormat(totalIncome));
             setTotalAssets(utils.transferToAmountFormat((totalIncome - totalExpenditure)))
@@ -194,6 +233,14 @@ const Installment = (props) => {
                                     setDateState(date);
                                 }}
                             />
+                        </div>
+                        <div className="input-group">
+                            <RadioGroup
+                                name='type'
+                                radioData={radioGroupItem}
+                                onClick={(val) => {
+                                    setRadioGroupState(val)
+                                }} />
                         </div>
                         <div className="input-group">
                             <Select value={values.category} name='category' label='category' options={selectOptions} onChange={handleChange} />
