@@ -39,6 +39,11 @@ const NavBar = (props) => {
 
                 break;
 
+            case '/Installment':
+                name = 'installment';
+                iconName = 'file alternate outline';
+                break;
+
 
             default:
                 break;
