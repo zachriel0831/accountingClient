@@ -33,6 +33,12 @@ const radioGroupItem = {
         "value": "income",
         "groupKey": "_none",
         "disabled": false
+    },
+    {
+        "label": "show all",
+        "value": "all",
+        "groupKey": "_none",
+        "disabled": false
     },],
     "selectedValue": "expenditure"
 }
@@ -124,6 +130,7 @@ const Details = (props) => {
     // const { t } = useTranslation();
     // const _this = this;
     const initialState = props.initialState;
+
     const [dimmerState, setDimmerState] = useState(false);
     const [selectAllState, setSelectAllState] = useState(false);
     const [checkBoxListState, setCheckBoxListState] = useState([]);
@@ -131,7 +138,11 @@ const Details = (props) => {
     const [endDateState, setEndDateState] = useState(new Date());
 
     const [startDateState, setStartDateState] = useState(new Date());
-    const [queriesState, setQueriesState] = useState(initialState);
+    const [queriesState, setQueriesState] = useState({});
+
+    const [countYearState, setCountYearState] = useState(moment(new Date()).format('YYYY').toString());
+    const [countMonthState, setCountMonthState] = useState(moment(new Date()).format('MM').toString());
+
 
     const [assetsDetailState, setAssetsDetailsState] = useState({
         monthlyIncomeState: 0,
@@ -149,10 +160,10 @@ const Details = (props) => {
 
     const [dataFilterRadioGroupState, setDataFilterRadioGroupState] = useState(dataFilterRadioBtnInitVal[0]);
     const [radioGroupState, setRadioGroupState] = useState(radioBtnInitVal[0]);
-    const initState = {};
+    const initFormState = {};
 
 
-    const { values, handleChange, handleSubmit, handleReset } = useForm(resetForm, submit, initState);
+    const { values, handleChange, handleSubmit, handleReset } = useForm(resetForm, submit, initFormState);
 
     function resetForm() {
     }
@@ -179,16 +190,18 @@ const Details = (props) => {
 
         let accountQueriesData = {};
 
-        accountQueriesData.queries = [];
-
-
 
         switch (dataFilterRadioGroupState) {
             case 'month':
                 accountQueriesData.queries = [...assetsDetailState.monthlyDatas];
+
+
+                accountQueriesData.queries = accountQueriesData.queries.filter((items, index, array) => {
+
+                    return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type == type) : true);
+                });
                 accountQueriesData.count = accountQueriesData.queries.length;
                 accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
-
                 setQueriesState(accountQueriesData);
 
                 break;
@@ -197,6 +210,11 @@ const Details = (props) => {
 
 
                 accountQueriesData.queries = [...assetsDetailState.annualDatas];
+
+                accountQueriesData.queries = accountQueriesData.queries.filter((items, index, array) => {
+
+                    return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type == type) : true);
+                });
                 accountQueriesData.count = accountQueriesData.queries.length;
                 accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
 
@@ -208,8 +226,14 @@ const Details = (props) => {
 
                 initialState.queries = initialState.queries.filter((items, index, array) => {
 
-                    return (items.date === date) && ((category) ? (items.category === category) : true) && (items.type == type);
+                    return (items.date === date) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type == type) : true);
                 });
+
+                accountQueriesData.queries = [...initialState.queries];
+                accountQueriesData.count = accountQueriesData.queries.length;
+                accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
+
+                setQueriesState(accountQueriesData);
 
                 break;
 
@@ -223,52 +247,10 @@ const Details = (props) => {
             default:
                 break;
         }
-
-
-
-
-        // values.type = type;
-        // values.date = date;
-        // values.category = category;
-        // values.month = month;
-        // values.day = day;
-        // values.year = year;
-
-
-        // values.endDate = startDate;
-        // values.endMonth = startMonth;
-        // values.endYear = startYear;
-        // values.endDay = startDay;
-
-
-
-        // values.endDate = endDate;
-        // values.endMonth = endMonth;
-        // values.endYear = endYear;
-        // values.endDay = endDay;
-
-
-        // let validateResult = true;
-
-        // _.each(values, (v, k) => {
-
-        //     validateResult = validateThis(v, k);
-
-        //     if (!validateResult) {
-        //         alert(`${k} format error!`);
-        //         return false;
-        //     }
-        // });
-
-
-        // if (!validateResult) {
-        //     return;
-        // }
-
     }
 
     const getAllData = () => {
-        let datas = _.isEmpty(queriesState) ? props.initialState : queriesState;
+        let datas = { ...props.initialState };
         // let accountQueriesData = {};
         // let today = moment().format('YYYY/MM/DD');
         let thisYear = moment().format('YYYY');
@@ -358,8 +340,66 @@ const Details = (props) => {
         }
         checkBoxListState.push(...val);
         setCheckBoxListState(checkBoxListState);
-
         console.log('getAllcheckBoxVal ', val);
+    }
+
+    const previousBtnClick = (e) => {
+
+        // const [countYearState, setCountYearState] = useState(moment(new Date()).format('YYYY').toString());
+        // const [countMonthState, setCountMonthState] = useState(moment(new Date()).format('MM').toString());
+        let accountQueriesData = {};
+        let previousMonth = parseInt(countMonthState) - 1;
+        let previousYear = countYearState;
+        if (previousMonth === 0) {
+            previousYear = parseInt(countYearState) - 1;
+            setCountYearState(previousYear);
+            previousMonth = '12';
+        } else {
+            previousMonth = (previousMonth < 10) ? '0' + previousMonth : previousMonth
+        }
+        setCountMonthState(previousMonth);
+
+
+        accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
+
+            return (items.year === previousYear) && (items.month === previousMonth);
+        });
+        accountQueriesData.count = accountQueriesData.queries.length;
+        accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
+
+
+        setQueriesState(accountQueriesData);
+
+    }
+
+    const nextBtnClick = (e) => {
+        // const [countYearState, setCountYearState] = useState(moment(new Date()).format('YYYY').toString());
+        // const [countMonthState, setCountMonthState] = useState(moment(new Date()).format('MM').toString());
+        debugger
+        let accountQueriesData = {};
+        let nextMonth = parseInt(countMonthState) + 1;
+        let nextYear = countYearState;
+
+        if (nextMonth === 13) {
+            nextYear = parseInt(countYearState) + 1;
+            setCountYearState(nextYear);
+            nextMonth = '01';
+        } else {
+            nextMonth = (nextMonth < 10) ? '0' + nextMonth : nextMonth
+
+        }
+        setCountMonthState(nextMonth);
+
+        accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
+
+            return (items.year === nextYear) && (items.month === nextMonth);
+        });
+        accountQueriesData.count = accountQueriesData.queries.length;
+        accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
+
+
+        setQueriesState(accountQueriesData);
+
     }
 
     let headerSpec = {
@@ -400,7 +440,7 @@ const Details = (props) => {
         requestDataKey: 'id',
         customOnRowDoubleClick: doubleClick,
     }
-    debugger
+
 
     return <><Form title='Details' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
         <Segment>
@@ -493,6 +533,22 @@ const Details = (props) => {
                 className='ui button btn-primary '
                 icon='icon times circle'
                 onClick={(e) => deleteItems(e)}
+
+            />
+            <Button
+                type='button'
+                displayName={t("previous")}
+                className='ui button btn-primary '
+                icon='left arrow icon'
+                onClick={(e) => previousBtnClick(e)}
+
+            />
+            <Button
+                type='button'
+                displayName={t("next")}
+                className='ui button btn-primary '
+                icon='right arrow icon'
+                onClick={(e) => nextBtnClick(e)}
 
             />
             <PureCheckBox name='checkBox' label='select all' onClick={(e) => selectAllCheckBox(e)} />

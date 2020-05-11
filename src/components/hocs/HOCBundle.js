@@ -36,7 +36,7 @@ const HOCBundle = (WrappedComponent) => {
                 accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
                 accountQueriesData.count = AccountingData.length;
                 console.log('getInitData');
-
+                
                 _this.setState({
                     result: accountQueriesData
                 })
@@ -167,7 +167,7 @@ const HOCBundle = (WrappedComponent) => {
             //TODO沒有responseData的話查看放行清單, 錯誤頁仍需render元件
             // if (result) {
             let results = this.state.result;
-
+            
             if (!_.isEmpty(results)) {
                 return (
                     <>
