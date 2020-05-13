@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { initDB, useIndexedDB } from 'react-indexed-db';
+import { useIndexedDB } from 'react-indexed-db';
 import Form from '../Form';
 // import Text from '../Text';
 // import Amount from '../Amount';
@@ -19,10 +19,15 @@ import PureCheckBox from '../PureCheckBox';
 // import EditPanel from '../modals/EditPanel';
 import validateThis from '../../validationSet/validations';
 import utils from '../../utils/utils';
-import { Segment, Divider } from 'semantic-ui-react';
+import { Segment, Divider, Radio } from 'semantic-ui-react';
 
 const radioGroupItem = {
     "items": [{
+        "label": "show all",
+        "value": "all",
+        "groupKey": "_none",
+        "disabled": false
+    }, {
         "label": "expenditure",
         "value": "expenditure",
         "groupKey": "_none",
@@ -34,13 +39,8 @@ const radioGroupItem = {
         "groupKey": "_none",
         "disabled": false
     },
-    {
-        "label": "show all",
-        "value": "all",
-        "groupKey": "_none",
-        "disabled": false
-    },],
-    "selectedValue": "expenditure"
+    ],
+    "selectedValue": "all"
 }
 
 const dataFilterRadioGroupItem = {
@@ -103,7 +103,7 @@ const yearSelectOptions = {
 };
 
 const Details = (props) => {
-    const { add, getAll, deleteRecord } = useIndexedDB('Accountings');
+    const { deleteRecord } = useIndexedDB('Accountings');
     const { t } = useTranslation();
 
     let radioBtnInitVal = [];
@@ -139,6 +139,7 @@ const Details = (props) => {
 
     const [startDateState, setStartDateState] = useState(new Date());
     const [queriesState, setQueriesState] = useState({});
+    const [displayBalanceState, setDisplayBalanceState] = useState('none');
 
     const [countYearState, setCountYearState] = useState(moment(new Date()).format('YYYY').toString());
     const [countMonthState, setCountMonthState] = useState(moment(new Date()).format('MM').toString());
@@ -160,7 +161,10 @@ const Details = (props) => {
 
     const [dataFilterRadioGroupState, setDataFilterRadioGroupState] = useState(dataFilterRadioBtnInitVal[0]);
     const [radioGroupState, setRadioGroupState] = useState(radioBtnInitVal[0]);
-    const initFormState = {};
+    const initFormState = {
+        year: moment(new Date()).format('YYYY'),
+
+    };
 
 
     const { values, handleChange, handleSubmit, handleReset } = useForm(resetForm, submit, initFormState);
@@ -173,20 +177,20 @@ const Details = (props) => {
         let category = values.category;
         let type = radioGroupState;
         let date = moment(dateState).format('YYYY/MM/DD');
-        let month = moment(dateState).format('MM');
-        let day = moment(dateState).format('DD');
-        let year = moment(dateState).format('YYYY');
+        // let month = moment(dateState).format('MM');
+        // let day = moment(dateState).format('DD');
+        // let year = moment(dateState).format('YYYY');
 
         let startDate = moment(startDateState).format('YYYY/MM/DD');
-        let startMonth = moment(startDateState).format('MM');
-        let startYear = moment(startDateState).format('YYYY');
-        let startDay = moment(startDateState).format('DD');
+        // let startMonth = moment(startDateState).format('MM');
+        // let startYear = moment(startDateState).format('YYYY');
+        // let startDay = moment(startDateState).format('DD');
 
 
         let endDate = moment(endDateState).format('YYYY/MM/DD');
-        let endMonth = moment(endDateState).format('MM');
-        let endYear = moment(endDateState).format('YYYY');
-        let endDay = moment(endDateState).format('DD');
+        // let endMonth = moment(endDateState).format('MM');
+        // let endYear = moment(endDateState).format('YYYY');
+        // let endDay = moment(endDateState).format('DD');
 
         let accountQueriesData = {};
 
@@ -198,7 +202,7 @@ const Details = (props) => {
 
                 accountQueriesData.queries = accountQueriesData.queries.filter((items, index, array) => {
 
-                    return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type == type) : true);
+                    return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                 });
                 accountQueriesData.count = accountQueriesData.queries.length;
                 accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
@@ -213,7 +217,7 @@ const Details = (props) => {
 
                 accountQueriesData.queries = accountQueriesData.queries.filter((items, index, array) => {
 
-                    return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type == type) : true);
+                    return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                 });
                 accountQueriesData.count = accountQueriesData.queries.length;
                 accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
@@ -223,13 +227,12 @@ const Details = (props) => {
                 break;
 
             case 'certain_day':
+                accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
 
-                initialState.queries = initialState.queries.filter((items, index, array) => {
-
-                    return (items.date === date) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type == type) : true);
+                    return (items.date === date) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                 });
 
-                accountQueriesData.queries = [...initialState.queries];
+                // accountQueriesData.queries = [...initialState.queries];
                 accountQueriesData.count = accountQueriesData.queries.length;
                 accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
 
@@ -238,11 +241,29 @@ const Details = (props) => {
                 break;
 
             case 'period':
+                accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
+
+                    return moment(items.date).isAfter(startDate) && moment(items.date).isBefore(endDate) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type == type) : true);
+                });
+
+                // accountQueriesData.queries = [...initialState.queries];
+                accountQueriesData.count = accountQueriesData.queries.length;
+                accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
+                setQueriesState(accountQueriesData);
 
                 break;
 
             case 'byYear':
+                accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
 
+                    return items.year === values.year && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
+                });
+
+                // accountQueriesData.queries = [...initialState.queries];
+                accountQueriesData.count = accountQueriesData.queries.length;
+                accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
+
+                setQueriesState(accountQueriesData);
                 break;
             default:
                 break;
@@ -281,6 +302,8 @@ const Details = (props) => {
 
         //進來先秀本月的資料 zack 
         queriesState.queries = [...monthlyResult.monthlyDatas];
+        queriesState.count = queriesState.queries.length;
+        queriesState.time = moment().format('YYYY/MM/DD MM:SS');
 
         setQueriesState(queriesState);
     }
@@ -344,9 +367,6 @@ const Details = (props) => {
     }
 
     const previousBtnClick = (e) => {
-
-        // const [countYearState, setCountYearState] = useState(moment(new Date()).format('YYYY').toString());
-        // const [countMonthState, setCountMonthState] = useState(moment(new Date()).format('MM').toString());
         let accountQueriesData = {};
         let previousMonth = parseInt(countMonthState) - 1;
         let previousYear = countYearState;
@@ -373,9 +393,6 @@ const Details = (props) => {
     }
 
     const nextBtnClick = (e) => {
-        // const [countYearState, setCountYearState] = useState(moment(new Date()).format('YYYY').toString());
-        // const [countMonthState, setCountMonthState] = useState(moment(new Date()).format('MM').toString());
-        debugger
         let accountQueriesData = {};
         let nextMonth = parseInt(countMonthState) + 1;
         let nextYear = countYearState;
@@ -441,7 +458,6 @@ const Details = (props) => {
         customOnRowDoubleClick: doubleClick,
     }
 
-
     return <><Form title='Details' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
         <Segment>
             <div className="input-group">
@@ -466,11 +482,12 @@ const Details = (props) => {
             </div>
 
             <div className="input-group" style={{ display: (dataFilterRadioGroupState === 'byYear') ? 'block' : 'none' }}>
-                <Select value={yearSelectOptions.seletedValue} name='year' label='year' options={yearSelectOptions} onChange={handleChange} />
+                <Select value={values.year} name='year' label='year' options={yearSelectOptions} onChange={handleChange} />
             </div>
             <div className="input-group" style={{ display: (dataFilterRadioGroupState === 'certain_day') ? 'block' : 'none' }}>
 
                 <DatePicker
+                    name='certain_day'
                     label={t("date")}
                     selected={dateState}
                     onChange={(date) => {
@@ -481,6 +498,7 @@ const Details = (props) => {
 
             <div className="input-group" style={{ display: (dataFilterRadioGroupState === 'period') ? 'block' : 'none' }}>
                 <DatePicker
+                    name='startDate'
                     label={t("startDate")}
                     selected={startDateState}
                     onChange={(date) => {
@@ -488,6 +506,7 @@ const Details = (props) => {
                     }}
                 />~
                 <DatePicker
+                    name='endDate'
                     label={t("endDate")}
                     selected={endDateState}
                     onChange={(date) => {
@@ -507,7 +526,11 @@ const Details = (props) => {
                 />
             </div>
         </Segment>
-        <Segment>
+        <Radio toggle label='toogle balance detail' onChange={(e) => {
+
+            setDisplayBalanceState((displayBalanceState === 'none') ? 'block' : 'none');
+        }} />
+        <Segment style={{ display: displayBalanceState }}>
             <span className='amount-label'>Total Income: {assetsDetailState.totalIncomeState}</span>
             <br />
             <span className='amount-label'>Total Expenditure: {assetsDetailState.totalExpenditureState}</span>
@@ -519,12 +542,23 @@ const Details = (props) => {
             <span className='amount-label'>Annual Expenditure:{assetsDetailState.annualExpenditureState}</span>
             <br />
             <span className='amount-label'>Annual Balance: {assetsDetailState.annualBalance}</span>
+            <br />
+            <span className='amount-label'>average Income/month: {(parseInt(assetsDetailState.annualIncomeState.toString().replace(/,/g, '')) / 12).toFixed(2)}</span>
+            <br />
+            <span className='amount-label'>average Expenditure/month : {(parseInt(assetsDetailState.annualExpenditureState.toString().replace(/,/g, '')) / 12).toFixed(2)} </span>
+
             <Divider section />
             <span className='amount-label'>Monthly Income: {assetsDetailState.monthlyIncomeState}</span>
             <br />
             <span className='amount-label'>Monthly Expenditure: {assetsDetailState.monthlyExpenditureState} </span>
             <br />
             <span className='amount-label'>Monthly Balance: {assetsDetailState.monthlyBalance}</span>
+            <br />
+            <span className='amount-label'>average Income/day: {(parseInt(assetsDetailState.monthlyIncomeState.toString().replace(/,/g, '')) / 30).toFixed(2)}</span>
+            <br />
+            <span className='amount-label'>average Expenditure/day : {(parseInt(assetsDetailState.monthlyExpenditureState.toString().replace(/,/g, '')) / 30).toFixed(2)} </span>
+            <Divider section />
+
         </Segment>
         <Segment className='accounting-table'>
             <Button

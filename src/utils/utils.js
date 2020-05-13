@@ -609,7 +609,7 @@ const utils = {
     initialYearOptions() {
         let yearBox = [];
 
-        for (var i = 1977; i <= 3000; i++) {
+        for (var i = 1977; i <= 2099; i++) {
             let items = {
                 label: i,
                 value: i + ''

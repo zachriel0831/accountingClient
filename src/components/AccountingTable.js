@@ -522,6 +522,7 @@ const AccountingTable = React.memo((props) => {
 
     let rowCounts = props.count ? props.count : 0;
     let queryResult = [];
+    
     if (rowCounts === 0) {
         // queryResult.push(<div className="">***無顯示資料***</div>)
         queryResult.push(<div key={utils.generateUID()} className="">***{t("tableNoData")}***</div>)
