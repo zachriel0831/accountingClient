@@ -16,6 +16,13 @@ export const DBConfig = {
           { name: 'remark', keypath: 'remark', options: { unique: false } },
 
         ]
+      },
+      {
+        store: 'Accountings_Categories',
+        storeConfig: { keyPath: 'id', autoIncrement: true },
+        storeSchema: [
+          { name: 'name', keypath: 'name', options: { unique: false } },
+        ]
       }
     ]
   };

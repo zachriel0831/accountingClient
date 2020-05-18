@@ -97,7 +97,8 @@ const AccountingTable = React.memo((props) => {
 
     let ths = [];
     let trs = [];
-
+    let incomeState = 0;
+    let expenditureState = 0;
 
     const checkBoxClick = (e, val, checked, checkedTarget) => {
         props.headerSpec.onCheckBoxClick(e, val, checked, checkedTarget);
@@ -243,7 +244,6 @@ const AccountingTable = React.memo((props) => {
         let amountSortingHeaderKey = value ? value.amountSortingHeaderKey : '';
 
         try {
-            // by shane
             _.each(header, (h) => {
 
                 let headerStyle = {};
@@ -326,6 +326,8 @@ const AccountingTable = React.memo((props) => {
         // let lastRowKey = '';
         let rowKey = '';
         let tdValueBox = [];
+
+
         _.each(value, (item, r) => {
             // 取得RowKey 參數
             _.each(item, (v, k) => {
@@ -357,7 +359,6 @@ const AccountingTable = React.memo((props) => {
 
                     if (tdKey === 'amount') {
                         tdValue = utils.transferToAmountFormat(tdValue);
-
                     }
 
                     // header key值與data key值做比對
@@ -472,6 +473,7 @@ const AccountingTable = React.memo((props) => {
             }
         });
 
+
         return trs;
     }
 
@@ -522,7 +524,7 @@ const AccountingTable = React.memo((props) => {
 
     let rowCounts = props.count ? props.count : 0;
     let queryResult = [];
-    
+
     if (rowCounts === 0) {
         // queryResult.push(<div className="">***無顯示資料***</div>)
         queryResult.push(<div key={utils.generateUID()} className="">***{t("tableNoData")}***</div>)
@@ -530,14 +532,15 @@ const AccountingTable = React.memo((props) => {
         queryResult.push(<div key={utils.generateUID()} className="">{t("data")} <span className="query__sum">{props.count ? props.count : 0}</span> {t("count")}</div>);
     }
 
+
     return (
         <>
             <div className="query__info__row">
                 {queryResult}
                 {/* <div className="">若處理狀態有 ** 註記，表示未對到帳，請分行人工確認資金是否到位</div> */}
                 <div className="">{t("time")}: <span className="query__time">{props.time}</span></div>
+                <div style={{ display: (props.displaySummaryBlockFlag) ? 'block' : 'none' }}><span >{t("expenditure")}:{props.incomeSummary}</span> <br /><span>{t("income")}:{props.expenditureSummary}</span></div>
             </div>
-            {/* // by shane */}
             <div className="query__table__wrap">
                 <table ref={tableRef} className="ui selectable sortable small striped celled compact table">
                     <thead>
@@ -570,7 +573,7 @@ AccountingTable.defaultProps = {
         }
     },
     selectAll: false,
-
+    displaySummaryBlockFlag: false,
 
 }
 

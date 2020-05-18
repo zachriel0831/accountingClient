@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { initDB, useIndexedDB } from 'react-indexed-db';
+import { useIndexedDB } from 'react-indexed-db';
 import Form from '../Form';
 import Text from '../Text';
 import Amount from '../Amount';
@@ -38,25 +38,12 @@ const radioGroupItem = {
 }
 
 //TODO 拉去db
-let categories = config.categories;
-let categoryBox = [];
 
-_.each(categories, (v, k) => {
-    let items = {
-        label: v,
-        value: v
-    }
-    categoryBox.push(items);
-});
-
-const selectOptions = {
-    "seletedValue": "",
-    "disabled": false,
-    "items": [...categoryBox]
-};
 
 const Home = (props) => {
     const { add, getAll, deleteRecord } = useIndexedDB('Accountings');
+    const categoryDB = useIndexedDB('Accountings_Categories');
+
     const { t } = useTranslation();
     // const initState = props.state;
     const initState = {};
@@ -71,6 +58,12 @@ const Home = (props) => {
         monthlyBalance: 0,
         monthlyDatas: [],
     });
+
+    
+
+    const [optionsState, setOptionState] = useState({});
+
+
 
 
 
@@ -103,18 +96,36 @@ const Home = (props) => {
         let year = moment(dateState).format('YYYY');;
         let category = values.category;
         let remark = values.remark;
+        let category_new = values.category_new;
 
         values.id = itemId;
         values.type = type;
         values.date = date;
         values.amount = amount.replace(/,/g, '');
-        values.category = category;
+        values.category = category ? category : category_new;
         values.remark = remark ? remark : '';
         values.month = month;
         values.day = day;
         values.year = year;
 
         let validateResult = true;
+
+        if (category_new) {
+
+            let add_category = {
+                id: moment().unix(),
+                name: category_new
+            }
+            categoryDB.add(add_category).then(
+                event => {
+                    console.log('ID Generated: ', event.target);
+                },
+                error => {
+                    console.log(error);
+                }
+            );
+
+        }
 
         _.each(values, (v, k) => {
 
@@ -237,6 +248,41 @@ const Home = (props) => {
 
     useEffect(() => {
         getAllData();
+
+
+        let categories = config.categories;
+        let categoryBox = [];
+
+        _.each(categories, (v, k) => {
+            let items = {
+                label: v,
+                value: v
+            }
+            categoryBox.push(items);
+        });
+
+        categoryDB.getAll().then(categories => {
+            _.each(categories, (v, k) => {
+                let items = {
+                    label: v.name,
+                    value: v.name
+                }
+                categoryBox.push(
+                    items
+                );
+
+            });
+
+            const options = {
+                "seletedValue": "",
+                "disabled": false,
+                "items": [...categoryBox]
+            };
+
+            
+            setOptionState(options);
+
+        });
     }, [])
 
     let columnSpec = [
@@ -259,7 +305,6 @@ const Home = (props) => {
         requestDataKey: 'id',
         customOnRowDoubleClick: doubleClick,
     }
-
 
     return (
         <>
@@ -286,7 +331,14 @@ const Home = (props) => {
 
                         </div>
                         <div className="input-group">
-                            <Select value={values.category} name='category' label='category' options={selectOptions} onChange={handleChange} />
+                            <Select value={values.category} name='category' label='category' options={optionsState} onChange={handleChange} />
+                            <Text
+                                icon='pencil alternate'
+                                value={values.category_new}
+                                name='category_new'
+                                label='new option'
+                                onChange={handleChange}
+                                disabled={values.category ? true : false} />
                         </div>
 
                         <div className="input-group">
@@ -299,7 +351,7 @@ const Home = (props) => {
 
                         <Button
                             type='submit'
-                            displayName={t("submit")}
+                            displayName={t("send")}
                             className='ui button btn-primary btn-search'
                             icon='icon search'
 

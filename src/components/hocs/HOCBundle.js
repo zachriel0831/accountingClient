@@ -36,7 +36,7 @@ const HOCBundle = (WrappedComponent) => {
                 accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
                 accountQueriesData.count = AccountingData.length;
                 console.log('getInitData');
-                
+                    
                 _this.setState({
                     result: accountQueriesData
                 })
@@ -89,6 +89,7 @@ const HOCBundle = (WrappedComponent) => {
 
                 resetKey: () => {
                     this.resetKey()
+                    
                 },
                 reloadPage: () => {
                     window.location.reload();

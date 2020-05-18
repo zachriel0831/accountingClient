@@ -3,5 +3,5 @@ module.exports = {
     mode: 0, //0 local, 1 dev
     defaultLanguage: 'zh-TW',
     routersData: ['/Home', '/Charts', '/Details', '/Installment'],
-    categories: ['foods', 'entertaining', 'travel', 'home', 'bills', 'gifts', 'insurance', 'credit-card', 'stock', 'salary', 'loan', 'interests', 'unexpected','other']
+    categories: ['foods', 'entertaining', 'travel', 'home', 'bills', 'rental', 'education', 'social', 'saving', 'tax', 'medical', 'gifts', 'insurance', 'credit-card', 'stock', 'salary', 'loan', 'interests', 'unexpected', 'other']
 };

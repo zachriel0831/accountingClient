@@ -157,6 +157,8 @@ const Details = (props) => {
         totalIncomeState: 0,
         totalExpenditureState: 0,
         totalAssets: 0,
+        incomeSummary: 0,
+        expenditureSummary: 0
     })
 
     const [dataFilterRadioGroupState, setDataFilterRadioGroupState] = useState(dataFilterRadioBtnInitVal[0]);
@@ -193,7 +195,8 @@ const Details = (props) => {
         // let endDay = moment(endDateState).format('DD');
 
         let accountQueriesData = {};
-
+        let sumIncome = 0;
+        let sumExpenditure = 0;
 
         switch (dataFilterRadioGroupState) {
             case 'month':
@@ -204,8 +207,20 @@ const Details = (props) => {
 
                     return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                 });
+
+                _.each(accountQueriesData.queries, (v, k) => {
+                    if (v.type === 'expenditure') {
+                        sumExpenditure += parseInt(v.amount);
+                    } else {
+                        sumIncome += parseInt(v.amount);
+                    }
+                });
+
                 accountQueriesData.count = accountQueriesData.queries.length;
                 accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
+                accountQueriesData.incomeSummary = sumIncome;
+                accountQueriesData.expenditureSummary = sumExpenditure;
+
                 setQueriesState(accountQueriesData);
 
                 break;
@@ -219,8 +234,19 @@ const Details = (props) => {
 
                     return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                 });
+
+                _.each(accountQueriesData.queries, (v, k) => {
+                    if (v.type === 'expenditure') {
+                        sumExpenditure += parseInt(v.amount);
+                    } else {
+                        sumIncome += parseInt(v.amount);
+                    }
+                });
+
                 accountQueriesData.count = accountQueriesData.queries.length;
                 accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
+                accountQueriesData.incomeSummary = sumIncome;
+                accountQueriesData.expenditureSummary = sumExpenditure;
 
                 setQueriesState(accountQueriesData);
 
@@ -232,9 +258,20 @@ const Details = (props) => {
                     return (items.date === date) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                 });
 
+                _.each(accountQueriesData.queries, (v, k) => {
+                    if (v.type === 'expenditure') {
+                        sumExpenditure += parseInt(v.amount);
+                    } else {
+                        sumIncome += parseInt(v.amount);
+                    }
+                });
+
+
                 // accountQueriesData.queries = [...initialState.queries];
                 accountQueriesData.count = accountQueriesData.queries.length;
                 accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
+                accountQueriesData.incomeSummary = sumIncome;
+                accountQueriesData.expenditureSummary = sumExpenditure;
 
                 setQueriesState(accountQueriesData);
 
@@ -246,9 +283,20 @@ const Details = (props) => {
                     return moment(items.date).isAfter(startDate) && moment(items.date).isBefore(endDate) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type == type) : true);
                 });
 
+                _.each(accountQueriesData.queries, (v, k) => {
+                    if (v.type === 'expenditure') {
+                        sumExpenditure += parseInt(v.amount);
+                    } else {
+                        sumIncome += parseInt(v.amount);
+                    }
+                });
+
                 // accountQueriesData.queries = [...initialState.queries];
                 accountQueriesData.count = accountQueriesData.queries.length;
                 accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
+                accountQueriesData.incomeSummary = sumIncome;
+                accountQueriesData.expenditureSummary = sumExpenditure;
+
                 setQueriesState(accountQueriesData);
 
                 break;
@@ -259,9 +307,20 @@ const Details = (props) => {
                     return items.year === values.year && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                 });
 
+                _.each(accountQueriesData.queries, (v, k) => {
+                    if (v.type === 'expenditure') {
+                        sumExpenditure += parseInt(v.amount);
+                    } else {
+                        sumIncome += parseInt(v.amount);
+                    }
+                });
+
+
                 // accountQueriesData.queries = [...initialState.queries];
                 accountQueriesData.count = accountQueriesData.queries.length;
                 accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
+                accountQueriesData.incomeSummary = sumIncome;
+                accountQueriesData.expenditureSummary = sumExpenditure;
 
                 setQueriesState(accountQueriesData);
                 break;
@@ -299,11 +358,12 @@ const Details = (props) => {
             }
         )
 
-
         //進來先秀本月的資料 zack 
         queriesState.queries = [...monthlyResult.monthlyDatas];
         queriesState.count = queriesState.queries.length;
         queriesState.time = moment().format('YYYY/MM/DD MM:SS');
+        queriesState.incomeSummary = monthlyResult.monthlyIncome;
+        queriesState.expenditureSummary = monthlyResult.monthlyExpenditure;
 
         setQueriesState(queriesState);
     }
@@ -311,12 +371,6 @@ const Details = (props) => {
     useEffect(() => {
         getAllData();
     }, []);
-
-    useEffect(() => {
-
-
-
-    }, [radioGroupState])
 
     const selectAllCheckBox = (e) => {
         setSelectAllState(!selectAllState);
@@ -457,6 +511,7 @@ const Details = (props) => {
         requestDataKey: 'id',
         customOnRowDoubleClick: doubleClick,
     }
+    
 
     return <><Form title='Details' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
         <Segment>
@@ -596,6 +651,9 @@ const Details = (props) => {
                 time={queriesState.time}
                 columnSpec={columnSpec}
                 rowSpec={rowSpec}
+                displaySummaryBlockFlag={true}
+                expenditureSummary={queriesState.expenditureSummary}
+                incomeSummary={queriesState.incomeSummary}
             />
         </Segment>
 
