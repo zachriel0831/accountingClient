@@ -355,9 +355,9 @@ const Charts = (props) => {
 
         switch (displayType) {
             case 'balanceComparisonPerMonth':
-            debugger
+            
                 let itemsOfThisYear = datas.queries.filter((items, index, array) => {
-                    debugger
+                    
                     let dates = items.date.split('/')[0];
 
                     return dates === thisYear;

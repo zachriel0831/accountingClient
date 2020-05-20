@@ -2,6 +2,6 @@ module.exports = {
     AjaxTimeOut: 6000,
     mode: 0, //0 local, 1 dev
     defaultLanguage: 'zh-TW',
-    routersData: ['/Home', '/Charts', '/Details', '/Installment'],
+    routersData: ['/Home', '/Charts', '/Details', '/Installment','/BackUp'],
     categories: ['foods', 'entertaining', 'travel', 'home', 'bills', 'rental', 'education', 'social', 'saving', 'tax', 'medical', 'gifts', 'insurance', 'credit-card', 'stock', 'salary', 'loan', 'interests', 'unexpected', 'other']
 };
