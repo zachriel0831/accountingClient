@@ -185,6 +185,7 @@ const BackUp = (props) => {
                     icon='pencil alternate'
                     name='serialNumber'
                     label='paste your serial key to update or save data'
+                    maxLength='50'
                     onChange={(e) => {
                         let val = e.currentTarget.value;
                         setUUIDKeyState(val);
