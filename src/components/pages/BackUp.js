@@ -25,7 +25,7 @@ import axios from 'axios';
 
 const BackUp = (props) => {
     const { t } = useTranslation();
-    const { add, getAll } = useIndexedDB('Accountings');
+    const { add, getAll,update } = useIndexedDB('Accountings');
     const initFormState = props.initialState;
 
     const [dimmerState, setDimmerState] = useState(false);
@@ -51,7 +51,7 @@ const BackUp = (props) => {
         accounting.uuidKey = uuidKeyState;
 
         accounting.data = JSON.stringify(initFormState);
-
+        setDimmerState(true);
         axios({
             method: 'post',
             baseURL: 'https://arcane-chamber-15160.herokuapp.com',
@@ -65,17 +65,23 @@ const BackUp = (props) => {
         }).then(function (response) {
             let responseData = response.data;
             console.log(response);
-
+            alert('updload success!')
             // handle success
         }).catch(function (error) {
             // handle error
             console.log(error);
+            alert('upload failed!')
+
         }).finally(function () {
             // always executed
+            setDimmerState(false);
+
         });
     }
 
     const getUUID = (e) => {
+        setDimmerState(true);
+
         axios({
             method: 'get',
             baseURL: 'https://arcane-chamber-15160.herokuapp.com',
@@ -95,8 +101,12 @@ const BackUp = (props) => {
         }).catch(function (error) {
             // handle error
             console.log(error);
+            alert('connection failed!')
+
         }).finally(function () {
             // always executed
+            setDimmerState(false);
+
         });
     }
 
@@ -106,6 +116,7 @@ const BackUp = (props) => {
             alert('please input serial key!');
             return;
         }
+        setDimmerState(true);
 
         let data = {}
         let uuidKey = values.synchronizeKey;
@@ -126,25 +137,36 @@ const BackUp = (props) => {
             let responseData = JSON.parse(response.data.data);
 
             if (responseData) {
+                alert('download successful!')
+
                 _.each(responseData.queries, (v, k) => {
-                    add(v).then(
+                    update(v).then(
                         event => {
                             console.log('ID Generated: ', event.target);
                         },
                         error => {
+                            alert('back up failed!')
+
                             console.log(error);
                         }
                     );
 
                 })
+            }else{
+
+                alert('back up failed!')
             }
 
             // handle success
         }).catch(function (error) {
             // handle error
             console.log(error);
+            alert('back up failed!')
+
         }).finally(function () {
             // always executed
+            setDimmerState(false);
+
         });
 
     }
