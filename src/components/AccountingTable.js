@@ -539,7 +539,7 @@ const AccountingTable = React.memo((props) => {
                 {queryResult}
                 {/* <div className="">若處理狀態有 ** 註記，表示未對到帳，請分行人工確認資金是否到位</div> */}
                 <div className="">{t("time")}: <span className="query__time">{props.time}</span></div>
-                <div style={{ display: (props.displaySummaryBlockFlag) ? 'block' : 'none' }}><span >{t("expenditure")}:{props.incomeSummary}</span> <br /><span>{t("income")}:{props.expenditureSummary}</span></div>
+                <div style={{ display: (props.displaySummaryBlockFlag) ? 'block' : 'none' }}><span >{t("income")}:{props.incomeSummary}</span> <br /><span>{t("expenditure")}:{props.expenditureSummary}</span></div>
             </div>
             <div className="query__table__wrap">
                 <table ref={tableRef} className="ui selectable sortable small striped celled compact table">
