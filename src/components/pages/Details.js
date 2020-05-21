@@ -103,7 +103,7 @@ const yearSelectOptions = {
 };
 
 const Details = (props) => {
-    const { deleteRecord } = useIndexedDB('Accountings');
+    const { deleteRecord, getAll } = useIndexedDB('Accountings');
     const { t } = useTranslation();
 
     let radioBtnInitVal = [];
@@ -208,21 +208,6 @@ const Details = (props) => {
                     return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                 });
 
-                _.each(accountQueriesData.queries, (v, k) => {
-                    if (v.type === 'expenditure') {
-                        sumExpenditure += parseInt(v.amount);
-                    } else {
-                        sumIncome += parseInt(v.amount);
-                    }
-                });
-
-                accountQueriesData.count = accountQueriesData.queries.length;
-                accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
-                accountQueriesData.incomeSummary = sumIncome;
-                accountQueriesData.expenditureSummary = sumExpenditure;
-
-                setQueriesState(accountQueriesData);
-
                 break;
 
             case 'year':
@@ -235,21 +220,6 @@ const Details = (props) => {
                     return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                 });
 
-                _.each(accountQueriesData.queries, (v, k) => {
-                    if (v.type === 'expenditure') {
-                        sumExpenditure += parseInt(v.amount);
-                    } else {
-                        sumIncome += parseInt(v.amount);
-                    }
-                });
-
-                accountQueriesData.count = accountQueriesData.queries.length;
-                accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
-                accountQueriesData.incomeSummary = sumIncome;
-                accountQueriesData.expenditureSummary = sumExpenditure;
-
-                setQueriesState(accountQueriesData);
-
                 break;
 
             case 'certain_day':
@@ -257,23 +227,6 @@ const Details = (props) => {
 
                     return (items.date === date) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                 });
-
-                _.each(accountQueriesData.queries, (v, k) => {
-                    if (v.type === 'expenditure') {
-                        sumExpenditure += parseInt(v.amount);
-                    } else {
-                        sumIncome += parseInt(v.amount);
-                    }
-                });
-
-
-                // accountQueriesData.queries = [...initialState.queries];
-                accountQueriesData.count = accountQueriesData.queries.length;
-                accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
-                accountQueriesData.incomeSummary = sumIncome;
-                accountQueriesData.expenditureSummary = sumExpenditure;
-
-                setQueriesState(accountQueriesData);
 
                 break;
 
@@ -283,22 +236,6 @@ const Details = (props) => {
                     return moment(items.date).isAfter(startDate) && moment(items.date).isBefore(endDate) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type == type) : true);
                 });
 
-                _.each(accountQueriesData.queries, (v, k) => {
-                    if (v.type === 'expenditure') {
-                        sumExpenditure += parseInt(v.amount);
-                    } else {
-                        sumIncome += parseInt(v.amount);
-                    }
-                });
-
-                // accountQueriesData.queries = [...initialState.queries];
-                accountQueriesData.count = accountQueriesData.queries.length;
-                accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
-                accountQueriesData.incomeSummary = sumIncome;
-                accountQueriesData.expenditureSummary = sumExpenditure;
-
-                setQueriesState(accountQueriesData);
-
                 break;
 
             case 'byYear':
@@ -307,65 +244,154 @@ const Details = (props) => {
                     return items.year === values.year && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                 });
 
-                _.each(accountQueriesData.queries, (v, k) => {
-                    if (v.type === 'expenditure') {
-                        sumExpenditure += parseInt(v.amount);
-                    } else {
-                        sumIncome += parseInt(v.amount);
-                    }
-                });
-
-
-                // accountQueriesData.queries = [...initialState.queries];
-                accountQueriesData.count = accountQueriesData.queries.length;
-                accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
-                accountQueriesData.incomeSummary = sumIncome;
-                accountQueriesData.expenditureSummary = sumExpenditure;
-
-                setQueriesState(accountQueriesData);
                 break;
             default:
                 break;
         }
+
+        _.each(accountQueriesData.queries, (v, k) => {
+            if (v.type === 'expenditure') {
+                sumExpenditure += parseInt(v.amount);
+            } else {
+                sumIncome += parseInt(v.amount);
+            }
+        });
+
+
+        // accountQueriesData.queries = [...initialState.queries];
+        accountQueriesData.count = accountQueriesData.queries.length;
+        accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
+        accountQueriesData.incomeSummary = sumIncome;
+        accountQueriesData.expenditureSummary = sumExpenditure;
+
+        setQueriesState(accountQueriesData);
+
     }
 
     const getAllData = () => {
-        let datas = { ...props.initialState };
-        // let accountQueriesData = {};
-        // let today = moment().format('YYYY/MM/DD');
-        let thisYear = moment().format('YYYY');
-        let thisMonth = moment().format('MM');
 
-        let monthlyResult = props.getMonthlyData(datas, thisMonth);
+        getAll().then(AccountingData => {
+            let accountQueriesData = {};
 
-        let annualResult = props.getAnnualData(datas, thisYear);
+            accountQueriesData.queries = AccountingData;
+            accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS')
+            accountQueriesData.count = AccountingData.length;
 
-        let totalAssetsResult = props.getTotalData(datas);
 
-        setAssetsDetailsState(
-            {
-                monthlyIncomeState: monthlyResult.monthlyIncome,
-                monthlyExpenditureState: monthlyResult.monthlyExpenditure,
-                monthlyBalance: monthlyResult.monthlyBalance,
-                monthlyDatas: monthlyResult.monthlyDatas,
-                annualIncomeState: annualResult.annualIncome,
-                annualExpenditureState: annualResult.annualExpenditure,
-                annualBalance: annualResult.annualBalance,
-                annualDatas: annualResult.annualDatas,
-                totalIncomeState: totalAssetsResult.totalIncome,
-                totalExpenditureState: totalAssetsResult.totalExpenditure,
-                totalAssets: totalAssetsResult.totalAssets,
+            let thisYear = moment().format('YYYY');
+            let thisMonth = moment().format('MM');
+
+            let monthlyResult = props.getMonthlyData(accountQueriesData, thisMonth);
+
+            let annualResult = props.getAnnualData(accountQueriesData, thisYear);
+
+            let totalAssetsResult = props.getTotalData(accountQueriesData);
+
+            setAssetsDetailsState(
+                {
+                    monthlyIncomeState: monthlyResult.monthlyIncome,
+                    monthlyExpenditureState: monthlyResult.monthlyExpenditure,
+                    monthlyBalance: monthlyResult.monthlyBalance,
+                    monthlyDatas: monthlyResult.monthlyDatas,
+                    annualIncomeState: annualResult.annualIncome,
+                    annualExpenditureState: annualResult.annualExpenditure,
+                    annualBalance: annualResult.annualBalance,
+                    annualDatas: annualResult.annualDatas,
+                    totalIncomeState: totalAssetsResult.totalIncome,
+                    totalExpenditureState: totalAssetsResult.totalExpenditure,
+                    totalAssets: totalAssetsResult.totalAssets,
+                }
+            )
+
+            let category = values.category;
+            let type = radioGroupState;
+            let date = moment(dateState).format('YYYY/MM/DD');
+            // let month = moment(dateState).format('MM');
+            // let day = moment(dateState).format('DD');
+            // let year = moment(dateState).format('YYYY');
+
+            let startDate = moment(startDateState).format('YYYY/MM/DD');
+            // let startMonth = moment(startDateState).format('MM');
+            // let startYear = moment(startDateState).format('YYYY');
+            // let startDay = moment(startDateState).format('DD');
+
+
+            let endDate = moment(endDateState).format('YYYY/MM/DD');
+            // let endMonth = moment(endDateState).format('MM');
+            // let endYear = moment(endDateState).format('YYYY');
+            // let endDay = moment(endDateState).format('DD');
+
+            let sumIncome = 0;
+            let sumExpenditure = 0;
+
+            switch (dataFilterRadioGroupState) {
+                case 'month':
+                    accountQueriesData.queries = [...monthlyResult.monthlyDatas];
+
+
+                    accountQueriesData.queries = accountQueriesData.queries.filter((items, index, array) => {
+
+                        return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
+                    });
+
+                    break;
+
+                case 'year':
+
+
+                    accountQueriesData.queries = [...annualResult.annualDatas];
+
+                    accountQueriesData.queries = accountQueriesData.queries.filter((items, index, array) => {
+
+                        return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
+                    });
+
+
+                    break;
+
+                case 'certain_day':
+                    accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
+
+                        return (items.date === date) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
+                    });
+
+                    break;
+
+                case 'period':
+                    accountQueriesData.queries = accountQueriesData.queries.filter((items, index, array) => {
+
+                        return moment(items.date).isAfter(startDate) && moment(items.date).isBefore(endDate) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type == type) : true);
+                    });
+
+
+                    break;
+
+                case 'byYear':
+                    accountQueriesData.queries = accountQueriesData.queries.filter((items, index, array) => {
+
+                        return items.year === values.year && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
+                    });
+
+                    break;
+                default:
+                    break;
             }
-        )
 
-        //進來先秀本月的資料 zack 
-        queriesState.queries = [...monthlyResult.monthlyDatas];
-        queriesState.count = queriesState.queries.length;
-        queriesState.time = moment().format('YYYY/MM/DD MM:SS');
-        queriesState.incomeSummary = monthlyResult.monthlyIncome;
-        queriesState.expenditureSummary = monthlyResult.monthlyExpenditure;
+            _.each(accountQueriesData.queries, (v, k) => {
+                if (v.type === 'expenditure') {
+                    sumExpenditure += parseInt(v.amount);
+                } else {
+                    sumIncome += parseInt(v.amount);
+                }
+            });
 
-        setQueriesState(queriesState);
+            accountQueriesData.count = accountQueriesData.queries.length;
+            accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
+            accountQueriesData.incomeSummary = sumIncome;
+            accountQueriesData.expenditureSummary = sumExpenditure;
+
+            setQueriesState(accountQueriesData);
+        });
     }
 
     useEffect(() => {
@@ -424,6 +450,9 @@ const Details = (props) => {
         let accountQueriesData = {};
         let previousMonth = parseInt(countMonthState) - 1;
         let previousYear = countYearState;
+        let sumIncome = 0;
+        let sumExpenditure = 0;
+
         if (previousMonth === 0) {
             previousYear = parseInt(countYearState) - 1;
             setCountYearState(previousYear);
@@ -433,23 +462,34 @@ const Details = (props) => {
         }
         setCountMonthState(previousMonth);
 
-
         accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
 
             return (items.year === previousYear) && (items.month === previousMonth);
         });
+
+        _.each(accountQueriesData.queries, (v, k) => {
+            if (v.type === 'expenditure') {
+                sumExpenditure += parseInt(v.amount);
+            } else {
+                sumIncome += parseInt(v.amount);
+            }
+        });
+
         accountQueriesData.count = accountQueriesData.queries.length;
         accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
-
+        accountQueriesData.incomeSummary = sumIncome;
+        accountQueriesData.expenditureSummary = sumExpenditure;
+        accountQueriesData.displayDate = { year: previousYear, month: previousMonth };
 
         setQueriesState(accountQueriesData);
-
     }
 
     const nextBtnClick = (e) => {
         let accountQueriesData = {};
         let nextMonth = parseInt(countMonthState) + 1;
         let nextYear = countYearState;
+        let sumIncome = 0;
+        let sumExpenditure = 0;
 
         if (nextMonth === 13) {
             nextYear = parseInt(countYearState) + 1;
@@ -465,8 +505,19 @@ const Details = (props) => {
 
             return (items.year === nextYear) && (items.month === nextMonth);
         });
+
+        _.each(accountQueriesData.queries, (v, k) => {
+            if (v.type === 'expenditure') {
+                sumExpenditure += parseInt(v.amount);
+            } else {
+                sumIncome += parseInt(v.amount);
+            }
+        });
         accountQueriesData.count = accountQueriesData.queries.length;
         accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
+        accountQueriesData.incomeSummary = sumIncome;
+        accountQueriesData.expenditureSummary = sumExpenditure;
+        accountQueriesData.displayDate = { year: nextYear, month: nextMonth };
 
 
         setQueriesState(accountQueriesData);
@@ -511,7 +562,7 @@ const Details = (props) => {
         requestDataKey: 'id',
         customOnRowDoubleClick: doubleClick,
     }
-    
+
 
     return <><Form title='Details' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
         <Segment>

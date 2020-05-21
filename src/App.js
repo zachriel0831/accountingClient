@@ -15,8 +15,7 @@ function App(props) {
 
     let path = browserHistory.location.pathname;
 
-
-    if (path === '/') {
+    if (path === '#/') {
 
       window.location.hash = 'Home'
     }

@@ -59,13 +59,7 @@ const Home = (props) => {
         monthlyDatas: [],
     });
 
-    
-
     const [optionsState, setOptionState] = useState({});
-
-
-
-
 
     let radioBtnInitVal = [];
     if (radioGroupItem) {
@@ -111,7 +105,6 @@ const Home = (props) => {
         let validateResult = true;
 
         if (category_new) {
-
             let add_category = {
                 id: moment().unix(),
                 name: category_new
@@ -124,7 +117,6 @@ const Home = (props) => {
                     console.log(error);
                 }
             );
-
         }
 
         _.each(values, (v, k) => {
@@ -248,8 +240,6 @@ const Home = (props) => {
 
     useEffect(() => {
         getAllData();
-
-
         let categories = config.categories;
         let categoryBox = [];
 
@@ -279,7 +269,7 @@ const Home = (props) => {
                 "items": [...categoryBox]
             };
 
-            
+
             setOptionState(options);
 
         });

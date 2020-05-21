@@ -226,12 +226,6 @@ const LargeTableExtendModal = React.memo((props) => {
                 </div>
             </Modal.Content>
             <Modal.Actions>
-                {/* {(queriesDisplay === 'LINE') ?
-                    <div className="ui primary button" onClick={(e) => switchToFID(e)}><i className="exchange icon"></i>Switch to FIN</div>
-                    : <div className="ui primary button" onClick={(e) => switchToLINE(e)}><i className="exchange icon"></i>Switch to LINE Format</div>
-                } */}
-
-
             </Modal.Actions>
 
         </Modal>

@@ -25,7 +25,7 @@ import axios from 'axios';
 
 const BackUp = (props) => {
     const { t } = useTranslation();
-    const { add, getAll,update } = useIndexedDB('Accountings');
+    const { update } = useIndexedDB('Accountings');
     const initFormState = props.initialState;
 
     const [dimmerState, setDimmerState] = useState(false);
@@ -54,7 +54,7 @@ const BackUp = (props) => {
         setDimmerState(true);
         axios({
             method: 'post',
-            baseURL: 'https://arcane-chamber-15160.herokuapp.com',
+            baseURL: config.mode === 0 ? config.localTestUrl : config.backEndUrl,
             url: '/BackUp/Saving_BackUp_Datas',
             'Content-Type': 'application/json',
             data: accounting,
@@ -84,7 +84,7 @@ const BackUp = (props) => {
 
         axios({
             method: 'get',
-            baseURL: 'https://arcane-chamber-15160.herokuapp.com',
+            baseURL: config.mode === 0 ? config.localTestUrl : config.backEndUrl,
             url: '/BackUp/Initital_BackUp_UUID',
             'Content-Type': 'application/json',
             headers: {
@@ -125,7 +125,7 @@ const BackUp = (props) => {
 
         axios({
             method: 'post',
-            baseURL: 'https://arcane-chamber-15160.herokuapp.com',
+            baseURL: config.mode === 0 ? config.localTestUrl : config.backEndUrl,
             url: '/BackUp/Get_BackUp_Datas',
             'Content-Type': 'application/json',
             data: data,
@@ -152,7 +152,7 @@ const BackUp = (props) => {
                     );
 
                 })
-            }else{
+            } else {
 
                 alert('back up failed!')
             }
@@ -238,9 +238,7 @@ const BackUp = (props) => {
                         onClick={(e) => synchronizeData(e)}
                     />
                 </div>
-
             </Segment>
-
         </Form></>
     </>
 }
