@@ -13,11 +13,10 @@ const HOCCommon = (ComposeComponent) => {
             //   return results;
             return true;
         },
-        //TODO 是否統一一個地方發ajax
         getDataFromServer: async (data, url) => {
-            console.log('context ajax firing!!')
-            let result = '';
-            var sendDataString = JSON.stringify(data);
+            // console.log('context ajax firing!!')
+            // let result = '';
+            // var sendDataString = JSON.stringify(data);
 
             //   await AjaxWrapper.sendDataToServer({
             //     method: 'POST',

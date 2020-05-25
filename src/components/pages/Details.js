@@ -78,23 +78,22 @@ const dataFilterRadioGroupItem = {
     ],
     "selectedValue": "month"
 }
-//TODO 拉去db
-let categories = config.categories;
-let categoryBox = [];
+// let categories = config.categories;
+// let categoryBox = [];
 
-_.each(categories, (v, k) => {
-    let items = {
-        label: v,
-        value: v
-    }
-    categoryBox.push(items);
-});
+// _.each(categories, (v, k) => {
+//     let items = {
+//         label: v,
+//         value: v
+//     }
+//     categoryBox.push(items);
+// });
 
-const selectOptions = {
-    "seletedValue": "",
-    "disabled": false,
-    "items": [...categoryBox]
-};
+// const selectOptions = {
+//     "seletedValue": "",
+//     "disabled": false,
+//     "items": [...categoryBox]
+// };
 
 const yearSelectOptions = {
     "seletedValue": moment(new Date()).format('YYYY'),
@@ -103,7 +102,10 @@ const yearSelectOptions = {
 };
 
 const Details = (props) => {
+    const [optionsState, setOptionState] = useState({});
     const { deleteRecord, getAll } = useIndexedDB('Accountings');
+    const categoryDB = useIndexedDB('Accountings_Categories');
+
     const { t } = useTranslation();
 
     let radioBtnInitVal = [];
@@ -396,6 +398,41 @@ const Details = (props) => {
 
     useEffect(() => {
         getAllData();
+
+        let categories = config.categories;
+        let categoryBox = [];
+
+        _.each(categories, (v, k) => {
+            let items = {
+                label: v,
+                value: v
+            }
+            categoryBox.push(items);
+        });
+
+
+        categoryDB.getAll().then(categories => {
+            _.each(categories, (v, k) => {
+                let items = {
+                    label: v.name,
+                    value: v.name
+                }
+                categoryBox.push(
+                    items
+                );
+
+            });
+
+            const options = {
+                "seletedValue": "",
+                "disabled": false,
+                "items": [...categoryBox]
+            };
+
+            setOptionState(options);
+
+        });
+
     }, []);
 
     const selectAllCheckBox = (e) => {
@@ -584,7 +621,7 @@ const Details = (props) => {
                     }} />
             </div>
             <div className="input-group">
-                <Select value={values.category} name='category' label='category' options={selectOptions} onChange={handleChange} />
+                <Select value={values.category} name='category' label='category' options={optionsState} onChange={handleChange} />
             </div>
 
             <div className="input-group" style={{ display: (dataFilterRadioGroupState === 'byYear') ? 'block' : 'none' }}>

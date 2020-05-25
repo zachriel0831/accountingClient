@@ -55,23 +55,7 @@ const dataFilterRadioGroupItem = {
     ],
     "selectedValue": "month"
 }
-//TODO 拉去db
-let categories = config.categories;
-let categoryBox = [];
 
-_.each(categories, (v, k) => {
-    let items = {
-        label: v,
-        value: v
-    }
-    categoryBox.push(items);
-});
-
-const selectOptions = {
-    "seletedValue": "",
-    "disabled": false,
-    "items": [...categoryBox]
-};
 const yearSelectOptions = {
     "seletedValue": moment(new Date()).format('YYYY'),
     "disabled": false,
@@ -80,6 +64,7 @@ const yearSelectOptions = {
 
 const Charts = (props) => {
     const { t } = useTranslation();
+    const categoryDB = useIndexedDB('Accountings_Categories');
 
     let radioBtnInitVal = [];
     if (radioGroupItem) {
@@ -111,9 +96,11 @@ const Charts = (props) => {
     const [checkBoxListState, setCheckBoxListState] = useState([]);
     const [dateState, setDateState] = useState(new Date());
     const [endDateState, setEndDateState] = useState(new Date());
+    const [optionsState, setOptionState] = useState({});
 
     const [startDateState, setStartDateState] = useState(new Date());
     const [queriesState, setQueriesState] = useState({});
+    const [itemLineChartState, setItemLineChartState] = useState([]);
     const [displayBalanceState, setDisplayBalanceState] = useState('none');
 
     const [countYearState, setCountYearState] = useState(moment(new Date()).format('YYYY').toString());
@@ -303,65 +290,48 @@ const Charts = (props) => {
         }
     }
 
+    const addItemToChart = (e) => {
+        let item = values.category;
 
-    // const getAllData = () => {
-    //     let datas = { ...props.initialState };
-    //     // let accountQueriesData = {};
-    //     // let today = moment().format('YYYY/MM/DD');
-    //     let thisYear = moment().format('YYYY');
-    //     let thisMonth = moment().format('MM');
+        generateLineChart('itemComparisonPerMonth', item);
 
-    //     let monthlyResult = props.getMonthlyData(datas, thisMonth);
+    }
 
-    //     let annualResult = props.getAnnualData(datas, thisYear);
+    const resetItemLineChart = (e) => {
 
-    //     let totalAssetsResult = props.getTotalData(datas);
+        setItemLineChartState([]);
+    }
 
-    //     setAssetsDetailsState(
-    //         {
-    //             monthlyIncomeState: monthlyResult.monthlyIncome,
-    //             monthlyExpenditureState: monthlyResult.monthlyExpenditure,
-    //             monthlyBalance: monthlyResult.monthlyBalance,
-    //             monthlyDatas: monthlyResult.monthlyDatas,
-    //             annualIncomeState: annualResult.annualIncome,
-    //             annualExpenditureState: annualResult.annualExpenditure,
-    //             annualBalance: annualResult.annualBalance,
-    //             annualDatas: annualResult.annualDatas,
-    //             totalIncomeState: totalAssetsResult.totalIncome,
-    //             totalExpenditureState: totalAssetsResult.totalExpenditure,
-    //             totalAssets: totalAssetsResult.totalAssets,
-    //         }
-    //     )
+    useEffect(() => {
 
-    //     //進來先秀本月的資料 zack 
-    //     queriesState.queries = [...monthlyResult.monthlyDatas];
-    //     queriesState.count = queriesState.queries.length;
-    //     queriesState.time = moment().format('YYYY/MM/DD MM:SS');
-    //     queriesState.incomeSummary = monthlyResult.monthlyIncome;
-    //     queriesState.expenditureSummary = monthlyResult.monthlyExpenditure;
 
-    //     setQueriesState(queriesState);
-    // }
+        if (itemLineChartState.length === 0) {
 
-    // useEffect(() => {
-    //     getAllData();
-    // }, []);
+            generateLineChart('itemComparisonPerMonth', '', 'reset');
+        }
 
-    const generateLineChart = (displayType, item) => {
+
+    }, [itemLineChartState])
+
+    const generateLineChart = (displayType, item, cmd) => {
+
+
         let datas = { ...props.initialState };
         let thisYear = moment().format('YYYY');
         let thisMonth = moment().format('MM');
-        var ctx_line = document.getElementById("lineChart");
+        let itemsOfThisYear = datas.queries.filter((items, index, array) => {
+
+            let dates = items.date.split('/')[0];
+
+            return dates === thisYear;
+        });
+        let chartDataSetBox = [];
 
         switch (displayType) {
             case 'balanceComparisonPerMonth':
-            
-                let itemsOfThisYear = datas.queries.filter((items, index, array) => {
-                    
-                    let dates = items.date.split('/')[0];
+                var ctx_line = document.getElementById("lineChart");
 
-                    return dates === thisYear;
-                });
+
 
                 let monthlyExpenditureSummaryArray = [];
                 let monthlyIncomeSummaryArray = [];
@@ -393,7 +363,6 @@ const Charts = (props) => {
                 }
 
 
-                let chartDataSetBox = [];
                 chartDataSetBox.push({
                     label: 'Annual expenditure', // Name the series
                     data: monthlyExpenditureSummaryArray, // Specify the data values array
@@ -429,12 +398,7 @@ const Charts = (props) => {
                 break;
 
             case 'itemComparisonPerMonth':
-                let expenditureItemsOfThisYear = datas.queries.filter((items, index, array) => {
-                    let dates = items.date.split('/')[0];
-
-                    return dates === thisYear && items.type === 'expenditure';
-                });
-
+                var item_ctx_line = document.getElementById("itemLineChart");
 
                 let itemExpenditureSummaryArray = [];
 
@@ -443,17 +407,71 @@ const Charts = (props) => {
                     let monthFormat = (i < 10) ? ('0' + i) : (i + '');
                     let monthlyExpenditureSummary = 0;
 
-                    let expenditureData_of_each_month = expenditureItemsOfThisYear.filter((items, index, array) => {
-                        return items.month === monthFormat;
+                    let data_of_each_month = itemsOfThisYear.filter((items, index, array) => {
+                        return items.month === monthFormat && items.category === item;
                     });
 
 
-                    _.each(expenditureData_of_each_month, (v, k) => {
+                    _.each(data_of_each_month, (v, k) => {
                         monthlyExpenditureSummary += parseInt(v.amount);
                     });
 
                     itemExpenditureSummaryArray.push(monthlyExpenditureSummary);
                 }
+
+                if (item === '') {
+
+                    var item_line_Chart = new Chart(item_ctx_line, {
+                        type: 'line',
+                        data: {
+                            labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
+                            datasets: []
+                        },
+                        options: {
+                            responsive: true, // Instruct chart js to respond nicely.
+                            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+                        }
+                    });
+                    item_line_Chart.reset();
+                } else {
+                    let lineColor = utils.getRandomColor();
+                    chartDataSetBox = [...itemLineChartState, {
+                        label: item, // Name the series
+                        data: itemExpenditureSummaryArray, // Specify the data values array
+                        fill: false,
+                        borderColor: lineColor, // Add custom color border (Line)
+                        backgroundColor: lineColor, // Add custom color background (Points and Fill)
+                        borderWidth: 1 // Specify bar border width
+                    }]
+                    setItemLineChartState([...chartDataSetBox]);
+
+                    var item_line_Chart = new Chart(item_ctx_line, {
+                        type: 'line',
+                        data: {
+                            labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
+                            datasets: [...chartDataSetBox]
+                        },
+                        options: {
+                            responsive: true, // Instruct chart js to respond nicely.
+                            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+                        }
+                    });
+
+                }
+
+
+                // chartDataSetBox.push({
+                //     label: item, // Name the series
+                //     data: itemExpenditureSummaryArray, // Specify the data values array
+                //     fill: false,
+                //     borderColor: '#FF0000', // Add custom color border (Line)
+                //     backgroundColor: '#FF0000', // Add custom color background (Points and Fill)
+                //     borderWidth: 1 // Specify bar border width
+                // });
+
+                //line chart
+
+
 
 
                 break;
@@ -463,10 +481,42 @@ const Charts = (props) => {
         }
     }
 
-    
-
     useEffect(() => {
         generateLineChart('balanceComparisonPerMonth');
+
+        let categories = config.categories;
+        let categoryBox = [];
+
+        _.each(categories, (v, k) => {
+            let items = {
+                label: v,
+                value: v
+            }
+            categoryBox.push(items);
+        });
+
+
+        categoryDB.getAll().then(categories => {
+            _.each(categories, (v, k) => {
+                let items = {
+                    label: v.name,
+                    value: v.name
+                }
+                categoryBox.push(
+                    items
+                );
+
+            });
+
+            const options = {
+                "seletedValue": "",
+                "disabled": false,
+                "items": [...categoryBox]
+            };
+
+            setOptionState(options);
+
+        });
         // let monthlyResult = props.getMonthlyData(datas, thisMonth);
 
         // let annualResult = props.getAnnualData(datas, thisYear);
@@ -660,6 +710,34 @@ const Charts = (props) => {
 
             </Segment>
 
+
+            <Segment>
+                <div className="input-group">
+                    <Select value={values.category} name='category' label='category' options={optionsState} onChange={handleChange} />
+                </div>
+                <div className="input-group">
+                    <Button
+                        type='button'
+                        displayName={t("add")}
+                        className='ui button btn-primary btn-search'
+                        icon='icon add'
+                        onClick={(e) => addItemToChart(e)}
+
+                    />
+                    <Button
+                        type='button'
+                        displayName={t("reset")}
+                        className='ui button btn-primary btn-search'
+                        icon='icon minus square outline'
+                        onClick={(e) => resetItemLineChart(e)}
+
+                    />
+
+                </div>
+                <div>
+                    <canvas id="itemLineChart"></canvas>
+                </div>
+            </Segment>
 
 
             {/* <Segment>

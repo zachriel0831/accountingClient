@@ -37,8 +37,6 @@ const radioGroupItem = {
     "selectedValue": "expenditure"
 }
 
-//TODO 拉去db
-
 
 const Home = (props) => {
     const { add, getAll, deleteRecord } = useIndexedDB('Accountings');
@@ -269,7 +267,6 @@ const Home = (props) => {
                 "items": [...categoryBox]
             };
 
-
             setOptionState(options);
 
         });
@@ -310,9 +307,9 @@ const Home = (props) => {
                                 }} />
                         </div>
 
-                        <div className="input-group">
+                        <div className="input-group ">
                             <DatePicker
-                                label={t("date")}
+                                label={t("Date")}
                                 selected={dateState}
                                 onChange={(date) => {
                                     setDateState(date);
@@ -321,7 +318,7 @@ const Home = (props) => {
 
                         </div>
                         <div className="input-group">
-                            <Select value={values.category} name='category' label='category' options={optionsState} onChange={handleChange} />
+                            <Select value={values.category} name='category' label='Category' options={optionsState} onChange={handleChange} />
                             <Text
                                 icon='pencil alternate'
                                 value={values.category_new}
@@ -341,14 +338,14 @@ const Home = (props) => {
 
                         <Button
                             type='submit'
-                            displayName={t("send")}
+                            displayName={t("Send")}
                             className='ui button btn-primary btn-search'
                             icon='icon search'
 
                         />
                         <Button
                             type='button'
-                            displayName={t("delete")}
+                            displayName={t("Delete")}
                             className='ui button btn-primary '
                             icon='icon times circle'
                             onClick={(e) => deleteItems(e)}

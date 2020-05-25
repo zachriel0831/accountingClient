@@ -7,7 +7,6 @@ import Button from './Button';
 import utils from '../utils/utils';
 // import $ from 'jquery';
 // import CheckBox from './CheckBox';
-//TODO table先不包HOC
 import _ from 'lodash';
 //memo用來提高網頁效能 當props與state不變則不render
 import { useTranslation } from "react-i18next";

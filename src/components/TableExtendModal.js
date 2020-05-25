@@ -105,7 +105,6 @@ const TableExtendModal = React.memo((props) => {
     }
 
     let tds = [];
-    //TODO 之後會有需要編輯的table 會再更改
     const trGenerator = (value) => {
 
         const trClick = (e) => {
@@ -176,38 +175,8 @@ const TableExtendModal = React.memo((props) => {
     }
 
     const openModal = async (e) => {
-        console.log('modal ajax firing!!')
         let result = '';
-        var sendDataString = { 'id': props.rowKey }; //TODO 應為欄位參數
 
-
-        // await AjaxWrapper.sendDataToServer({
-        //     method: props.queryMethod,
-        //     url: config.mode === 0 ? `${config.testContextURL}${url}` : url,
-        //     data: sendDataString,
-        //     dataType: 'text',
-        //     async: true,
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json',
-        //         // 'DataCheckSum': sendDataStringCRC32  /做為比對data用 以免資料被人竄改
-        //     },
-        //     success: function (respData) {
-        //         // console.log('SERVER RESPONSE: ', JSON.parse(respData));
-                
-        //         result = respData;
-        //     },
-        //     error: function (jqXHR, textStatus, errorThrown) {
-
-        //         console.log('SERVER error jqXHR: ', jqXHR);
-        //         console.log('SERVER error textStatus: ', textStatus);
-        //         console.log('SERVER error errorThrown: ', errorThrown);
-
-        //     },
-        //     complete: function (jqXHR, textStatus) {
-        //         console.log('TableModal ajax complete')
-        //     }
-        // })
 
         setQueries(result.data.queriesData);
         setOpen(true);
