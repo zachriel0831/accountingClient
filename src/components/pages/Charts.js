@@ -90,10 +90,10 @@ const Charts = (props) => {
     // const { t } = useTranslation();
     // const _this = this;
     const initialState = props.initialState;
-
+    const [chartState, setChartState] = useState({});
     const [dimmerState, setDimmerState] = useState(false);
-    const [selectAllState, setSelectAllState] = useState(false);
-    const [checkBoxListState, setCheckBoxListState] = useState([]);
+    // const [selectAllState, setSelectAllState] = useState(false);
+    // const [checkBoxListState, setCheckBoxListState] = useState([]);
     const [dateState, setDateState] = useState(new Date());
     const [endDateState, setEndDateState] = useState(new Date());
     const [optionsState, setOptionState] = useState({});
@@ -101,10 +101,10 @@ const Charts = (props) => {
     const [startDateState, setStartDateState] = useState(new Date());
     const [queriesState, setQueriesState] = useState({});
     const [itemLineChartState, setItemLineChartState] = useState([]);
-    const [displayBalanceState, setDisplayBalanceState] = useState('none');
+    // const [displayBalanceState, setDisplayBalanceState] = useState('none');
 
-    const [countYearState, setCountYearState] = useState(moment(new Date()).format('YYYY').toString());
-    const [countMonthState, setCountMonthState] = useState(moment(new Date()).format('MM').toString());
+    // const [countYearState, setCountYearState] = useState(moment(new Date()).format('YYYY').toString());
+    // const [countMonthState, setCountMonthState] = useState(moment(new Date()).format('MM').toString());
 
     const [assetsDetailState, setAssetsDetailsState] = useState({
         monthlyIncomeState: 0,
@@ -300,25 +300,30 @@ const Charts = (props) => {
     const resetItemLineChart = (e) => {
 
         setItemLineChartState([]);
+        chartState.destroy();
+        var item_ctx_line = document.getElementById("itemLineChart");
+
+        var item_line_Chart = new Chart(item_ctx_line, {
+            type: 'line',
+            data: {
+                labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
+                datasets: []
+            },
+            options: {
+                responsive: true, // Instruct chart js to respond nicely.
+                maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+            }
+        });
+
+        setChartState(item_line_Chart);
+
     }
-
-    useEffect(() => {
-
-
-        if (itemLineChartState.length === 0) {
-
-            generateLineChart('itemComparisonPerMonth', '', 'reset');
-        }
-
-
-    }, [itemLineChartState])
 
     const generateLineChart = (displayType, item, cmd) => {
 
 
         let datas = { ...props.initialState };
         let thisYear = moment().format('YYYY');
-        let thisMonth = moment().format('MM');
         let itemsOfThisYear = datas.queries.filter((items, index, array) => {
 
             let dates = items.date.split('/')[0];
@@ -399,7 +404,6 @@ const Charts = (props) => {
 
             case 'itemComparisonPerMonth':
                 var item_ctx_line = document.getElementById("itemLineChart");
-
                 let itemExpenditureSummaryArray = [];
 
                 for (var i = 1; i <= 12; i++) {
@@ -419,21 +423,7 @@ const Charts = (props) => {
                     itemExpenditureSummaryArray.push(monthlyExpenditureSummary);
                 }
 
-                if (item === '') {
-
-                    var item_line_Chart = new Chart(item_ctx_line, {
-                        type: 'line',
-                        data: {
-                            labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
-                            datasets: []
-                        },
-                        options: {
-                            responsive: true, // Instruct chart js to respond nicely.
-                            maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
-                        }
-                    });
-                    item_line_Chart.reset();
-                } else {
+                if (item_ctx_line.$chartjs) {
                     let lineColor = utils.getRandomColor();
                     chartDataSetBox = [...itemLineChartState, {
                         label: item, // Name the series
@@ -445,7 +435,9 @@ const Charts = (props) => {
                     }]
                     setItemLineChartState([...chartDataSetBox]);
 
-                    var item_line_Chart = new Chart(item_ctx_line, {
+                    chartState.destroy();
+
+                    let newChartState = new Chart(item_ctx_line, {
                         type: 'line',
                         data: {
                             labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
@@ -457,25 +449,11 @@ const Charts = (props) => {
                         }
                     });
 
+                    setChartState(newChartState);
+
                 }
 
-
-                // chartDataSetBox.push({
-                //     label: item, // Name the series
-                //     data: itemExpenditureSummaryArray, // Specify the data values array
-                //     fill: false,
-                //     borderColor: '#FF0000', // Add custom color border (Line)
-                //     backgroundColor: '#FF0000', // Add custom color background (Points and Fill)
-                //     borderWidth: 1 // Specify bar border width
-                // });
-
-                //line chart
-
-
-
-
                 break;
-
             default:
                 break;
         }
@@ -486,7 +464,6 @@ const Charts = (props) => {
 
         let categories = config.categories;
         let categoryBox = [];
-
         _.each(categories, (v, k) => {
             let items = {
                 label: v,
@@ -517,7 +494,26 @@ const Charts = (props) => {
             setOptionState(options);
 
         });
-        // let monthlyResult = props.getMonthlyData(datas, thisMonth);
+        var item_ctx_line = document.getElementById("itemLineChart");
+
+        var item_line_Chart = new Chart(item_ctx_line, {
+            type: 'line',
+            data: {
+                labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
+                datasets: []
+            },
+            options: {
+                responsive: true, // Instruct chart js to respond nicely.
+                maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+            }
+        });
+
+        setChartState(item_line_Chart);
+
+
+        let datas = { ...props.initialState };
+        let thisMonth = moment().format('MM');
+        let monthlyResult = props.getMonthlyData(datas, thisMonth);
 
         // let annualResult = props.getAnnualData(datas, thisYear);
 
@@ -540,103 +536,101 @@ const Charts = (props) => {
         // )
 
         //進來先秀本月的資料 zack 
-        // queriesState.queries = monthlyResult.monthlyDatas.filter((items, index, array) => {
+        let pieData = {};
+        pieData.queries = monthlyResult.monthlyDatas.filter((items, index, array) => {
 
-        //     return items.type === 'expenditure';
-        // });
-        // queriesState.count = queriesState.queries.length;
-        // queriesState.time = moment().format('YYYY/MM/DD MM:SS');
-        // queriesState.incomeSummary = monthlyResult.monthlyIncome;
-        // queriesState.expenditureSummary = monthlyResult.monthlyExpenditure;
+            return items.type === 'expenditure';
+        });
+        pieData.count = pieData.queries.length;
+        pieData.time = moment().format('YYYY/MM/DD MM:SS');
+        pieData.incomeSummary = monthlyResult.monthlyIncome;
+        pieData.expenditureSummary = monthlyResult.monthlyExpenditure;
 
+        var ctx = document.getElementById('myChart');
 
+        // pie chart
+        let labels = [];
+        let categoryBoxForPie = [];
+        let label_data = [];
+        let bgColors = [];
+        let bdColors = [];
 
+        _.each(pieData.queries, (v, k) => {
+            let itemCategory = v.category;
+            let itemAmount = parseInt(v.amount);
+            // labels = [...labels, itemCategory];
 
-        // var ctx = document.getElementById('myChart');
+            if (labels.length !== 0) {
+                if (labels.includes(itemCategory)) {
+                    _.each(categoryBoxForPie, (v, k) => {
+                        if (v.category === itemCategory) {
+                            v.category = itemCategory;
+                            let amount = parseInt(v.amount);
+                            v.amount = (amount += parseInt(itemAmount));
+                            // categoryBox.push({ category: itemCategory, amount: itemAmount })
+                        }
+                    });
 
-        //pie chart
-        // let labels = [];
-        // let categoryBox = [];
-        // let label_data = [];
-        // let bgColors = [];
-        // let bdColors = [];
+                } else {
+                    labels = [...labels, itemCategory];
+                    categoryBoxForPie.push({ category: itemCategory, amount: itemAmount })
 
-        // _.each(queriesState.queries, (v, k) => {
-        //     let itemCategory = v.category;
-        //     let itemAmount = parseInt(v.amount);
-        //     // labels = [...labels, itemCategory];
+                }
 
-        //     if (labels.length !== 0) {
-        //         if (labels.includes(itemCategory)) {
-        //             _.each(categoryBox, (v, k) => {
-        //                 if (v.category === itemCategory) {
-        //                     v.category = itemCategory;
-        //                     let amount = parseInt(v.amount);
-        //                     v.amount = (amount += parseInt(itemAmount));
-        //                     // categoryBox.push({ category: itemCategory, amount: itemAmount })
-        //                 }
-        //             });
+            } else {
+                labels.push(itemCategory);
+                categoryBoxForPie.push({ category: itemCategory, amount: itemAmount });
+            }
+        });
 
-        //         } else {
-        //             labels = [...labels, itemCategory];
-        //             categoryBox.push({ category: itemCategory, amount: itemAmount })
+        _.each(categoryBoxForPie, (v, k) => {
+            // labels.push(v.category);
+            label_data.push(v.amount);
+        })
 
-        //         }
+        _.each(labels, (v, k) => {
+            let generageColor = utils.random_rgba(0.2, 1);
+            bgColors.push(generageColor[0]);
+            bdColors.push(generageColor[1]);
+        })
 
-        //     } else {
-        //         labels.push(itemCategory);
-        //         categoryBox.push({ category: itemCategory, amount: itemAmount });
-        //     }
-        // });
-
-        // _.each(categoryBox, (v, k) => {
-        //     // labels.push(v.category);
-        //     label_data.push(v.amount);
-        // })
-
-        // _.each(labels, (v, k) => {
-        //     let generageColor = utils.random_rgba(0.2, 1);
-        //     bgColors.push(generageColor[0]);
-        //     bdColors.push(generageColor[1]);
-        // })
-
-        // var myChart = new Chart(ctx, {
-        //     type: 'bar',
-        //     data: {
-        //         labels: labels,
-        //         datasets: [{
-        //             label: 'amount',
-        //             data: label_data,
-        //             backgroundColor: bgColors,
-        //             borderColor: bdColors,
-        //             borderWidth: 1
-        //         }],
-        //     },
-        //     options: {
-        //         scales: {
-        //             yAxes: [{
-        //                 ticks: {
-        //                     beginAtZero: true
-        //                 }
-        //             }]
-        //         },
-        //         events: ['mousemove', 'click', 'touchstart', 'touchmove'],
-        //         hover: {
-        //             mode: 'index',
-        //             intersect: false
-        //         },
-        //         legend: {
-        //             display: false,
-        //         }
-        //     }
-        // });
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'amount',
+                    data: label_data,
+                    backgroundColor: bgColors,
+                    borderColor: bdColors,
+                    borderWidth: 1
+                }],
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                events: ['mousemove', 'click', 'touchstart', 'touchmove'],
+                hover: {
+                    mode: 'index',
+                    intersect: false
+                },
+                legend: {
+                    display: false,
+                }
+            }
+        });
 
     }, [])
 
     return <>
         <><Form title='Charts' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
-            <Segment>
-                {/* <div className="input-group">
+            {/* <Segment> */}
+            {/* <div className="input-group">
                     <RadioGroup
                         name='data filter'
                         radioData={dataFilterRadioGroupItem}
@@ -701,7 +695,7 @@ const Charts = (props) => {
 
                     />
                 </div>*/}
-            </Segment>
+            {/* </Segment> */}
 
 
             <Segment>
@@ -740,9 +734,29 @@ const Charts = (props) => {
             </Segment>
 
 
-            {/* <Segment>
+            <Segment style={{display:'none'}}>
+                <label>Monthly barChart</label>
+                <div className="input-group">
+                    <Button
+                        type='button'
+                        displayName={t("previous")}
+                        className='ui button btn-primary btn-search'
+                        icon='left arrow icon'
+                    // onClick={(e) => addItemToChart(e)}
+
+                    />
+                    <Button
+                        type='button'
+                        displayName={t("next")}
+                        className='ui button btn-primary btn-search'
+                        icon='right arrow icon'
+                    // onClick={(e) => resetItemLineChart(e)}
+
+                    />
+
+                </div>
                 <canvas id="myChart"></canvas>
-            </Segment> */}
+            </Segment>
 
         </Form></>
     </>
