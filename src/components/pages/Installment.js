@@ -89,14 +89,14 @@ const Installment = (props) => {
         values.id = itemId;
         values.type = type;
         values.date = date;
-        values.amount = amount ? amount.replace(/,/g, '') : '';
+        values.amount = amount;
         values.category = category;
         values.remark = remark ? remark : '';
         values.month = month;
         values.day = day;
         values.year = year;
         values.times = times ? times : "1";
-
+        debugger;
         let validateResult = true;
 
         _.each(values, (v, k) => {
@@ -116,16 +116,18 @@ const Installment = (props) => {
         let calAsset = 0;
         let assetTest = 0;
         assetTest = totalAssets.replace(/,/g, '');
+        amount = values.amount.replace(/,/g, '');
         let calAmount = amount * times;
+        console.log("amount * times:" + amount + "*" + times + "=" + calAmount);
         if (radioGroupState === "expenditure") {
             calExp = parseInt(calAmount);
             setTotalExpenditureState(utils.transferToAmountFormat(parseInt(totalExpenditureState.replace(/,/g, '')) + parseInt(calAmount)));
-            
         } else if (radioGroupState === "income") {
             calIncome = parseInt(calAmount);
             setTotalIncomeState(utils.transferToAmountFormat(parseInt(totalIncomeState.replace(/,/g, '')) + parseInt(calAmount)));
         }
-        
+
+
         calAsset = parseInt(assetTest) + calIncome - calExp;
         setTotalAssets(utils.transferToAmountFormat(calAsset));
         setQueryDisabl(true);
@@ -151,7 +153,7 @@ const Installment = (props) => {
         values.id = itemId;
         values.type = type;
         values.date = date;
-        values.amount = amount ? amount.replace(/,/g, '') : '';
+        values.amount = amount;
         values.category = category;
         values.remark = remark ? remark : '';
         values.month = month;
@@ -172,9 +174,12 @@ const Installment = (props) => {
             return;
         }
 
+        
+
         for (let i = 0; i < times; i++) {
             let applyDate = new Date(date);
             let installmentDate = moment(applyDate).add(i, 'months').format('YYYY/MM/DD');
+            values.amount = amount.replace(/,/g, '');
             values.date = installmentDate;
             values.month = moment(installmentDate).format('MM');
             values.id = `${moment().unix()}_expenditure_${values.category}_${moment(installmentDate).format('YYYY/MM/DD')}_${values.amount}`;
