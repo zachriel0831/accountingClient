@@ -81,7 +81,7 @@ const LargeTableExtendModal = React.memo((props) => {
     }
     //radioGroup state
     const [radioGroupState, setRadioGroupState] = useState(radioBtnInitVal[0]);
-    const [dateState, setDateState] = useState(initialState.date ? moment(initialState.date, 'YYYY/MM/DD').toDate() : new Date());
+    const [tableDateState, setTableDateState] = useState(initialState.tableDate ? moment(initialState.tableDate, 'YYYY/MM/DD').toDate() : new Date());
     const [dimmerState, setDimmerState] = useState(false);
 
     // const [largeTableOpen, setLargeTableOpen] = useState(false);
@@ -94,7 +94,7 @@ const LargeTableExtendModal = React.memo((props) => {
     function submit(e, formRef) {
 
         values.id = rowKey;
-        values.date = moment(values.date).format('YYYY/MM/DD')
+        values.date = moment(tableDateState).format('YYYY/MM/DD');
         values.type = radioGroupState;
 
 
@@ -199,11 +199,11 @@ const LargeTableExtendModal = React.memo((props) => {
 
                         <div className="input-group">
                             <DatePicker
-                                name='date'
+                                name='tableDate'
                                 label={t("date")}
-                                selected={dateState}
+                                selected={tableDateState}
                                 onChange={(date) => {
-                                    setDateState(date);
+                                    setTableDateState(date);
                                 }}
                             />
 

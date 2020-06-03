@@ -140,6 +140,8 @@ const Details = (props) => {
     const [endDateState, setEndDateState] = useState(new Date());
 
     const [startDateState, setStartDateState] = useState(new Date());
+
+    const [allDataState,setAllDataState] = useState(initialState);
     const [queriesState, setQueriesState] = useState({});
     const [displayBalanceState, setDisplayBalanceState] = useState('none');
 
@@ -225,7 +227,7 @@ const Details = (props) => {
                 break;
 
             case 'certain_day':
-                accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
+                accountQueriesData.queries = allDataState.filter((items, index, array) => {
 
                     return (items.date === date) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                 });
@@ -233,7 +235,7 @@ const Details = (props) => {
                 break;
 
             case 'period':
-                accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
+                accountQueriesData.queries = allDataState.filter((items, index, array) => {
 
                     return moment(items.date).isAfter(startDate) && moment(items.date).isBefore(endDate) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type == type) : true);
                 });
@@ -241,7 +243,7 @@ const Details = (props) => {
                 break;
 
             case 'byYear':
-                accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
+                accountQueriesData.queries = allDataState.filter((items, index, array) => {
 
                     return items.year === values.year && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                 });
@@ -279,6 +281,7 @@ const Details = (props) => {
             accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS')
             accountQueriesData.count = AccountingData.length;
 
+            setAllDataState(AccountingData);
 
             let thisYear = moment().format('YYYY');
             let thisMonth = moment().format('MM');
@@ -352,7 +355,7 @@ const Details = (props) => {
                     break;
 
                 case 'certain_day':
-                    accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
+                    accountQueriesData.queries = allDataState.filter((items, index, array) => {
 
                         return (items.date === date) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                     });
@@ -499,7 +502,7 @@ const Details = (props) => {
         }
         setCountMonthState(previousMonth);
 
-        accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
+        accountQueriesData.queries = allDataState.filter((items, index, array) => {
 
             return (items.year === previousYear) && (items.month === previousMonth);
         });
@@ -538,7 +541,7 @@ const Details = (props) => {
         }
         setCountMonthState(nextMonth);
 
-        accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
+        accountQueriesData.queries = allDataState.filter((items, index, array) => {
 
             return (items.year === nextYear) && (items.month === nextMonth);
         });
