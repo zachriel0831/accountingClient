@@ -343,14 +343,6 @@ const Home = (props) => {
                             icon='icon search'
 
                         />
-                        <Button
-                            type='button'
-                            displayName={t("Delete")}
-                            className='ui button btn-primary '
-                            icon='icon times circle'
-                            onClick={(e) => deleteItems(e)}
-
-                        />
                     </Segment>
 
                     <Segment>
@@ -364,6 +356,15 @@ const Home = (props) => {
                 </div>
 
                 <Segment className='accounting-table'>
+                    <Button
+                        type='button'
+                        displayName={t("Delete")}
+                        className='ui button btn-primary '
+                        icon='icon times circle'
+                        onClick={(e) => deleteItems(e)}
+
+                    />
+
                     <PureCheckBox name='checkBox' label='select all' onClick={(e) => selectAllCheckBox(e)} />
                     <AccountingTable
                         // ref='accountingTable'

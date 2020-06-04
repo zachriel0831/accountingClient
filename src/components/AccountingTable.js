@@ -208,9 +208,6 @@ const AccountingTable = React.memo((props) => {
         modal: false,
         large_modal: false,
     }
-    //header只要繞完第一圈
-    let headerFinishFlag = false;
-
 
     //排序
     const sortingQuery = (value, sortingType, order, orderByAmount, amountHeaderName) => {
@@ -525,7 +522,6 @@ const AccountingTable = React.memo((props) => {
     let queryResult = [];
 
     if (rowCounts === 0) {
-        // queryResult.push(<div className="">***無顯示資料***</div>)
         queryResult.push(<div key={utils.generateUID()} className="">***{t("tableNoData")}***</div>)
     } else {
         queryResult.push(<div key={utils.generateUID()} className="">{t("data")} <span className="query__sum">{props.count ? props.count : 0}</span> {t("count")}</div>);
@@ -536,7 +532,6 @@ const AccountingTable = React.memo((props) => {
         <>
             <div className="query__info__row">
                 {queryResult}
-                {/* <div className="">若處理狀態有 ** 註記，表示未對到帳，請分行人工確認資金是否到位</div> */}
                 <div className="">{t("time")}: <span className="query__time">{props.time}</span></div>
                 <div style={{ display: (props.displaySummaryBlockFlag) ? 'block' : 'none' }}><span >{t("income")}:{props.incomeSummary}</span> <br /><span>{t("expenditure")}:{props.expenditureSummary}</span></div>
             </div>

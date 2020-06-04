@@ -96,7 +96,6 @@ const Installment = (props) => {
         values.day = day;
         values.year = year;
         values.times = times ? times : "1";
-        debugger;
         let validateResult = true;
 
         _.each(values, (v, k) => {

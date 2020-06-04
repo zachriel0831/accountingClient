@@ -51,7 +51,7 @@ const Select = (props) => {
                 }
             }}
                 style={props.labelStyle} htmlFor="">{props.label}</label>
-            <div className="four wide field">
+            <div className="two wide field">
                 <select
                     defaultValue={props.value}
                     ref={selectRefs}

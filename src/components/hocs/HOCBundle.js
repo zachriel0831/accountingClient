@@ -20,10 +20,21 @@ const HOCBundle = (WrappedComponent) => {
                 result: {},
                 resetKey: Math.random(),
             };
-            // let current_page = (window.location.hash).replace('#', '');
+            let current_page = (window.location.hash).replace('#/', '');
+            
+            switch (current_page) {
+                case 'Currency':
+                this.getCurrencyInitData();         
 
+                    break;
+                case 'BackUp':
+                    console.log('back up page');
+                default:
+                this.getInitData();
 
-            this.getInitData();
+                    break;
+            }
+
         }
         async getInitData() {
             const { getAll } = useIndexedDB('Accountings');
@@ -36,6 +47,25 @@ const HOCBundle = (WrappedComponent) => {
                 accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
                 accountQueriesData.count = AccountingData.length;
                 console.log('getInitData');
+                    
+                _this.setState({
+                    result: accountQueriesData
+                })
+
+            });
+        }
+
+        async getCurrencyInitData(){
+            const { getAll } = useIndexedDB('Accountings_Currencies');
+            let _this = this;
+            //TODO 
+            await getAll().then(AccountingData => {
+                let accountQueriesData = {};
+
+                accountQueriesData.queries = AccountingData;
+                accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
+                accountQueriesData.count = AccountingData.length;
+                console.log('getCurrencyInitData');
                     
                 _this.setState({
                     result: accountQueriesData
@@ -69,13 +99,6 @@ const HOCBundle = (WrappedComponent) => {
         }
 
         render() {
-            // let result = this.state.result;
-            // let current_page = (window.location.hash).replace('#', '');
-
-            //錯誤頁要能通過
-            // let releaseList = ['/Errors/CommonErrorPage', '/Errors/SystemErrorPage'];
-            // let releaseResult = releaseList.indexOf(current_page);
-            // let _this = this;
             let customerFunc = {
                 // submitFormToSerevr: async (url, values, callback) => {
 
