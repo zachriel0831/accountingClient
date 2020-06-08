@@ -41,7 +41,7 @@ const radioGroupItem = {
 
 const Currency = (props) => {
     const { t } = useTranslation();
-    // const initFormState = props.initialState;
+    const initCurrencyState = props.initialState;
     const { add, getAll, deleteRecord } = useIndexedDB('Accountings_Currencies');
     //loading dimmer
     const [dimmerState, setDimmerState] = useState(false);
@@ -50,7 +50,7 @@ const Currency = (props) => {
     //currency category
     const [optionsState, setOptionState] = useState({});
     //table queriues
-    const [queriesState, setQueriesState] = useState(props.initialState);
+    const [queriesState, setQueriesState] = useState({});
     //table select all items
     const [selectAllState, setSelectAllState] = useState(false);
     //table checkbox values
@@ -192,112 +192,87 @@ const Currency = (props) => {
         let currencyOptions = [];
         let currency_data_for_rate_calculations = [];
 
-        //check connection TODO
-        axios({
-            method: 'get',
-            baseURL: config.mode === 0 ? config.crawlingLocalService : config.crawlerService,
-            url: '/currency/get_currency',
-            'Content-Type': 'application/json',
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-            },
-            withCredentials: false,
-        }).then(function (response) {
-            let responseData = response.data;
-            currency_data_for_rate_calculations = responseData.data;
+        let responseData = initCurrencyState;
+        currency_data_for_rate_calculations = responseData;
 
-            console.log(response);
+        setCurrencyState(responseData);
 
-            setCurrencyState(responseData.data);
+        _.each(responseData, (v, k) => {
+            let cur = v.currency_type.substring(v.currency_type.indexOf('(') + 1, v.currency_type.indexOf(')'));
+            let items = {
+                label: cur,
+                value: cur
+            }
 
-            _.each(responseData.data, (v, k) => {
-                let cur = v.currency_type.substring(v.currency_type.indexOf('(') + 1, v.currency_type.indexOf(')'));
-                let items = {
-                    label: cur,
-                    value: cur
+            currencyOptions.push(items);
+        })
+
+        const options = {
+            "seletedValue": "",
+            "disabled": false,
+            "items": [...currencyOptions]
+        };
+
+        setOptionState(options);
+
+        getAll().then(currencyData => {
+            let currencyQueriesData = {};
+
+            currencyQueriesData.queries = currencyData;
+            currencyQueriesData.time = moment().format('YYYY/MM/DD MM:SS')
+            currencyQueriesData.count = currencyData.length;
+
+
+            let currencySumBox = [];
+            _.each(currencyOptions, (v, k) => {
+                let currecyObejct = currencyData.filter((items, index, array) => {
+                    return items.category === v.value;
+                })
+
+                if (currecyObejct.length !== 0) {
+                    let sumsObject = {};
+                    let sums = 0;
+                    sumsObject.name = v.value;
+
+                    _.each(currecyObejct, (v, k) => {
+                        sums += parseFloat(v.amount);
+                    });
+                    sumsObject.sum = sums;
+
+                    currencySumBox.push(sumsObject);
                 }
-
-                currencyOptions.push(items);
             })
 
-            const options = {
-                "seletedValue": "",
-                "disabled": false,
-                "items": [...currencyOptions]
-            };
-
-            setOptionState(options);
-
-            // handle success
-        }).catch(function (error) {
-            // handle error
-            console.log(error);
-            alert('upload failed!')
-
-        }).finally(function () {
-
-            getAll().then(currencyData => {
-                let currencyQueriesData = {};
-
-                currencyQueriesData.queries = currencyData;
-                currencyQueriesData.time = moment().format('YYYY/MM/DD MM:SS')
-                currencyQueriesData.count = currencyData.length;
-
-
-                let currencySumBox = [];
-                _.each(currencyOptions, (v, k) => {
-                    let currecyObejct = currencyData.filter((items, index, array) => {
-                        return items.category === v.value;
-                    })
-
-                    if (currecyObejct.length !== 0) {
-                        let sumsObject = {};
-                        let sums = 0;
-                        sumsObject.name = v.value;
-
-                        _.each(currecyObejct, (v, k) => {
-                            sums += parseFloat(v.amount);
-                        });
-                        sumsObject.sum = sums;
-
-                        currencySumBox.push(sumsObject);
-                    }
+            let segmentResultBox = [];
+            _.each(currencySumBox, (v, k) => {
+                let convertToTWD = 0;
+                let _this = v;
+                let getRate = currency_data_for_rate_calculations.filter((item, index, array) => {
+                    let curToCompare = item.currency_type.substring(item.currency_type.indexOf('(') + 1, item.currency_type.indexOf(')'));
+                    return _this.name === curToCompare;
                 })
+                let rate = parseFloat(getRate[0].currency_spot_rate[1]);
+                if (_.isNumber(rate)) {
+                    convertToTWD = (parseFloat(v.sum) * rate).toFixed(0);
+                } else {
 
-                let segmentResultBox = [];
-                _.each(currencySumBox, (v, k) => {
-                    let convertToTWD = 0;
-                    let _this = v;
-                    let getRate = currency_data_for_rate_calculations.filter((item, index, array) => {
-                        let curToCompare = item.currency_type.substring(item.currency_type.indexOf('(') + 1, item.currency_type.indexOf(')'));
-                        return _this.name === curToCompare;
-                    })
-                    let rate = parseFloat(getRate[0].currency_spot_rate[1]);
-                    if (_.isNumber(rate)) {
-                        convertToTWD = (parseFloat(v.sum) * rate).toFixed(0);
-                    } else {
+                    convertToTWD = '-';
+                }
 
-                        convertToTWD = '-';
-                    }
-
-                    let sumsSegment = (
-                        <Segment circular style={{ width: 200, height: 200 }}>
-                            <Header as='h2'>
-                                {v.name}
-                                <Header.Subheader>TOTAL : {v.sum}<p></p>TWD: {convertToTWD}</Header.Subheader>
-                            </Header>
-                        </Segment>
-                    )
-                    segmentResultBox.push(sumsSegment);
-                })
+                let sumsSegment = (
+                    <Segment circular style={{ width: 200, height: 200 }}>
+                        <Header as='h2'>
+                            {v.name}
+                            <Header.Subheader>TOTAL : {v.sum}<p></p>TWD: {convertToTWD}</Header.Subheader>
+                        </Header>
+                    </Segment>
+                )
+                segmentResultBox.push(sumsSegment);
+            })
 
 
-                setCurrencySumSegmentState(segmentResultBox);
-                setQueriesState(currencyQueriesData);
-            });
-
-            // always executed
-            setDimmerState(false);
+            setCurrencySumSegmentState(segmentResultBox);
+            setQueriesState(currencyQueriesData);
         });
     }, []);
 

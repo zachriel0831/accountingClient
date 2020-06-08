@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 // import AjaxWrapper from '../utils/AjaxWrapper';
 import utils from '../../utils/utils';
-// import config from '../../configs/config'
+import config from '../../configs/config'
 // import { TxnContextProvider } from '../../../contexts/TxnContext';
 // import { RoutingCheckerLayer } from './RoutingCheckerLayer';
 import { Dimmer, Loader } from 'semantic-ui-react';
@@ -10,6 +10,7 @@ import { Dimmer, Loader } from 'semantic-ui-react';
 import _ from 'lodash';
 import { useIndexedDB } from 'react-indexed-db';
 import moment from 'moment';
+import axios from 'axios';
 
 const HOCBundle = (WrappedComponent) => {
     return class extends React.PureComponent {
@@ -21,17 +22,17 @@ const HOCBundle = (WrappedComponent) => {
                 resetKey: Math.random(),
             };
             let current_page = (window.location.hash).replace('#/', '');
-            
+
             switch (current_page) {
                 case 'Currency':
-                this.getCurrencyInitData();         
-                console.log('curency page');
+                    this.getCurrencyInitData();
+                    console.log('curency page');
 
                     break;
                 case 'BackUp':
                     console.log('back up page');
                 default:
-                this.getInitData();
+                    this.getInitData();
 
                     break;
             }
@@ -48,7 +49,7 @@ const HOCBundle = (WrappedComponent) => {
                 accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
                 accountQueriesData.count = AccountingData.length;
                 console.log('getInitData');
-                    
+
                 _this.setState({
                     result: accountQueriesData
                 })
@@ -56,23 +57,52 @@ const HOCBundle = (WrappedComponent) => {
             });
         }
 
-        async getCurrencyInitData(){
-            const { getAll } = useIndexedDB('Accountings_Currencies');
-            let _this = this;
-            //TODO 
-            await getAll().then(AccountingData => {
-                let accountQueriesData = {};
+        async getCurrencyInitData() {
+            // const { getAll } = useIndexedDB('Accountings_Currencies');
+            // let _this = this;
+            // //TODO 
+            // await getAll().then(AccountingData => {
+            //     let accountQueriesData = {};
 
-                accountQueriesData.queries = AccountingData;
-                accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
-                accountQueriesData.count = AccountingData.length;
-                console.log('getCurrencyInitData');
-                    
+            //     accountQueriesData.queries = AccountingData;
+            //     accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
+            //     accountQueriesData.count = AccountingData.length;
+            //     console.log('getCurrencyInitData');
+
+            //     _this.setState({
+            //         result: accountQueriesData
+            //     })
+
+            // });
+            let _this = this;
+
+            await axios({
+                method: 'get',
+                baseURL: config.mode === 0 ? config.crawlingLocalService : config.crawlerService,
+                url: '/currency/get_currency',
+                'Content-Type': 'application/json',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                },
+                withCredentials: false,
+            }).then(function (response) {
+                let responseData = response.data;
+
+                console.log(response);
                 _this.setState({
-                    result: accountQueriesData
+                    result: responseData.data
                 })
+                // handle success
+            }).catch(function (error) {
+                // handle error
+                console.log(error);
+                alert('git currency failed!')
+
+            }).finally(function () {
+                console.log('request finished');
 
             });
+
         }
 
         setAlertMsg = (errors) => {
@@ -113,7 +143,7 @@ const HOCBundle = (WrappedComponent) => {
 
                 resetKey: () => {
                     this.resetKey()
-                    
+
                 },
                 reloadPage: () => {
                     window.location.reload();
@@ -192,7 +222,7 @@ const HOCBundle = (WrappedComponent) => {
             //TODO沒有responseData的話查看放行清單, 錯誤頁仍需render元件
             // if (result) {
             let results = this.state.result;
-            
+
             if (!_.isEmpty(results)) {
                 return (
                     <>
@@ -210,7 +240,10 @@ const HOCBundle = (WrappedComponent) => {
                     </>)
             } else {
 
-                return <>loading...</>
+                return <div className="sys__main__wrap">
+                    <Dimmer active={true} inverted>
+                        <Loader>Loading</Loader>
+                    </Dimmer></div>
             }
 
         }
