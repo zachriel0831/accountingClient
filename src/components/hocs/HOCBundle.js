@@ -24,7 +24,7 @@ const HOCBundle = (WrappedComponent) => {
             
             switch (current_page) {
                 case 'Currency':
-                // this.getCurrencyInitData();         
+                this.getCurrencyInitData();         
                 console.log('curency page');
 
                     break;
