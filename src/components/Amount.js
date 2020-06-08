@@ -3,9 +3,9 @@ import HOCCommon from './hocs/HOCCommon';
 import ReactTooltip from 'react-tooltip';
 
 const Amount = (props) => {
-
+    
     const [state, setState] = useState(props.value);
-
+    
     const transferToAmountFormat = (val, decimalPoint) => {
         if (!val)
             return;
@@ -66,6 +66,13 @@ const Amount = (props) => {
         }
     }
 
+    useEffect(() => {
+
+        setState(props.value);
+
+        return () => {
+        }
+    }, [props.value])
     return (
         <>
             <div data-tip data-for='warning' className={`ui ${props.disabled ? 'disabled' : ''}left icon input`}>

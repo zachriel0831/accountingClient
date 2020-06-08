@@ -63,6 +63,8 @@ const Currency = (props) => {
     const [currenySumSegmentState, setCurrencySumSegmentState] = useState([]);
     // TWD times currency rate 
     const [calculateTWDState, setCaculateTWDState] = useState(0);
+    // amount state
+    const [amountState,setAmountState] = useState('');
 
     //set up radioGroupState
     let radioBtnInitVal = [];
@@ -85,7 +87,7 @@ const Currency = (props) => {
         let itemId = `${moment().unix()}_${radioGroupState}_${values.category}_${moment(dateState).format('YYYY/MM/DD')}_${values.amount}`;
         let type = radioGroupState;
         let date = moment(dateState).format('YYYY/MM/DD');
-        let amount = values.amount;
+        let amount = amountState;
         let month = moment(dateState).format('MM');
         let day = moment(dateState).format('DD');
         let year = moment(dateState).format('YYYY');;
@@ -326,6 +328,11 @@ const Currency = (props) => {
     // const CardExampleGroupCentered = () => 
     const showSelectCurrencyRate = (e) => {
         let cur = e.currentTarget.value;
+        if(calculateTWDState !== 0){
+            setCaculateTWDState(0);
+            
+            setAmountState('');
+        }
         let item = {
             header: '',
             description: '',
@@ -391,8 +398,8 @@ const Currency = (props) => {
                 return false;
             }
         });
-
-        handleChange(e)
+        
+        setAmountState(val);
     }
     return <>
         <><Form title='Currency' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
@@ -422,7 +429,7 @@ const Currency = (props) => {
 
                     </div>
                     <div className="input-group">
-                        <Amount decimal disabled={values.category ? false : true} maxLength='20' icon='dollar sign' value={values.amount} name='amount' label='amount' onChange={(e) => calculateRate(e)} />
+                        <Amount decimal disabled={values.category ? false : true} maxLength='20' icon='dollar sign' value={amountState} name='amount' label='amount' onChange={(e) => calculateRate(e)} />
                         {/* <i style={{ display:(!values.category ? 'block' : 'none')}}  className='icon exclamation'></i> */}
 
 
