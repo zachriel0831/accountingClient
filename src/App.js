@@ -26,7 +26,7 @@ function App(props) {
 
 
   return (
-    <div>
+    <div style={{width:'140%'}}>
       <NavBar routersData={props.routersData} />
       {props.children}
     </div>

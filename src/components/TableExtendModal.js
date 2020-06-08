@@ -195,11 +195,11 @@ const TableExtendModal = React.memo((props) => {
                 </div>
             </Modal.Header>
             <Modal.Content className="scrolling content">
-                <div className="query__info__row">
+                <div className="">
                     <div className="">{t("tableNumData")} <span className="query__sum">{queries.count}</span> {t("tableCount")}</div>
                     <div className="">{t("tableQuerytime")}: <span className="query__time">{queries.time}</span></div>
                 </div>
-                <div className="query__table__wrap">
+                <div className="">
                     <table className="ui selectable small striped celled compact table">
                         <thead>
                             <tr>

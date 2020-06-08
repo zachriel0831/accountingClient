@@ -530,12 +530,12 @@ const AccountingTable = React.memo((props) => {
 
     return (
         <>
-            <div className="query__info__row">
+            <div className="">
                 {queryResult}
                 <div className="">{t("time")}: <span className="query__time">{props.time}</span></div>
                 <div style={{ display: (props.displaySummaryBlockFlag) ? 'block' : 'none' }}><span >{t("income")}:{props.incomeSummary}</span> <br /><span>{t("expenditure")}:{props.expenditureSummary}</span></div>
             </div>
-            <div className="query__table__wrap">
+            <div className="">
                 <table ref={tableRef} className="ui selectable sortable small striped celled compact table">
                     <thead>
                         <tr>

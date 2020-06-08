@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import HOCCommon from './hocs/HOCCommon';
+import ReactTooltip from 'react-tooltip';
 
 const Amount = (props) => {
 
@@ -67,7 +68,7 @@ const Amount = (props) => {
 
     return (
         <>
-            <div className={`ui ${props.disabled ? 'disabled' : ''}left icon input`}>
+            <div data-tip data-for='warning' className={`ui ${props.disabled ? 'disabled' : ''}left icon input`}>
                 <input
                     type='text'
                     value={state}
@@ -81,8 +82,10 @@ const Amount = (props) => {
                     size={props.size}
                     style={{ textAlign: 'right' }}
                 />
-                <i aria-hidden="true" className={`${props.icon} icon`}></i>
+                <ReactTooltip id='warning' aria-haspopup='true' type='error' getContent={() => {
 
+                    return props.disabled ? <><p style={{ color: 'white' }}><i className='icon exclamation'></i>select the curreny first</p></> : null
+                }}/>
             </div>
         </>
     );
