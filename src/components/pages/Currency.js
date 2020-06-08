@@ -63,7 +63,7 @@ const Currency = (props) => {
     const [currenySumSegmentState, setCurrencySumSegmentState] = useState([]);
     // TWD times currency rate 
     const [calculateTWDState, setCaculateTWDState] = useState(0);
-    
+
     //set up radioGroupState
     let radioBtnInitVal = [];
     if (radioGroupItem) {
@@ -94,14 +94,14 @@ const Currency = (props) => {
         let category_new = values.category_new;
 
         values.id = itemId;
-        values.type = type;
-        values.date = date;
-        values.amount = amount.replace(/,/g, '');
+        values.type = type ? type : '';
+        values.date = date ? date : '';
+        values.amount = amount ? amount.replace(/,/g, '') : '';
         values.category = category ? category : category_new;
         values.remark = remark ? remark : '';
-        values.month = month;
-        values.day = day;
-        values.year = year;
+        values.month = month ? month : '';
+        values.day = day ? day : '';
+        values.year = year ? year : '';
 
         let validateResult = true;
 
