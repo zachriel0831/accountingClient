@@ -6,13 +6,10 @@ import { Dimmer, Loader } from 'semantic-ui-react'
 const Form = (props) => {
     const formRef = useRef();
     const formSubmit = (e) => {
-        //將form ref傳出去 以利之後submit前針對form input的處理
-            
         props.onSubmit(e, formRef)
     }
 
     const formReset = (e) => {
-        //將form ref傳出去 以利之後submit前針對form input的處理
         props.onReset(e, formRef)
     }
     return (

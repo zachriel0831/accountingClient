@@ -1,7 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
 const Button = (props) => {
-    //TODO button會有查詢,submit,列印,產檔,reset分別
     let btnType = props.type;
 
     const btnClick = (e) => {
