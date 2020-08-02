@@ -39,31 +39,31 @@ const radioGroupItem = {
 
 const regular_item = {
     "items": [
-    {
-        "label": "none",
-        "value": "",
-        "groupKey": "_none",
-        "disabled": false
-    },    
-    {
-        "label": "food",
-        "value": "food",
-        "groupKey": "_none",
-        "disabled": false
-    },
-    {
-        "label": "entertaining",
-        "value": "entertaining",
-        "groupKey": "_none",
-        "disabled": false
-    },
-    {
-        "label": "travel",
-        "value": "travel",
-        "groupKey": "_none",
-        "disabled": false
-    }
-],
+        {
+            "label": "none",
+            "value": "",
+            "groupKey": "_none",
+            "disabled": false
+        },
+        {
+            "label": "food",
+            "value": "food",
+            "groupKey": "_none",
+            "disabled": false
+        },
+        {
+            "label": "entertaining",
+            "value": "entertaining",
+            "groupKey": "_none",
+            "disabled": false
+        },
+        {
+            "label": "travel",
+            "value": "travel",
+            "groupKey": "_none",
+            "disabled": false
+        }
+    ],
     "selectedValue": ""
 
 }
@@ -121,19 +121,19 @@ const Home = (props) => {
         let category = values.category;
         let remark = values.remark;
         let category_new = values.category_new;
-        let regularItem = regularItemState;
+        let regularItem = regularItemState ? regularItemState : '';
 
         values.id = itemId;
         values.type = type;
         values.date = date;
-        values.amount = amount.replace(/,/g, '');
+        values.amount = amount? amount.replace(/,/g, '') : '';
 
-        if(regularItem !== ''){
+        if (regularItem !== '') {
             values.category = regularItem;
-        }else{
-           values.category = category ? category : category_new;
+        } else {
+            values.category = category ? category : category_new;
         }
-        
+
         values.remark = remark ? remark : '';
         values.month = month;
         values.day = day;
@@ -357,7 +357,7 @@ const Home = (props) => {
 
                         </div>
                         <div className="input-group">
-                        <RadioGroup
+                            <RadioGroup
                                 name='regular_item'
                                 radioData={regular_item}
                                 onClick={(val) => {
@@ -369,14 +369,14 @@ const Home = (props) => {
                             <Select disabled={regularItemState ? true : false}  value={values.category} name='category' label='Category' options={optionsState} onChange={handleChange} />
                             {regularItemState?
                                 <></>:
-                             <Text
-                                icon='pencil alternate'
-                                value={values.category_new}
-                                name='category_new'
-                                label='new option'
-                                onChange={handleChange}
-                                disabled={values.category ? true : false} />}
-                            
+                                <Text
+                                    icon='pencil alternate'
+                                    value={values.category_new}
+                                    name='category_new'
+                                    label='new option'
+                                    onChange={handleChange}
+                                    disabled={values.category ? true : false} />}
+
                         </div>
 
                         <div className="input-group">
