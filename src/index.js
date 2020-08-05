@@ -11,8 +11,58 @@ import { initDB, useIndexedDB } from 'react-indexed-db';
 import { DBConfig } from './service/DBConfig';
 
 import * as serviceWorker from './serviceWorker';
+import axios from 'axios'
 //DB initializing
 initDB(DBConfig);
+const wakeUpCurrency = () => {
+  axios({
+    method: 'get',
+    baseURL: config.mode === 0 ? config.crawlingLocalService : config.crawlerService,
+    url: '/currency/heroku_wakeup_signal',
+    'Content-Type': 'application/json',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+    withCredentials: false,
+  }).then(function (response) {
+    let responseData = response.data;
+
+    console.log(response);
+  }).catch(function (error) {
+    // handle error
+    console.log(error);
+    alert(' failed!')
+  }).finally(function () {
+    console.log('request finished');
+  });
+};
+
+const wakeUpBackUpServer = () => {
+  axios({
+    method: 'get',
+    baseURL: config.mode === 0 ? config.localTestUrl : config.backEndUrl,
+    url: '/BackUp/wake_up_call',
+    'Content-Type': 'application/json',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+    withCredentials: false,
+  }).then(function (response) {
+    let responseData = response.data;
+
+    console.log(response);
+  }).catch(function (error) {
+    // handle error
+    console.log(error);
+    alert(' failed!')
+  }).finally(function () {
+    console.log('request finished');
+  });
+}
+
+wakeUpBackUpServer();
+
+wakeUpCurrency();
 
 const routersData = config.routersData;
 // const browserHistory = createBrowserHistory();
