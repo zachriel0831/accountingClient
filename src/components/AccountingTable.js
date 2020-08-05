@@ -517,7 +517,6 @@ const AccountingTable = React.memo((props) => {
         }
     }, [props.selectAll]);
 
-
     let rowCounts = props.count ? props.count : 0;
     let queryResult = [];
 
@@ -527,12 +526,11 @@ const AccountingTable = React.memo((props) => {
         queryResult.push(<div key={utils.generateUID()} className="">{t("data")} <span className="query__sum">{props.count ? props.count : 0}</span> {t("count")}</div>);
     }
 
-
     return (
         <>
             <div className="">
                 {queryResult}
-                <div className="">{t("time")}: <span className="query__time">{props.time}</span></div>
+                {/* <div className="">{t("time")}: <span className="query__time">{props.time}</span></div> */}
                 <div style={{ display: (props.displaySummaryBlockFlag) ? 'block' : 'none' }}><span >{t("income")}:{props.incomeSummary}</span> <br /><span>{t("expenditure")}:{props.expenditureSummary}</span></div>
             </div>
             <div className="">

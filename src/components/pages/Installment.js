@@ -52,11 +52,12 @@ const selectOptions = {
 const Installment = (props) => {
     const { add, getAll, deleteRecord } = useIndexedDB('Accountings');
     const { t } = useTranslation();
-    const _this = this;
+
     const initState = {};
     const [dimmerState, setDimmerState] = useState(false);
     const [dateState, setDateState] = useState(new Date());
     const [totalExpenditureState, setTotalExpenditureState] = useState(0);
+    const [estimateAmountState, setEstimateAmountState] = useState(0);
     const [totalIncomeState, setTotalIncomeState] = useState(0);
     const [totalAssets, setTotalAssets] = useState(0);
     const [queryDisable, setQueryDisabl] = useState(false);
@@ -118,6 +119,7 @@ const Installment = (props) => {
         amount = values.amount.replace(/,/g, '');
         let calAmount = amount * times;
         console.log("amount * times:" + amount + "*" + times + "=" + calAmount);
+        setEstimateAmountState(utils.transferToAmountFormat(parseInt(calAmount)));
         if (radioGroupState === "expenditure") {
             calExp = parseInt(calAmount);
             setTotalExpenditureState(utils.transferToAmountFormat(parseInt(totalExpenditureState.replace(/,/g, '')) + parseInt(calAmount)));
@@ -173,8 +175,6 @@ const Installment = (props) => {
             return;
         }
 
-        
-
         for (let i = 0; i < times; i++) {
             let applyDate = new Date(date);
             let installmentDate = moment(applyDate).add(i, 'months').format('YYYY/MM/DD');
@@ -182,6 +182,7 @@ const Installment = (props) => {
             values.date = installmentDate;
             values.month = moment(installmentDate).format('MM');
             values.id = `${moment().unix()}_expenditure_${values.category}_${moment(installmentDate).format('YYYY/MM/DD')}_${values.amount}`;
+            
             await add(values).then(
                 event => {
                     console.log('ID Generated: ', event.target);
@@ -286,6 +287,9 @@ const Installment = (props) => {
                     </Segment>
 
                     <Segment>
+                    
+                        <span className='amount-label'>amount: {estimateAmountState}</span>
+                        <br />
                         <span className='amount-label'>Total Income: {totalIncomeState}</span>
                         <br />
                         <span className='amount-label'>Total Expenditure: {totalExpenditureState}</span>

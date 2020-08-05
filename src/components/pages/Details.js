@@ -141,7 +141,7 @@ const Details = (props) => {
 
     const [startDateState, setStartDateState] = useState(new Date());
 
-    const [allDataState,setAllDataState] = useState(initialState);
+    const [allDataState, setAllDataState] = useState(initialState);
     const [queriesState, setQueriesState] = useState({});
     const [displayBalanceState, setDisplayBalanceState] = useState('none');
 
@@ -453,7 +453,6 @@ const Details = (props) => {
         props.resetKey();
     }
     const selectedCheckBoxClick = (e, val, checked, checkedTarget) => {
-
         if (checked) {
             checkBoxListState.push(val);
 
@@ -473,8 +472,6 @@ const Details = (props) => {
     }
 
     const getAllCheckBoxVal = (val) => {
-
-
         if (_.isEmpty(val)) {
             checkBoxListState.splice(0, checkBoxListState.length)
 
@@ -500,6 +497,9 @@ const Details = (props) => {
         } else {
             previousMonth = (previousMonth < 10) ? '0' + previousMonth : previousMonth
         }
+
+        previousMonth = previousMonth + '';
+        previousYear = previousYear + '';
         setCountMonthState(previousMonth);
 
         accountQueriesData.queries = allDataState.filter((items, index, array) => {
@@ -539,6 +539,9 @@ const Details = (props) => {
             nextMonth = (nextMonth < 10) ? '0' + nextMonth : nextMonth
 
         }
+
+        nextYear = nextYear + '';
+        nextMonth = nextMonth + '';
         setCountMonthState(nextMonth);
 
         accountQueriesData.queries = allDataState.filter((items, index, array) => {
@@ -559,9 +562,7 @@ const Details = (props) => {
         accountQueriesData.expenditureSummary = sumExpenditure;
         accountQueriesData.displayDate = { year: nextYear, month: nextMonth };
 
-
         setQueriesState(accountQueriesData);
-
     }
 
     let headerSpec = {
@@ -732,6 +733,8 @@ const Details = (props) => {
 
             />
             <PureCheckBox name='checkBox' label='select all' onClick={(e) => selectAllCheckBox(e)} />
+            <br/>
+            <span style={{fontSize:'large',fontWeight:'bold'}}>year: {countYearState} / month:{countMonthState}</span>
             <AccountingTable
                 // ref='accountingTable'
                 {...props}

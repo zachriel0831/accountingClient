@@ -86,7 +86,7 @@ const Charts = (props) => {
         })
     }
 
-    // const { getAll } = useIndexedDB('Accountings');
+    const { getAll } = useIndexedDB('Accountings');
     // const { t } = useTranslation();
     // const _this = this;
     const initialState = props.initialState;
@@ -94,35 +94,16 @@ const Charts = (props) => {
     const [dimmerState, setDimmerState] = useState(false);
     // const [selectAllState, setSelectAllState] = useState(false);
     // const [checkBoxListState, setCheckBoxListState] = useState([]);
-    const [dateState, setDateState] = useState(new Date());
-    const [endDateState, setEndDateState] = useState(new Date());
     const [optionsState, setOptionState] = useState({});
+    const [yearOptionState, setYearOptionState] = useState({});
+    const [yearLineChartState, setYearLineChartState] = useState([]);
 
-    const [startDateState, setStartDateState] = useState(new Date());
-    const [queriesState, setQueriesState] = useState({});
     const [itemLineChartState, setItemLineChartState] = useState([]);
     // const [displayBalanceState, setDisplayBalanceState] = useState('none');
 
     // const [countYearState, setCountYearState] = useState(moment(new Date()).format('YYYY').toString());
     // const [countMonthState, setCountMonthState] = useState(moment(new Date()).format('MM').toString());
 
-    const [assetsDetailState, setAssetsDetailsState] = useState({
-        monthlyIncomeState: 0,
-        monthlyExpenditureState: 0,
-        monthlyBalance: 0,
-        monthlyDatas: [],
-        annualIncomeState: 0,
-        annualExpenditureState: 0,
-        annualBalance: 0,
-        annualDatas: [],
-        totalIncomeState: 0,
-        totalExpenditureState: 0,
-        totalAssets: 0,
-        incomeSummary: 0,
-        expenditureSummary: 0
-    })
-
-    const [dataFilterRadioGroupState, setDataFilterRadioGroupState] = useState(dataFilterRadioBtnInitVal[0]);
     const [radioGroupState, setRadioGroupState] = useState(radioBtnInitVal[0]);
     const initFormState = {
         year: moment(new Date()).format('YYYY'),
@@ -137,164 +118,45 @@ const Charts = (props) => {
 
     function submit(e, formRef) {
 
-        let category = values.category;
-        let type = radioGroupState;
-        let date = moment(dateState).format('YYYY/MM/DD');
-        // let month = moment(dateState).format('MM');
-        // let day = moment(dateState).format('DD');
-        // let year = moment(dateState).format('YYYY');
+        // let category = values.category;
+        // let type = radioGroupState;
+        // let date = moment(dateState).format('YYYY/MM/DD');
+        // // let month = moment(dateState).format('MM');
+        // // let day = moment(dateState).format('DD');
+        // // let year = moment(dateState).format('YYYY');
 
-        let startDate = moment(startDateState).format('YYYY/MM/DD');
-        // let startMonth = moment(startDateState).format('MM');
-        // let startYear = moment(startDateState).format('YYYY');
-        // let startDay = moment(startDateState).format('DD');
-
-
-        let endDate = moment(endDateState).format('YYYY/MM/DD');
-        // let endMonth = moment(endDateState).format('MM');
-        // let endYear = moment(endDateState).format('YYYY');
-        // let endDay = moment(endDateState).format('DD');
-
-        let accountQueriesData = {};
-        let sumIncome = 0;
-        let sumExpenditure = 0;
-
-        switch (dataFilterRadioGroupState) {
-            case 'month':
-                accountQueriesData.queries = [...assetsDetailState.monthlyDatas];
+        // let startDate = moment(startDateState).format('YYYY/MM/DD');
+        // // let startMonth = moment(startDateState).format('MM');
+        // // let startYear = moment(startDateState).format('YYYY');
+        // // let startDay = moment(startDateState).format('DD');
 
 
-                accountQueriesData.queries = accountQueriesData.queries.filter((items, index, array) => {
+        // let endDate = moment(endDateState).format('YYYY/MM/DD');
+        // // let endMonth = moment(endDateState).format('MM');
+        // // let endYear = moment(endDateState).format('YYYY');
+        // // let endDay = moment(endDateState).format('DD');
 
-                    return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
-                });
+        // let accountQueriesData = {};
+        // let sumIncome = 0;
+        // let sumExpenditure = 0;
+    }
 
-                _.each(accountQueriesData.queries, (v, k) => {
-                    if (v.type === 'expenditure') {
-                        sumExpenditure += parseInt(v.amount);
-                    } else {
-                        sumIncome += parseInt(v.amount);
-                    }
-                });
+    const addYearToChart = (e) => {
 
-                accountQueriesData.count = accountQueriesData.queries.length;
-                accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
-                accountQueriesData.incomeSummary = sumIncome;
-                accountQueriesData.expenditureSummary = sumExpenditure;
+        let years = values.years;
 
-                setQueriesState(accountQueriesData);
+        generateLineChart('balanceComparisonPerMonth', '', years);
 
-                break;
+    }
 
-            case 'year':
+    const resetYearLineChart = (e) => {
 
-
-                accountQueriesData.queries = [...assetsDetailState.annualDatas];
-
-                accountQueriesData.queries = accountQueriesData.queries.filter((items, index, array) => {
-
-                    return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
-                });
-
-                _.each(accountQueriesData.queries, (v, k) => {
-                    if (v.type === 'expenditure') {
-                        sumExpenditure += parseInt(v.amount);
-                    } else {
-                        sumIncome += parseInt(v.amount);
-                    }
-                });
-
-                accountQueriesData.count = accountQueriesData.queries.length;
-                accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
-                accountQueriesData.incomeSummary = sumIncome;
-                accountQueriesData.expenditureSummary = sumExpenditure;
-
-                setQueriesState(accountQueriesData);
-
-                break;
-
-            case 'certain_day':
-                accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
-
-                    return (items.date === date) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
-                });
-
-                _.each(accountQueriesData.queries, (v, k) => {
-                    if (v.type === 'expenditure') {
-                        sumExpenditure += parseInt(v.amount);
-                    } else {
-                        sumIncome += parseInt(v.amount);
-                    }
-                });
-
-
-                // accountQueriesData.queries = [...initialState.queries];
-                accountQueriesData.count = accountQueriesData.queries.length;
-                accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
-                accountQueriesData.incomeSummary = sumIncome;
-                accountQueriesData.expenditureSummary = sumExpenditure;
-
-                setQueriesState(accountQueriesData);
-
-                break;
-
-            case 'period':
-                accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
-
-                    return moment(items.date).isAfter(startDate) && moment(items.date).isBefore(endDate) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type == type) : true);
-                });
-
-                _.each(accountQueriesData.queries, (v, k) => {
-                    if (v.type === 'expenditure') {
-                        sumExpenditure += parseInt(v.amount);
-                    } else {
-                        sumIncome += parseInt(v.amount);
-                    }
-                });
-
-                // accountQueriesData.queries = [...initialState.queries];
-                accountQueriesData.count = accountQueriesData.queries.length;
-                accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
-                accountQueriesData.incomeSummary = sumIncome;
-                accountQueriesData.expenditureSummary = sumExpenditure;
-
-                setQueriesState(accountQueriesData);
-
-                break;
-
-            case 'byYear':
-                accountQueriesData.queries = initialState.queries.filter((items, index, array) => {
-
-                    return items.year === values.year && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
-                });
-
-                _.each(accountQueriesData.queries, (v, k) => {
-                    if (v.type === 'expenditure') {
-                        sumExpenditure += parseInt(v.amount);
-                    } else {
-                        sumIncome += parseInt(v.amount);
-                    }
-                });
-
-
-                // accountQueriesData.queries = [...initialState.queries];
-                accountQueriesData.count = accountQueriesData.queries.length;
-                accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
-                accountQueriesData.incomeSummary = sumIncome;
-                accountQueriesData.expenditureSummary = sumExpenditure;
-
-                setQueriesState(accountQueriesData);
-                break;
-            default:
-                break;
-        }
     }
 
     const addItemToChart = (e) => {
         let item = values.category;
 
         generateLineChart('itemComparisonPerMonth', item);
-
     }
 
     const resetItemLineChart = (e) => {
@@ -319,11 +181,9 @@ const Charts = (props) => {
 
     }
 
-    const generateLineChart = (displayType, item, cmd) => {
-
-
+    const generateLineChart = (displayType, item, thisYear) => {
         let datas = { ...props.initialState };
-        let thisYear = moment().format('YYYY');
+        // let thisYear = moment().format('YYYY');
         let itemsOfThisYear = datas.queries.filter((items, index, array) => {
 
             let dates = items.date.split('/')[0];
@@ -335,8 +195,6 @@ const Charts = (props) => {
         switch (displayType) {
             case 'balanceComparisonPerMonth':
                 var ctx_line = document.getElementById("lineChart");
-
-
 
                 let monthlyExpenditureSummaryArray = [];
                 let monthlyIncomeSummaryArray = [];
@@ -450,7 +308,6 @@ const Charts = (props) => {
                     });
 
                     setChartState(newChartState);
-
                 }
 
                 break;
@@ -459,94 +316,19 @@ const Charts = (props) => {
         }
     }
 
-    useEffect(() => {
-        generateLineChart('balanceComparisonPerMonth');
-
-        let categories = config.categories;
-        let categoryBox = [];
-        _.each(categories, (v, k) => {
-            let items = {
-                label: v,
-                value: v
-            }
-            categoryBox.push(items);
-        });
-
-
-        categoryDB.getAll().then(categories => {
-            _.each(categories, (v, k) => {
-                let items = {
-                    label: v.name,
-                    value: v.name
-                }
-                categoryBox.push(
-                    items
-                );
-
-            });
-
-            const options = {
-                "seletedValue": "",
-                "disabled": false,
-                "items": [...categoryBox]
-            };
-
-            setOptionState(options);
-
-        });
-        var item_ctx_line = document.getElementById("itemLineChart");
-
-        var item_line_Chart = new Chart(item_ctx_line, {
-            type: 'line',
-            data: {
-                labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
-                datasets: []
-            },
-            options: {
-                responsive: true, // Instruct chart js to respond nicely.
-                maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
-            }
-        });
-
-        setChartState(item_line_Chart);
-
-
-        let datas = { ...props.initialState };
-        let thisMonth = moment().format('MM');
-        let monthlyResult = props.getMonthlyData(datas, thisMonth);
-
-        // let annualResult = props.getAnnualData(datas, thisYear);
-
-        // let totalAssetsResult = props.getTotalData(datas);
-
-        // setAssetsDetailsState(
-        //     {
-        //         monthlyIncomeState: monthlyResult.monthlyIncome,
-        //         monthlyExpenditureState: monthlyResult.monthlyExpenditure,
-        //         monthlyBalance: monthlyResult.monthlyBalance,
-        //         monthlyDatas: monthlyResult.monthlyDatas,
-        //         annualIncomeState: annualResult.annualIncome,
-        //         annualExpenditureState: annualResult.annualExpenditure,
-        //         annualBalance: annualResult.annualBalance,
-        //         annualDatas: annualResult.annualDatas,
-        //         totalIncomeState: totalAssetsResult.totalIncome,
-        //         totalExpenditureState: totalAssetsResult.totalExpenditure,
-        //         totalAssets: totalAssetsResult.totalAssets,
-        //     }
-        // )
-
-        //進來先秀本月的資料 zack 
+    const generatePieChart = (queryResults, type) => {
+        //進來先秀本月支出的資料 PIE data start =====================================
         let pieData = {};
-        pieData.queries = monthlyResult.monthlyDatas.filter((items, index, array) => {
+        pieData.queries = queryResults.annualDatas.filter((items, index, array) => {
 
-            return items.type === 'expenditure';
+            return items.type === type;
         });
         pieData.count = pieData.queries.length;
         pieData.time = moment().format('YYYY/MM/DD MM:SS');
-        pieData.incomeSummary = monthlyResult.monthlyIncome;
-        pieData.expenditureSummary = monthlyResult.monthlyExpenditure;
+        pieData.incomeSummary = queryResults.monthlyIncome;
+        pieData.expenditureSummary = queryResults.monthlyExpenditure;
 
-        var ctx = document.getElementById('myChart');
+        var ctx = document.getElementById('pieChart');
 
         // pie chart
         let labels = [];
@@ -594,8 +376,8 @@ const Charts = (props) => {
             bdColors.push(generageColor[1]);
         })
 
-        var myChart = new Chart(ctx, {
-            type: 'bar',
+        var pieChart = new Chart(ctx, {
+            type: 'pie',
             data: {
                 labels: labels,
                 datasets: [{
@@ -607,95 +389,149 @@ const Charts = (props) => {
                 }],
             },
             options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                },
+
                 events: ['mousemove', 'click', 'touchstart', 'touchmove'],
                 hover: {
                     mode: 'index',
                     intersect: false
                 },
                 legend: {
-                    display: false,
+                    display: true,
+                },
+                responsive: true
+
+            }
+        });
+        //PIE data Ends =====================================
+
+    }
+
+
+    useEffect(() => {
+        let thisYear = moment().format('YYYY');
+        generateLineChart('balanceComparisonPerMonth', '', thisYear);
+
+        let categories = config.categories;
+        let categoryBox = [];
+        let yearBox = [];
+        let yearBoxResult = [];
+        _.each(categories, (v, k) => {
+            let items = {
+                label: v,
+                value: v
+            }
+            categoryBox.push(items);
+        });
+
+        getAll().then(accountinDatas => {
+            _.each(accountinDatas, (v, k) => {
+                if (!yearBox.includes(v.year) && !(yearBox.length === 0)) {
+                    let items = {
+                        label: v.year === thisYear ? v.year + '(default)' : v.year,
+                        value: v.year
+                    }
+                    yearBox.push(v.year);
+                    yearBoxResult.push(items)
+                } else if (yearBox.length === 0) {
+
+
+                    let items = {
+                        label: v.year === thisYear ? v.year + '(default)' : v.year,
+                        value: v.year
+                    }
+                    yearBox.push(v.year);
+                    yearBoxResult.push(items)
                 }
+            });
+            const options = {
+                "seletedValue": moment(new Date()).format('YYYY'),
+                "disabled": false,
+                "items": [...yearBoxResult]
+            };
+
+            setYearOptionState(options);
+        })
+
+        categoryDB.getAll().then(categories => {
+            _.each(categories, (v, k) => {
+                let items = {
+                    label: v.name,
+                    value: v.name
+                }
+                categoryBox.push(
+                    items
+                );
+            });
+
+            const options = {
+                "seletedValue": "",
+                "disabled": false,
+                "items": [...categoryBox]
+            };
+
+            setOptionState(options);
+        });
+
+        //初始category items
+        var item_ctx_line = document.getElementById("itemLineChart");
+
+        var item_line_Chart = new Chart(item_ctx_line, {
+            type: 'line',
+            data: {
+                labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
+                datasets: []
+            },
+            options: {
+                responsive: true, // Instruct chart js to respond nicely.
+                maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
             }
         });
 
+        setChartState(item_line_Chart);
+
+        let datas = { ...props.initialState };
+        let thisMonth = moment().format('MM');
+        // let monthlyResult = props.getMonthlyData(datas, thisMonth);
+
+        let annualResult = props.getAnnualData(datas, thisYear);
+        // let totalAssetsResult = props.getTotalData(datas);
+
+        // setAssetsDetailsState(
+        //     {
+        //         monthlyIncomeState: monthlyResult.monthlyIncome,
+        //         monthlyExpenditureState: monthlyResult.monthlyExpenditure,
+        //         monthlyBalance: monthlyResult.monthlyBalance,
+        //         monthlyDatas: monthlyResult.monthlyDatas,
+        //         annualIncomeState: annualResult.annualIncome,
+        //         annualExpenditureState: annualResult.annualExpenditure,
+        //         annualBalance: annualResult.annualBalance,
+        //         annualDatas: annualResult.annualDatas,
+        //         totalIncomeState: totalAssetsResult.totalIncome,
+        //         totalExpenditureState: totalAssetsResult.totalExpenditure,
+        //         totalAssets: totalAssetsResult.totalAssets,
+        //     }
+        // )
+
+        generatePieChart(annualResult, 'expenditure');
     }, [])
 
     return <>
         <><Form title='Charts' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
-            {/* <Segment> */}
-            {/* <div className="input-group">
-                    <RadioGroup
-                        name='data filter'
-                        radioData={dataFilterRadioGroupItem}
-                        onClick={(val) => {
-                            setDataFilterRadioGroupState(val)
-                        }} />
+            <Segment>
+
+                <div className="input-group" >
+                    <Select value={values.years} name='years' label='years' options={yearOptionState} onChange={handleChange} />
                 </div>
 
-                <div className="input-group">
-                    <RadioGroup
-                        name='type'
-                        radioData={radioGroupItem}
-                        onClick={(val) => {
-                            setRadioGroupState(val)
-                        }} />
-                </div>
-                <div className="input-group">
-                    <Select value={values.category} name='category' label='category' options={selectOptions} onChange={handleChange} />
-                </div>
+                <Button
+                    type='button'
+                    displayName={t("add")}
+                    className='ui button btn-primary btn-search'
+                    icon='icon add'
+                    onClick={(e) => addYearToChart(e)}
 
-                <div className="input-group" style={{ display: (dataFilterRadioGroupState === 'byYear') ? 'block' : 'none' }}>
-                    <Select value={values.year} name='year' label='year' options={yearSelectOptions} onChange={handleChange} />
-                </div>
-                <div className="input-group" style={{ display: (dataFilterRadioGroupState === 'certain_day') ? 'block' : 'none' }}>
-
-                    <DatePicker
-                        name='certain_day'
-                        label={t("date")}
-                        selected={dateState}
-                        onChange={(date) => {
-                            setDateState(date);
-                        }}
-                    />
-                </div>
-
-                <div className="input-group" style={{ display: (dataFilterRadioGroupState === 'period') ? 'block' : 'none' }}>
-                    <DatePicker
-                        name='startDate'
-                        label={t("startDate")}
-                        selected={startDateState}
-                        onChange={(date) => {
-                            setStartDateState(date);
-                        }}
-                    />~
-                <DatePicker
-                        name='endDate'
-                        label={t("endDate")}
-                        selected={endDateState}
-                        onChange={(date) => {
-                            setEndDateState(date);
-                        }}
-                    />
-
-                </div> 
-
-                <div className="input-group">
-                    <Button
-                        type='submit'
-                        displayName={t("submit")}
-                        className='ui button btn-primary btn-search'
-                        icon='icon search'
-
-                    />
-                </div>*/}
-            {/* </Segment> */}
+                />
+            </Segment>
 
 
             <Segment>
@@ -724,9 +560,7 @@ const Charts = (props) => {
                         className='ui button btn-primary btn-search'
                         icon='icon minus square outline'
                         onClick={(e) => resetItemLineChart(e)}
-
                     />
-
                 </div>
                 <div>
                     <canvas id="itemLineChart"></canvas>
@@ -734,8 +568,8 @@ const Charts = (props) => {
             </Segment>
 
 
-            <Segment style={{display:'none'}}>
-                <label>Monthly barChart</label>
+            <Segment >
+                <label>pieChart</label>
                 <div className="input-group">
                     <Button
                         type='button'
@@ -755,7 +589,10 @@ const Charts = (props) => {
                     />
 
                 </div>
-                <canvas id="myChart"></canvas>
+            </Segment>
+            <Segment style={{width:'800px',height:'600px'}}>
+                <canvas id="pieChart"></canvas>
+
             </Segment>
 
         </Form></>
