@@ -567,29 +567,6 @@ const Charts = (props) => {
                 </div>
             </Segment>
 
-
-            <Segment >
-                <label>pieChart</label>
-                <div className="input-group">
-                    <Button
-                        type='button'
-                        displayName={t("previous")}
-                        className='ui button btn-primary btn-search'
-                        icon='left arrow icon'
-                    // onClick={(e) => addItemToChart(e)}
-
-                    />
-                    <Button
-                        type='button'
-                        displayName={t("next")}
-                        className='ui button btn-primary btn-search'
-                        icon='right arrow icon'
-                    // onClick={(e) => resetItemLineChart(e)}
-
-                    />
-
-                </div>
-            </Segment>
             <Segment style={{width:'800px',height:'600px'}}>
                 <canvas id="pieChart"></canvas>
 
