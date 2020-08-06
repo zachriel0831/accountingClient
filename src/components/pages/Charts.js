@@ -155,8 +155,8 @@ const Charts = (props) => {
 
     const addItemToChart = (e) => {
         let item = values.category;
-
-        generateLineChart('itemComparisonPerMonth', item);
+        let year = moment().format('YYYY');
+        generateLineChart('itemComparisonPerMonth', item, year);
     }
 
     const resetItemLineChart = (e) => {
@@ -263,7 +263,7 @@ const Charts = (props) => {
             case 'itemComparisonPerMonth':
                 var item_ctx_line = document.getElementById("itemLineChart");
                 let itemExpenditureSummaryArray = [];
-
+                
                 for (var i = 1; i <= 12; i++) {
 
                     let monthFormat = (i < 10) ? ('0' + i) : (i + '');
