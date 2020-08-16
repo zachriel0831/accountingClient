@@ -125,8 +125,8 @@ const StockModal = React.memo((props) => {
 
         axios({
             method: 'post',
-            // baseURL: config.mode === 0 ? config.localTestUrl : config.backEndUrl,
-            baseURL: 'http://localhost:5000',
+            baseURL: config.mode === 0 ? config.localTestUrl : config.backEndUrl,
+            // baseURL: 'http://localhost:5000',
             url: '/stocks/get_stocks',
             'Content-Type': 'application/json',
             data: data,
@@ -424,8 +424,8 @@ const Stocks = (props) => {
 
         axios({
             method: 'post',
-            // baseURL: config.mode === 0 ? config.localTestUrl : config.backEndUrl,
-            baseURL: 'http://localhost:5000',
+            baseURL: config.mode === 0 ? config.localTestUrl : config.backEndUrl,
+            // baseURL: 'http://localhost:5000',
             url: '/stocks/get_stocks',
             'Content-Type': 'application/json',
             data: data,
@@ -474,8 +474,8 @@ const Stocks = (props) => {
 
             axiosObjects.push(axios({
                 method: 'post',
-                // baseURL: config.mode === 0 ? config.localTestUrl : config.backEndUrl,
-                baseURL: 'http://localhost:5000',
+                baseURL: config.mode === 0 ? config.localTestUrl : config.backEndUrl,
+                // baseURL: 'http://localhost:5000',
                 url: '/stocks/get_stocks',
                 'Content-Type': 'application/json',
                 data: data,
