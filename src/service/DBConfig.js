@@ -38,7 +38,25 @@ export const DBConfig = {
         { name: 'remark', keypath: 'remark', options: { unique: false } },
       ]
     },
-
+    {
+      store: 'Accountings_Stocks',
+      storeConfig: { keyPath: 'id', autoIncrement: true },
+      storeSchema: [
+        { name: 'stockCode', keypath: 'stockCode', options: { unique: false } },
+        { name: 'share', keypath: 'share', options: { unique: false } },
+        { name: 'closingPrice', keypath: 'closingPrice', options: { unique: false } },
+        { name: 'marketPrice', keypath: 'marketPrice', options: { unique: false } },
+        { name: 'acquisitionPrice', keypath: 'acquisitionPrice', options: { unique: false } },
+        { name: 'currentStockValue', keypath: 'currentStockValue', options: { unique: false } },
+        { name: 'profit', keypath: 'profit', options: { unique: false } },
+        { name: 'roe', keypath: 'roe', options: { unique: false } },
+        { name: 'date', keypath: 'date', options: { unique: false } },
+        { name: 'year', keypath: 'year', options: { unique: false } },
+        { name: 'month', keypath: 'month', options: { unique: false } },
+        { name: 'day', keypath: 'day', options: { unique: false } },
+        { name: 'remark', keypath: 'remark', options: { unique: false } },
+      ]
+    },
 
   ]
 };

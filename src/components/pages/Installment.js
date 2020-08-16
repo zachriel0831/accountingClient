@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { initDB, useIndexedDB } from 'react-indexed-db';
+import React, { useState, useEffect } from 'react';
+import { useIndexedDB } from 'react-indexed-db';
 import Form from '../Form';
 import Text from '../Text';
 import Amount from '../Amount';
@@ -14,7 +14,7 @@ import moment from 'moment';
 import DatePicker from '../DatePicker';
 import validateThis from '../../validationSet/validations';
 import utils from '../../utils/utils';
-import { Segment, Divider } from 'semantic-ui-react';
+import { Segment } from 'semantic-ui-react';
 
 const radioGroupItem = {
     "items": [{
@@ -50,7 +50,7 @@ const selectOptions = {
 };
 
 const Installment = (props) => {
-    const { add, getAll, deleteRecord } = useIndexedDB('Accountings');
+    const { add, getAll } = useIndexedDB('Accountings');
     const { t } = useTranslation();
 
     const initState = {};

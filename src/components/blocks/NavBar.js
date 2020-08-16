@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Icon, Menu } from 'semantic-ui-react'
 import _ from 'lodash'
@@ -47,7 +47,10 @@ const NavBar = (props) => {
                 name = 'BackUp';
                 iconName = 'exchange';
                 break;
-
+            case '/Stocks':
+                name = 'Stocks';
+                iconName = 'money bill alternate';
+            break;
             case '/Currency':
                 name = 'Currency';
                 iconName = 'money bill alternate';
@@ -67,11 +70,8 @@ const NavBar = (props) => {
                 <Icon name={iconName} />
                 {name}
             </Menu.Item>
-
         )
-
     })
-
 
     return (
         <Menu icon='labeled'>

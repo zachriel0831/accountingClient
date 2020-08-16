@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import Form from '../Form';
 // import Text from '../Text';
@@ -17,7 +17,7 @@ import DatePicker from '../DatePicker';
 import PureCheckBox from '../PureCheckBox';
 // import { Modal } from 'semantic-ui-react';
 // import EditPanel from '../modals/EditPanel';
-import validateThis from '../../validationSet/validations';
+// import validateThis from '../../validationSet/validations';
 import utils from '../../utils/utils';
 import { Segment, Divider, Radio } from 'semantic-ui-react';
 
@@ -78,22 +78,6 @@ const dataFilterRadioGroupItem = {
     ],
     "selectedValue": "month"
 }
-// let categories = config.categories;
-// let categoryBox = [];
-
-// _.each(categories, (v, k) => {
-//     let items = {
-//         label: v,
-//         value: v
-//     }
-//     categoryBox.push(items);
-// });
-
-// const selectOptions = {
-//     "seletedValue": "",
-//     "disabled": false,
-//     "items": [...categoryBox]
-// };
 
 const yearSelectOptions = {
     "seletedValue": moment(new Date()).format('YYYY'),
@@ -105,6 +89,8 @@ const Details = (props) => {
     const [optionsState, setOptionState] = useState({});
     const { deleteRecord, getAll } = useIndexedDB('Accountings');
     const categoryDB = useIndexedDB('Accountings_Categories');
+    // const currencyDB = useIndexedDB('Accountings_Currencies');
+    const stockDB = useIndexedDB('Accountings_Stocks');
 
     const { t } = useTranslation();
 
@@ -167,6 +153,10 @@ const Details = (props) => {
 
     const [dataFilterRadioGroupState, setDataFilterRadioGroupState] = useState(dataFilterRadioBtnInitVal[0]);
     const [radioGroupState, setRadioGroupState] = useState(radioBtnInitVal[0]);
+    const [stockSumState, setStockSumState] = useState({});
+    // const [stockState, setStockState] = useState(0);
+    // const [currencyState, setCurrencyState] = useState(0);
+    const [totalAssetState, setTotalAssetState] = useState(0);
     const initFormState = {
         year: moment(new Date()).format('YYYY'),
 
@@ -179,7 +169,6 @@ const Details = (props) => {
     }
 
     function submit(e, formRef) {
-
         let category = values.category;
         let type = radioGroupState;
         let date = moment(dateState).format('YYYY/MM/DD');
@@ -205,8 +194,6 @@ const Details = (props) => {
         switch (dataFilterRadioGroupState) {
             case 'month':
                 accountQueriesData.queries = [...assetsDetailState.monthlyDatas];
-
-
                 accountQueriesData.queries = accountQueriesData.queries.filter((items, index, array) => {
 
                     return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
@@ -215,10 +202,7 @@ const Details = (props) => {
                 break;
 
             case 'year':
-
-
                 accountQueriesData.queries = [...assetsDetailState.annualDatas];
-
                 accountQueriesData.queries = accountQueriesData.queries.filter((items, index, array) => {
 
                     return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
@@ -237,7 +221,7 @@ const Details = (props) => {
             case 'period':
                 accountQueriesData.queries = allDataState.filter((items, index, array) => {
 
-                    return moment(items.date).isAfter(startDate) && moment(items.date).isBefore(endDate) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type == type) : true);
+                    return moment(items.date).isAfter(startDate) && moment(items.date).isBefore(endDate) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                 });
 
                 break;
@@ -365,7 +349,7 @@ const Details = (props) => {
                 case 'period':
                     accountQueriesData.queries = accountQueriesData.queries.filter((items, index, array) => {
 
-                        return moment(items.date).isAfter(startDate) && moment(items.date).isBefore(endDate) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type == type) : true);
+                        return moment(items.date).isAfter(startDate) && moment(items.date).isBefore(endDate) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                     });
 
 
@@ -413,7 +397,6 @@ const Details = (props) => {
             categoryBox.push(items);
         });
 
-
         categoryDB.getAll().then(categories => {
             _.each(categories, (v, k) => {
                 let items = {
@@ -423,7 +406,6 @@ const Details = (props) => {
                 categoryBox.push(
                     items
                 );
-
             });
 
             const options = {
@@ -431,12 +413,57 @@ const Details = (props) => {
                 "disabled": false,
                 "items": [...categoryBox]
             };
-
             setOptionState(options);
-
         });
 
+        // currencyDB.getAll().then(currency =>{
+
+
+
+        //     // setCurrencyState();
+
+        // })
+
+        stockDB.getAll().then(stocks => {
+
+            let totalStockCost = 0;
+            let totalCurrentStockValue = 0;
+
+            _.each(stocks, (v, k) => {
+                totalStockCost += parseInt(v.acquisitionPrice);
+                totalCurrentStockValue += parseInt(v.currentStockValue);
+            })
+            //總成本
+            ///總預估現值
+            let roe = ((totalCurrentStockValue / totalStockCost * 100) - 100).toFixed(2) + '%'
+            let profit = totalCurrentStockValue - totalStockCost;
+
+            setStockSumState({
+                totalStockCost: totalStockCost,
+                totalCurrentStockValue: totalCurrentStockValue,
+                roe: roe,
+                profit: profit
+            });
+            // setStockState();
+        })
+
+
+
+        // setTotalAssetState();
     }, []);
+
+    useEffect(() => {
+        if (assetsDetailState.totalAssets !== 0 && stockSumState.totalCurrentStockValue !== undefined) {
+            let totalAssetsResult = assetsDetailState.totalAssets;
+            
+            totalAssetsResult = totalAssetsResult.replace(/,/g, '');
+            let stockProfit = stockSumState.totalCurrentStockValue;
+            let sumsUp = stockProfit + parseInt(totalAssetsResult);
+            let formatResult = utils.transferToAmountFormat(sumsUp);
+            setTotalAssetState(formatResult);
+        }
+
+    }, [assetsDetailState,stockSumState])
 
     const selectAllCheckBox = (e) => {
         setSelectAllState(!selectAllState);
@@ -678,11 +705,20 @@ const Details = (props) => {
             setDisplayBalanceState((displayBalanceState === 'none') ? 'block' : 'none');
         }} />
         <Segment style={{ display: displayBalanceState }}>
+            {/*TODO put a select here to choose the year; */}
             <span className='amount-label'>Total Income: {assetsDetailState.totalIncomeState}</span>
             <br />
             <span className='amount-label'>Total Expenditure: {assetsDetailState.totalExpenditureState}</span>
             <br />
-            <span className='amount-label'>Total Assets: {assetsDetailState.totalAssets} </span>
+            <span className='amount-label'>Total : {assetsDetailState.totalAssets} </span>
+            {/* <br /> */}
+            {/* <span className='amount-label'>Total Forein Currency: {currencyState}</span> */}
+            <br />
+            <span className='amount-label'>Total Stock Value: {stockSumState.totalCurrentStockValue} </span>
+            <br />
+            <span className='amount-label'>Total Assets: {totalAssetState}</span>
+
+
             <Divider section />
             <span className='amount-label'>Annual Income: {assetsDetailState.annualIncomeState}</span>
             <br />
@@ -733,8 +769,8 @@ const Details = (props) => {
 
             />
             <PureCheckBox name='checkBox' label='select all' onClick={(e) => selectAllCheckBox(e)} />
-            <br/>
-            <span style={{fontSize:'large',fontWeight:'bold'}}>year: {countYearState} / month:{countMonthState}</span>
+            <br />
+            <span style={{ fontSize: 'large', fontWeight: 'bold' }}>year: {countYearState} / month:{countMonthState}</span>
             <AccountingTable
                 // ref='accountingTable'
                 {...props}
@@ -748,6 +784,7 @@ const Details = (props) => {
                 displaySummaryBlockFlag={true}
                 expenditureSummary={queriesState.expenditureSummary}
                 incomeSummary={queriesState.incomeSummary}
+                categoryOptions={optionsState}
             />
         </Segment>
 

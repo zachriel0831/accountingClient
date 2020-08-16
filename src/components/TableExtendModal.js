@@ -2,36 +2,33 @@ import React, { useState, useRef } from 'react';
 import _ from 'lodash';
 import { Button, Modal } from 'semantic-ui-react';
 // import AjaxWrapper from '../utils/AjaxWrappers';
-import config from '../configs/config';
 // import LargeTableExtendModalWithForm from '../txnComponents/LargeTableExtendModalWithForm';
 import utils from '../utils/utils';
 import { useTranslation } from "react-i18next";
 
 const TableExtendModal = React.memo((props) => {
-
     const { t } = useTranslation();
     let ths = [];
     let trs = [];
-    const url = props.queryURL;
     let selectedValue = false;
-    let swiftMethod = '';
-    let querySwiftUrl = '';
-    let detailType = '';
-    let submitUrl = '';
-    let submitMethod = '';
     let enLarge = false;
+    // let method = '';
+    // let queryUrl = '';
+    // let detailType = '';
+    // let submitUrl = '';
+    // let submitMethod = '';
+
     const modalRef = useRef();
-    if (props.tableDetails.expandDetail) {
-        submitUrl = props.tableDetails.url;
-        submitMethod = props.tableDetails.method;
+    // if (props.tableDetails.expandDetail) {
+        // submitUrl = props.tableDetails.url;
+        // submitMethod = props.tableDetails.method;
 
-        selectedValue = props.tableDetails.rowSpec.selectedValue;
-        swiftMethod = props.tableDetails.rowSpec.method;
-        querySwiftUrl = props.tableDetails.rowSpec.url;
-        detailType = props.tableDetails.rowSpec.detailType;
+        // selectedValue = props.tableDetails.rowSpec.selectedValue;
+        // method = props.tableDetails.rowSpec.method;
+        // queryUrl = props.tableDetails.rowSpec.url;
+        // detailType = props.tableDetails.rowSpec.detailType;
 
-    }
-
+    // }
 
     const Header = (props) => {
         return (
@@ -44,12 +41,10 @@ const TableExtendModal = React.memo((props) => {
 
             if (selectedValue) {
                 let getAllRow = e.currentTarget.parentElement.children;
-
                 //重置所有row style
                 _.each(getAllRow, (v, k) => {
                     v.style.backgroundColor = 'white';
                 })
-
                 //反白選取的row
                 e.currentTarget.style.backgroundColor = '#cce2ff';
             }
@@ -57,24 +52,6 @@ const TableExtendModal = React.memo((props) => {
             props.onClick(e)
         }
 
-
-        // if (!selectedValue) {
-
-        //     return (
-        //         <LargeTableExtendModalWithForm
-        //             rowKey={props.rowKey ? props.rowKey : utils.generateUID()}
-        //             submitUrl={submitUrl}
-        //             submitMethod={submitMethod}
-        //             queryMethod={swiftMethod}
-        //             queryURL={querySwiftUrl}
-        //             detailType={detailType}
-        //             style={{ cursor: 'pointer' }}
-        //             onClick={setStyleOnDoubleClick}
-        //         >
-        //             {props.children}
-        //         </LargeTableExtendModalWithForm>
-        //     )
-        // } else {
             return (
                 <tr id={props.rowKey ? props.rowKey : utils.generateUID()}
                     style={{ cursor: 'pointer' }}
@@ -83,7 +60,6 @@ const TableExtendModal = React.memo((props) => {
                     {props.children}
                 </tr>
             )
-        // }
     }
 
     const TDdata = (props) => {
@@ -93,7 +69,6 @@ const TableExtendModal = React.memo((props) => {
     }
 
     const headerGenerator = (value) => {
-
         try {
             _.each(value, (v) => {
                 ths.push(<Header style={v.style}>{v.headerName}</Header>);
@@ -103,10 +78,8 @@ const TableExtendModal = React.memo((props) => {
         }
         return ths;
     }
-
     let tds = [];
     const trGenerator = (value) => {
-
         const trClick = (e) => {
             //取得欄位值
             let cells = e.currentTarget.cells;
@@ -118,7 +91,6 @@ const TableExtendModal = React.memo((props) => {
             if (props.tableDetails.expandDetail) {
                 if (typeof props.tableDetails.rowSpec.customOnRowDoubleClick === 'function') {
                     props.rowSpec.customOnRowDoubleClick(e, trValues);
-
                 }
             }
         }
@@ -135,7 +107,6 @@ const TableExtendModal = React.memo((props) => {
                             rowKey = v;
                         }
                     }
-
                     if (h.id === k) {
                         tds.push(<TDdata style={h.style}>{v}</TDdata>);
                     }
@@ -176,7 +147,6 @@ const TableExtendModal = React.memo((props) => {
 
     const openModal = async (e) => {
         let result = '';
-
 
         setQueries(result.data.queriesData);
         setOpen(true);
@@ -219,6 +189,5 @@ const TableExtendModal = React.memo((props) => {
         </Modal>
     )
 })
-
 
 export default TableExtendModal;

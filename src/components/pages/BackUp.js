@@ -1,36 +1,40 @@
 
 
-import React, { useState, useEffect, useRef } from 'react';
-import { initDB, useIndexedDB } from 'react-indexed-db';
+import React, { useState, useEffect } from 'react';
+import { useIndexedDB } from 'react-indexed-db';
 import Form from '../Form';
 import Text from '../Text';
 // import Amount from '../Amount';
-import RadioGroup from '../RadioGroup';
-import Select from '../Select'
+// import RadioGroup from '../RadioGroup';
+// import Select from '../Select'
 import useForm from '../custom-hooks/useForm';
 import _ from 'lodash';
 import config from '../../configs/config';
 import Button from '../Button';
-import { useTranslation } from "react-i18next";
-import moment from 'moment';
+// import { useTranslation } from "react-i18next";
+// import moment from 'moment';
 // import AccountingTable from '../AccountingTable';
-import DatePicker from '../DatePicker';
+// import DatePicker from '../DatePicker';
 // import PureCheckBox from '../PureCheckBox';
 // import { Modal } from 'semantic-ui-react';
 // import EditPanel from '../modals/EditPanel';
 // import validateThis from '../../validationSet/validations';
-import utils from '../../utils/utils';
-import { Segment, Divider } from 'semantic-ui-react';
+// import utils from '../../utils/utils';
+import { Segment } from 'semantic-ui-react';
 import axios from 'axios';
 
 const BackUp = (props) => {
-    const { t } = useTranslation();
+    // const { t } = useTranslation();
     const { update } = useIndexedDB('Accountings');
+    const categoryDB = useIndexedDB('Accountings_Categories');
+    const stockDB = useIndexedDB('Accountings_Stocks');
+    const currencyDB = useIndexedDB('Accountings_Currencies');
+
     const initFormState = props.initialState;
 
     const [dimmerState, setDimmerState] = useState(false);
     const [uuidKeyState, setUUIDKeyState] = useState('');
-
+    const [backUpDatasState, setBackUpdataState] = useState(initFormState);
     const { values, handleChange, handleSubmit, handleReset } = useForm(resetForm, submit, {});
 
     function resetForm() {
@@ -38,6 +42,26 @@ const BackUp = (props) => {
 
     function submit(e, formRef) {
     }
+
+    useEffect(() => {
+        categoryDB.getAll().then(categories => {
+
+            backUpDatasState.categories = categories;
+            setBackUpdataState(backUpDatasState);
+
+        })
+        stockDB.getAll().then(stocks => {
+
+            backUpDatasState.stocks = stocks;
+            setBackUpdataState(backUpDatasState);
+        })
+
+        currencyDB.getAll().then(currencies => {
+
+            backUpDatasState.currencies = currencies;
+            setBackUpdataState(backUpDatasState);
+        })
+    }, [])
 
     const uploadDatas = (e) => {
         let accounting = {};
@@ -49,6 +73,8 @@ const BackUp = (props) => {
             return;
         }
         accounting.uuidKey = uuidKeyState;
+        let data = backUpDatasState;
+
 
         accounting.data = JSON.stringify(initFormState);
         setDimmerState(true);
@@ -63,8 +89,8 @@ const BackUp = (props) => {
             },
             withCredentials: false,
         }).then(function (response) {
-            let responseData = response.data;
-            console.log(response);
+            // let responseData = response.data;
+            console.log(response.data);
             alert('updload success!')
             // handle success
         }).catch(function (error) {
@@ -150,7 +176,46 @@ const BackUp = (props) => {
                             console.log(error);
                         }
                     );
+                });
 
+
+                _.each(responseData.stocks, (v, k) => {
+                    stockDB.update(v).then(
+                        event => {
+                            console.log('ID Generated: ', event.target);
+                        },
+                        error => {
+                            alert('back up failed!')
+
+                            console.log(error);
+                        }
+                    );
+                });
+
+                _.each(responseData.currencies, (v, k) => {
+                    currencyDB.update(v).then(
+                        event => {
+                            console.log('ID Generated: ', event.target);
+                        },
+                        error => {
+                            alert('back up failed!')
+
+                            console.log(error);
+                        }
+                    );
+                })
+
+                _.each(responseData.categories, (v, k) => {
+                    categoryDB.update(v).then(
+                        event => {
+                            console.log('ID Generated: ', event.target);
+                        },
+                        error => {
+                            alert('back up failed!')
+
+                            console.log(error);
+                        }
+                    );
                 })
             } else {
 

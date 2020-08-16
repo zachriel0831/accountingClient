@@ -22,7 +22,7 @@ const HOCBundle = (WrappedComponent) => {
                 resetKey: Math.random(),
             };
             let current_page = (window.location.hash).replace('#/', '');
-
+            
             switch (current_page) {
                 case 'Currency':
                     this.getCurrencyInitData();
@@ -31,6 +31,10 @@ const HOCBundle = (WrappedComponent) => {
                     break;
                 case 'BackUp':
                     console.log('back up page');
+                    this.getInitData();
+
+                    break;
+
                 default:
                     this.getInitData();
 
@@ -152,9 +156,10 @@ const HOCBundle = (WrappedComponent) => {
                     let monthlyIncome = 0;
                     let monthlyExpenditure = 0;
                     let result = {};
+                    let year = moment().format('YYYY');
                     let monthlyDatas = queryState.queries.filter((items, index, array) => {
 
-                        return items.month === month;
+                        return items.month === month && items.year === year;
                     });
 
                     _.each(monthlyDatas, (v, k) => {
@@ -216,12 +221,44 @@ const HOCBundle = (WrappedComponent) => {
                     result.totalAssets = utils.transferToAmountFormat((totalIncome - totalExpenditure));
 
                     return result;
+                },
+                getHomeOptions:(categoryDB)=>{
+                    let categories = config.categories;
+                    let categoryBox = [];
+                    _.each(categories, (v, k) => {
+                        let items = {
+                            label: v,
+                            value: v
+                        }
+                        categoryBox.push(items);
+                    });
+            
+                    categoryDB.getAll().then(categories => {
+                        _.each(categories, (v, k) => {
+                            let items = {
+                                label: v.name,
+                                value: v.name
+                            }
+                            categoryBox.push(
+                                items
+                            );
+                        });
+            
+                        const options = {
+                            "seletedValue": "",
+                            "disabled": false,
+                            "items": [...categoryBox]
+                        };
+            
+                        return options;
+                    });
                 }
             }
 
             //TODO沒有responseData的話查看放行清單, 錯誤頁仍需render元件
             // if (result) {
             let results = this.state.result;
+            
 
             if (!_.isEmpty(results)) {
                 return (

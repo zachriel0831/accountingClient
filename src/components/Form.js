@@ -1,6 +1,6 @@
 
 import React, { useRef } from 'react';
-import _ from 'lodash';
+// import _ from 'lodash';
 import { Dimmer, Loader } from 'semantic-ui-react'
 
 const Form = (props) => {

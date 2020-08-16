@@ -31,7 +31,7 @@ const Select = (props) => {
 
 
     const changeValue = (e) => {
-        let currentValue = e.currentTarget.value;
+        // let currentValue = e.currentTarget.value;
         // let validateResult = props.doValidate(currentValue, props);
         // if (!validateResult.status) {
         //     alert(validateResult.msg)

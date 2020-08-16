@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
 import _ from 'lodash';
-import { initDB, useIndexedDB } from 'react-indexed-db';
+import { useIndexedDB } from 'react-indexed-db';
 import { Modal } from 'semantic-ui-react';
 import Button from '../components/Button';
 // import AjaxWrapper from '../utils/AjaxWrappers';
-import config from '../configs/config';
+// import config from '../configs/config';
 import Form from './Form';
 import Text from './Text';
 import Amount from './Amount';
@@ -16,45 +16,27 @@ import moment from 'moment';
 import DatePicker from './DatePicker';
 import validateThis from '../validationSet/validations';
 import utils from '../utils/utils';
-const radioGroupItem = {
-    "items": [{
-        "label": "expenditure",
-        "value": "expenditure",
-        "groupKey": "_none",
-        "disabled": false
-    },
-    {
-        "label": "income",
-        "value": "income",
-        "groupKey": "_none",
-        "disabled": false
-    },],
-    "selectedValue": "expenditure"
-}
-
-let categories = config.categories;
-let categoryBox = [];
-
-_.each(categories, (v, k) => {
-    let items = {
-        label: v,
-        value: v
-    }
-    categoryBox.push(items);
-});
-
-const selectOptions = {
-    "seletedValue": "",
-    "disabled": false,
-    "items": [...categoryBox]
-};
 
 const LargeTableExtendModal = React.memo((props) => {
+
     const rowKey = props.rowKey;
-
     const [largeTableOpen, setLargeTableOpen] = useState(false);
-    const { update } = useIndexedDB('Accountings');
+    let modalType = props.largeModalType;
+    let dbType = '';
+    switch (modalType) {
+        case 'accounting':
+            dbType = 'Accountings'
+            break;
+        case 'currency':
+            dbType = 'Accountings_Currencies'
+            break;
 
+        default:
+            dbType = 'Accountings'
+
+            break;
+    }
+    const { update } = useIndexedDB(dbType);
 
     const [initialState, setInitialState] = useState({
 
@@ -66,7 +48,22 @@ const LargeTableExtendModal = React.memo((props) => {
 
     });
 
-    const [queriesDisplay, setQueriesDisplay] = useState('LINE');
+    const radioGroupItem = {
+        "items": [{
+            "label": "expenditure",
+            "value": "expenditure",
+            "groupKey": "_none",
+            "disabled": false
+        },
+        {
+            "label": "income",
+            "value": "income",
+            "groupKey": "_none",
+            "disabled": false
+        },],
+        "selectedValue": props.trElements[1]
+    }
+
     let enLarge = false;
     const modalRef = useRef();
     const { t } = useTranslation();
@@ -84,11 +81,9 @@ const LargeTableExtendModal = React.memo((props) => {
     const [tableDateState, setTableDateState] = useState(initialState.tableDate ? moment(initialState.tableDate, 'YYYY/MM/DD').toDate() : new Date());
     const [dimmerState, setDimmerState] = useState(false);
 
-    // const [largeTableOpen, setLargeTableOpen] = useState(false);
     const { values, handleChange, handleSubmit, handleReset } = useForm(resetForm, submit, initialState);
 
     function resetForm(e, formRef) {
-
 
     }
     function submit(e, formRef) {
@@ -96,8 +91,6 @@ const LargeTableExtendModal = React.memo((props) => {
         values.id = rowKey;
         values.date = moment(tableDateState).format('YYYY/MM/DD');
         values.type = radioGroupState;
-
-
 
         let validateResult = true;
 
@@ -115,19 +108,10 @@ const LargeTableExtendModal = React.memo((props) => {
         values.day = moment(values.date).format('DD');
         values.year = moment(values.date).format('YYYY');
 
-
-        if (!validateResult) {
-            return;
-        }
-
         update(values).then(event => {
-            //TODO
 
             props.resetKey();
-
         });
-
-
     }
 
     const closeModal = (e) => {
@@ -138,7 +122,6 @@ const LargeTableExtendModal = React.memo((props) => {
     const openModal = async (e) => {
         let nameChecking = e.target.parentElement.getAttribute('name');
 
-        //為了解決double click會被任何燈箱處處發的問題, 看看是否有更好的做法 , zack
         if (nameChecking && nameChecking.indexOf('largeModal') !== -1) {
             setLargeTableOpen(true);
             props.onDoubleClick(e);
@@ -188,15 +171,19 @@ const LargeTableExtendModal = React.memo((props) => {
             <Modal.Content scrolling>
                 <div className="scrolling content">
                     <Form onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
-                        <div className="input-group">
-                            <RadioGroup
-                                name='type'
-                                radioData={radioGroupItem}
-                                onClick={(val) => {
-                                    setRadioGroupState(val)
-                                }} />
-                        </div>
-
+                        {(props.largeModalType === 'accounting')
+                            ?
+                            <div className="input-group">
+                                <RadioGroup
+                                    name='type'
+                                    radioData={radioGroupItem}
+                                    onClick={(val) => {
+                                        setRadioGroupState(val)
+                                    }} />
+                            </div>
+                            :
+                            <></>
+                        }
                         <div className="input-group">
                             <DatePicker
                                 name='tableDate'
@@ -209,7 +196,7 @@ const LargeTableExtendModal = React.memo((props) => {
 
                         </div>
                         <div className="input-group">
-                            <Select value={values.category} name='category' label='category' options={selectOptions} onChange={handleChange} />
+                            <Select value={values.category} name='category' label='category' options={props.categoryOptions} onChange={handleChange} />
                         </div>
 
                         <div className="input-group">
@@ -221,13 +208,11 @@ const LargeTableExtendModal = React.memo((props) => {
                         </div>
                         <Button type='button' displayName='update' className='ui button btn-primary btn-search' icon='icon search' onClick={(e) => submit(e, {})} />
                         <Button type='cancel' displayName='cancel' className="ui cancel button" onClick={(e) => closeModal(e)} />
-
                     </Form>
                 </div>
             </Modal.Content>
             <Modal.Actions>
             </Modal.Actions>
-
         </Modal>
     )
 })

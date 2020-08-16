@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import Form from '../Form';
 import Text from '../Text';
@@ -15,11 +15,11 @@ import moment from 'moment';
 import AccountingTable from '../AccountingTable';
 import DatePicker from '../DatePicker';
 import PureCheckBox from '../PureCheckBox';
-import { Modal } from 'semantic-ui-react';
-import EditPanel from '../modals/EditPanel';
+// import { Modal } from 'semantic-ui-react';
+// import EditPanel from '../modals/EditPanel';
 import validateThis from '../../validationSet/validations';
-import utils from '../../utils/utils';
-import { Segment, Divider } from 'semantic-ui-react';
+// import utils from '../../utils/utils';
+import { Segment } from 'semantic-ui-react';
 
 const radioGroupItem = {
     "items": [{
@@ -46,8 +46,8 @@ const regular_item = {
             "disabled": false
         },
         {
-            "label": "food",
-            "value": "food",
+            "label": "foods",
+            "value": "foods",
             "groupKey": "_none",
             "disabled": false
         },
@@ -71,15 +71,14 @@ const regular_item = {
 const Home = (props) => {
     const { add, getAll, deleteRecord } = useIndexedDB('Accountings');
     const categoryDB = useIndexedDB('Accountings_Categories');
-
     const { t } = useTranslation();
-    // const initState = props.state;
-    const initState = {};
     const [dimmerState, setDimmerState] = useState(false);
     const [selectAllState, setSelectAllState] = useState(false);
     const [checkBoxListState, setCheckBoxListState] = useState([]);
     const [dateState, setDateState] = useState(new Date());
-    const [queriesState, setQueriesState] = useState(props.initialState);
+    const [queriesState, setQueriesState] = useState({});
+    const [optionsState, setOptionState] = useState({});
+
     const [monthlyBalance, setMonthlyBalance] = useState({
         monthlyIncomeState: 0,
         monthlyExpenditureState: 0,
@@ -87,7 +86,7 @@ const Home = (props) => {
         monthlyDatas: [],
     });
 
-    const [optionsState, setOptionState] = useState({});
+    // const [optionsState, setOptionState] = useState(props.getHomeOptions(categoryDB));
 
     let radioBtnInitVal = [];
     if (radioGroupItem) {
@@ -100,12 +99,7 @@ const Home = (props) => {
 
     //radioGroup state
     const [radioGroupState, setRadioGroupState] = useState(radioBtnInitVal[0]);
-
     const [regularItemState, setRegularItemState] = useState(regular_item[0]);
-
-    // const [dataFilterRadioGroupState, setDataFilterRadioGroupState] = useState(dataFilterRadioBtnInitVal[0]);
-
-
     function resetForm(e, formRef) {
         props.resetKey();
     }
@@ -126,7 +120,7 @@ const Home = (props) => {
         values.id = itemId;
         values.type = type;
         values.date = date;
-        values.amount = amount? amount.replace(/,/g, '') : '';
+        values.amount = amount ? amount.replace(/,/g, '') : '';
 
         if (regularItem !== '') {
             values.category = regularItem;
@@ -157,7 +151,6 @@ const Home = (props) => {
         }
 
         _.each(values, (v, k) => {
-
             validateResult = validateThis(v, k);
 
             if (!validateResult) {
@@ -165,7 +158,6 @@ const Home = (props) => {
                 return false;
             }
         });
-
 
         if (!validateResult) {
             return;
@@ -183,10 +175,9 @@ const Home = (props) => {
         props.resetKey();
     }
 
-    const { values, handleChange, handleSubmit, handleReset } = useForm(resetForm, submit, initState);
+    const { values, handleChange, handleSubmit, handleReset } = useForm(resetForm, submit, {});
 
     const selectAllCheckBox = (e) => {
-
         setSelectAllState(!selectAllState);
     }
 
@@ -225,11 +216,8 @@ const Home = (props) => {
 
         if (checked) {
             checkBoxListState.push(val);
-
             setCheckBoxListState(checkBoxListState);
-
         } else {
-
             let newArray = checkBoxListState.filter(function (item, index, array) {
                 console.log(item[0]);
 
@@ -237,13 +225,10 @@ const Home = (props) => {
             });
             // checkBoxListState = [...newArray];
             setCheckBoxListState(newArray);
-
         }
     }
 
     const getAllCheckBoxVal = (val) => {
-
-
         if (_.isEmpty(val)) {
             checkBoxListState.splice(0, checkBoxListState.length)
 
@@ -274,9 +259,9 @@ const Home = (props) => {
         // requestDataHeaderKey: [ "num", "msg_num" ]
     }
 
-
     useEffect(() => {
         getAllData();
+
         let categories = config.categories;
         let categoryBox = [];
 
@@ -297,7 +282,6 @@ const Home = (props) => {
                 categoryBox.push(
                     items
                 );
-
             });
 
             const options = {
@@ -307,7 +291,7 @@ const Home = (props) => {
             };
 
             setOptionState(options);
-
+            
         });
     }, [])
 
@@ -366,9 +350,9 @@ const Home = (props) => {
                         </div>
 
                         <div className="input-group">
-                            <Select disabled={regularItemState ? true : false}  value={values.category} name='category' label='Category' options={optionsState} onChange={handleChange} />
-                            {regularItemState?
-                                <></>:
+                            <Select disabled={regularItemState ? true : false} value={values.category} name='category' label='Category' options={optionsState} onChange={handleChange} />
+                            {regularItemState ?
+                                <></> :
                                 <Text
                                     icon='pencil alternate'
                                     value={values.category_new}
@@ -420,16 +404,17 @@ const Home = (props) => {
                     <AccountingTable
                         // ref='accountingTable'
                         {...props}
+                        largeModalType='accounting'
+                        categoryOptions={optionsState}
                         headerSpec={headerSpec}
                         queriesData={queriesState.queries}
                         selectAll={selectAllState}
                         count={queriesState.count}
-                        time={queriesState.time}
+                        // time={queriesState.time}
                         columnSpec={columnSpec}
                         rowSpec={rowSpec}
                     />
                 </Segment>
-
             </Form>
         </>)
 }

@@ -1,6 +1,4 @@
 import React from 'react';
-import { Checkbox } from 'semantic-ui-react';
-
 class PureCheckBox extends React.Component {
     constructor(props) {
         super(props);

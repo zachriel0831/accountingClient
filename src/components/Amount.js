@@ -51,12 +51,12 @@ const Amount = (props) => {
 
     const changeValue = (e) => {
         let currentValue = e.currentTarget.value;
-        var acceptDeciaml = 0;
-        if (props.decimal) {
-            acceptDeciaml = props.decimalLength;
-        } else {
+        // var acceptDeciaml = 0;
+        // if (props.decimal) {
+        //     acceptDeciaml = props.decimalLength;
+        // } else {
             currentValue = transferToAmountFormat(currentValue, 1);
-        }
+        // }
 
         console.log('currentValue ', currentValue);
         setState(currentValue);
@@ -88,11 +88,17 @@ const Amount = (props) => {
                     readOnly={props.disabled}
                     size={props.size}
                     style={{ textAlign: 'right' }}
+                    disabled={props.disabled}
                 />
-                <ReactTooltip id='warning' aria-haspopup='true' type='error' getContent={() => {
+                {(props.showToolTip)
+                    ?
+                    <ReactTooltip id='warning' aria-haspopup='true' type='error' getContent={() => {
 
-                    return props.disabled ? <><p style={{ color: 'white' }}><i className='icon exclamation'></i>select the curreny first</p></> : null
-                }}/>
+                        return props.disabled ? <><p style={{ color: 'white' }}><i className='icon exclamation'></i>{props.warning}</p></> : null
+                    }}/>
+                    :
+                    <></>
+                }
             </div>
         </>
     );
@@ -110,7 +116,9 @@ Amount.defaultProps = {
     decimal: false,
     decimalLength: 2,
     size: 10,
-    labelStyle: {}
+    labelStyle: {},
+    warning:'',
+    showToolTip:false,
 
 }
 

@@ -7,7 +7,7 @@ const Text = (props) => {
     const inputRef = useRef();
 
     const changeValue = (e) => {
-        let currentValue = e.currentTarget.value;
+        // let currentValue = e.currentTarget.value;
 
         if (_.isFunction(props.onChange)) {
             props.onChange(e);
@@ -15,13 +15,12 @@ const Text = (props) => {
     }
 
     const componentBlur = (e) => {
-        let currentValue = e.currentTarget.value;
-        if (_.isFunction(props.onChange)) {
-            props.onChange(e);
+        // let currentValue = e.currentTarget.value;
+        if (_.isFunction(props.onBlur)) {
+            props.onBlur(e);
         }
     }
 
-    //寬度有設!import 須個別調整
     return (
         <>
             <div className={`ui ${props.disabled ? 'disabled' : ''} left icon input`}>

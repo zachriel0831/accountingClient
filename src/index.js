@@ -1,13 +1,13 @@
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter, Route, Switch } from "react-router-dom";
-import { createBrowserHistory } from 'history';
+// import { createBrowserHistory } from 'history';
 import _ from 'lodash';
 import HOCBundle from './components/hocs/HOCBundle';
 import config from './configs/config';
 import './index.css';
 import App from './App';
-import { initDB, useIndexedDB } from 'react-indexed-db';
+import { initDB } from 'react-indexed-db';
 import { DBConfig } from './service/DBConfig';
 
 import * as serviceWorker from './serviceWorker';
@@ -25,9 +25,9 @@ const wakeUpCurrency = () => {
     },
     withCredentials: false,
   }).then(function (response) {
-    let responseData = response.data;
+    // let responseData = response.data;
 
-    console.log(response);
+    console.log(response.data);
   }).catch(function (error) {
     // handle error
     console.log(error);
@@ -48,9 +48,9 @@ const wakeUpBackUpServer = () => {
     },
     withCredentials: false,
   }).then(function (response) {
-    let responseData = response.data;
+    // let responseData = response.data;
 
-    console.log(response);
+    console.log(response.data);
   }).catch(function (error) {
     // handle error
     console.log(error);

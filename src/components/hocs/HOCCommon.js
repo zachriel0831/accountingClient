@@ -1,7 +1,7 @@
 import React from 'react';
 // import { validationCommon } from '../../../mtMessageCommon/validations/validationCommon';
 // import AjaxWrapper from '../util/AjaxWrapper';
-import config from '../../configs/config'
+// import config from '../../configs/config'
 //元件HOC
 const HOCCommon = (ComposeComponent) => {
     let customerFunc = {

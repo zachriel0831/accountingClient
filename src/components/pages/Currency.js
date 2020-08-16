@@ -1,7 +1,7 @@
 
 
-import React, { useState, useEffect, useRef } from 'react';
-import { initDB, useIndexedDB } from 'react-indexed-db';
+import React, { useState, useEffect } from 'react';
+import { useIndexedDB } from 'react-indexed-db';
 import Form from '../Form';
 import Text from '../Text';
 // import Amount from '../Amount';
@@ -9,7 +9,7 @@ import RadioGroup from '../RadioGroup';
 import Select from '../Select'
 import useForm from '../custom-hooks/useForm';
 import _ from 'lodash';
-import config from '../../configs/config';
+// import config from '../../configs/config';
 import Button from '../Button';
 import { useTranslation } from "react-i18next";
 import moment from 'moment';
@@ -19,9 +19,9 @@ import DatePicker from '../DatePicker';
 // import { Modal } from 'semantic-ui-react';
 // import EditPanel from '../modals/EditPanel';
 // import validateThis from '../../validationSet/validations';
-import utils from '../../utils/utils';
-import { Segment, Header, Divider, Card } from 'semantic-ui-react';
-import axios from 'axios';
+// import utils from '../../utils/utils';
+import { Segment, Header, Card } from 'semantic-ui-react';
+// import axios from 'axios';
 import PureCheckBox from '../PureCheckBox';
 import AccountingTable from '../AccountingTable';
 import Amount from '../Amount';
@@ -84,7 +84,7 @@ const Currency = (props) => {
     }
 
     function submit(e, formRef) {
-        let itemId = `${moment().unix()}_${radioGroupState}_${values.category}_${moment(dateState).format('YYYY/MM/DD')}_${values.amount}`;
+        let itemId = `${moment().unix()}_${radioGroupState}_${values.category}_${moment(dateState).format('YYYY/MM/DD')}_${amountState}`;
         let type = radioGroupState;
         let date = moment(dateState).format('YYYY/MM/DD');
         let amount = amountState;
@@ -429,7 +429,7 @@ const Currency = (props) => {
 
                     </div>
                     <div className="input-group">
-                        <Amount decimal disabled={values.category ? false : true} maxLength='20' icon='dollar sign' value={amountState} name='amount' label='amount' onChange={(e) => calculateRate(e)} />
+                        <Amount  showToolTip decimal disabled={values.category ? false : true} warning='select the curreny first' maxLength='20' icon='dollar sign' value={amountState} name='amount' label='amount' onChange={(e) => calculateRate(e)} />
                         {/* <i style={{ display:(!values.category ? 'block' : 'none')}}  className='icon exclamation'></i> */}
 
 
@@ -471,6 +471,8 @@ const Currency = (props) => {
                 <AccountingTable
                     // ref='accountingTable'
                     {...props}
+                    largeModalType='currency'
+                    categoryOptions={optionsState}
                     headerSpec={headerSpec}
                     queriesData={queriesState.queries}
                     selectAll={selectAllState}

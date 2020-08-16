@@ -73,14 +73,18 @@ const propsEquality = (preProps, nextProps) => {
     //selectAll變了通行
     if (preProps.selectAll !== nextProps.selectAll) {
         return false;
+    }else if(preProps.categoryOptions !== nextProps.categoryOptions){
+
+        return false;
     } else if (preProps.queriesData === nextProps.queriesData) {
 
         return true;
     }
-    // 
+    
     return false;
 }
 const AccountingTable = React.memo((props) => {
+    
     const [state, setState] = useState(props.queriesData);
     const [showContent, setShowContent] = useState(true);
     const [sortingType, setSortingType] = useState('');
@@ -89,15 +93,13 @@ const AccountingTable = React.memo((props) => {
 
     const tableRef = useRef();
 
-    const swiftMethod = props.rowSpec.method;
-    const querySwiftUrl = props.rowSpec.queryUrl;
+    const method = props.rowSpec.method;
+    const queryUrl = props.rowSpec.queryUrl;
     const requestDataKey = props.rowSpec.requestDataKey;
     const selectedValue = props.rowSpec.selectedValue;
 
     let ths = [];
     let trs = [];
-    let incomeState = 0;
-    let expenditureState = 0;
 
     const checkBoxClick = (e, val, checked, checkedTarget) => {
         props.headerSpec.onCheckBoxClick(e, val, checked, checkedTarget);
@@ -136,7 +138,7 @@ const AccountingTable = React.memo((props) => {
             if (selectedValue) {
                 //非同步下無法取得currentTarget
                 let getAllRow = e.currentTarget.parentElement.children;
-
+                
                 //重置所有row style
                 _.each(getAllRow, (v, k) => {
                     v.style.backgroundColor = 'white';
@@ -155,8 +157,8 @@ const AccountingTable = React.memo((props) => {
                     {...props}
                     trElements={props.trElements}
                     rowKey={props.rowKey ? props.rowKey : utils.generateUID()}
-                    queryMethod={swiftMethod}
-                    queryURL={querySwiftUrl}
+                    queryMethod={method}
+                    queryURL={queryUrl}
                     style={{ cursor: 'pointer' }}
                     onDoubleClick={setStyleOnDoubleClick}
                 >
@@ -463,7 +465,7 @@ const AccountingTable = React.memo((props) => {
                         <td key={utils.generateUID()}><PureCheckBox key={utils.generateUID()} checked={checkBoxSelectAllState} onClick={checkBoxClick} /></td>);
                 }
                 let trElements = tdValueBox;
-
+                
                 trs.push(<TRdata key={utils.generateUID()} {...props} trElements={trElements} rowKey={rowKey} onDoubleClick={trClick}>{tds}</TRdata>);
                 tds = [];
             }
@@ -566,6 +568,7 @@ AccountingTable.defaultProps = {
     },
     selectAll: false,
     displaySummaryBlockFlag: false,
+    largeModalType:'accounting'
 
 }
 

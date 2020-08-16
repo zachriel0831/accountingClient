@@ -2,7 +2,7 @@ import React from 'react'
 import Datepicker, { registerLocale } from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import _ from 'lodash';
-import moment from 'moment';
+// import moment from 'moment';
 import HOCCommon from './hocs/HOCCommon';
 
 import { zhTW } from 'date-fns/locale';
@@ -11,9 +11,8 @@ registerLocale("zhTW", zhTW);
 const DatePicker = (props) => {
 
     const changeValue = (val) => {
-        let currentValue = moment(val).format('YYYY/MM/DD');
-        let validateResult = props.doValidate(currentValue, props);
-
+        // let currentValue = moment(val).format('YYYY/MM/DD');
+        // let validateResult = props.doValidate(currentValue, props);
         // if (!validateResult.status) {
         //     alert(validateResult.msg)
         //     return;

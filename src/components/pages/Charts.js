@@ -1,11 +1,11 @@
 
 
-import React, { useState, useEffect, useRef } from 'react';
-import { initDB, useIndexedDB } from 'react-indexed-db';
+import React, { useState, useEffect } from 'react';
+import { useIndexedDB } from 'react-indexed-db';
 import Form from '../Form';
 // import Text from '../Text';
 // import Amount from '../Amount';
-import RadioGroup from '../RadioGroup';
+// import RadioGroup from '../RadioGroup';
 import Select from '../Select'
 import useForm from '../custom-hooks/useForm';
 import _ from 'lodash';
@@ -14,13 +14,13 @@ import Button from '../Button';
 import { useTranslation } from "react-i18next";
 import moment from 'moment';
 // import AccountingTable from '../AccountingTable';
-import DatePicker from '../DatePicker';
+// import DatePicker from '../DatePicker';
 // import PureCheckBox from '../PureCheckBox';
 // import { Modal } from 'semantic-ui-react';
 // import EditPanel from '../modals/EditPanel';
 // import validateThis from '../../validationSet/validations';
 import utils from '../../utils/utils';
-import { Segment, Divider } from 'semantic-ui-react';
+import { Segment } from 'semantic-ui-react';
 import Chart from 'chart.js';
 
 const radioGroupItem = {
@@ -56,11 +56,11 @@ const dataFilterRadioGroupItem = {
     "selectedValue": "month"
 }
 
-const yearSelectOptions = {
-    "seletedValue": moment(new Date()).format('YYYY'),
-    "disabled": false,
-    "items": [...(utils.initialYearOptions())]
-};
+// const yearSelectOptions = {
+//     "seletedValue": moment(new Date()).format('YYYY'),
+//     "disabled": false,
+//     "items": [...(utils.initialYearOptions())]
+// };
 
 const Charts = (props) => {
     const { t } = useTranslation();
@@ -89,14 +89,14 @@ const Charts = (props) => {
     const { getAll } = useIndexedDB('Accountings');
     // const { t } = useTranslation();
     // const _this = this;
-    const initialState = props.initialState;
+    // const initialState = props.initialState;
     const [chartState, setChartState] = useState({});
     const [dimmerState, setDimmerState] = useState(false);
     // const [selectAllState, setSelectAllState] = useState(false);
     // const [checkBoxListState, setCheckBoxListState] = useState([]);
     const [optionsState, setOptionState] = useState({});
     const [yearOptionState, setYearOptionState] = useState({});
-    const [yearLineChartState, setYearLineChartState] = useState([]);
+    // const [yearLineChartState, setYearLineChartState] = useState([]);
 
     const [itemLineChartState, setItemLineChartState] = useState([]);
     // const [displayBalanceState, setDisplayBalanceState] = useState('none');
@@ -104,7 +104,7 @@ const Charts = (props) => {
     // const [countYearState, setCountYearState] = useState(moment(new Date()).format('YYYY').toString());
     // const [countMonthState, setCountMonthState] = useState(moment(new Date()).format('MM').toString());
 
-    const [radioGroupState, setRadioGroupState] = useState(radioBtnInitVal[0]);
+    // const [radioGroupState, setRadioGroupState] = useState(radioBtnInitVal[0]);
     const initFormState = {
         year: moment(new Date()).format('YYYY'),
 
@@ -146,10 +146,6 @@ const Charts = (props) => {
         let years = values.years;
 
         generateLineChart('balanceComparisonPerMonth', '', years);
-
-    }
-
-    const resetYearLineChart = (e) => {
 
     }
 
@@ -264,9 +260,9 @@ const Charts = (props) => {
                 var item_ctx_line = document.getElementById("itemLineChart");
                 let itemExpenditureSummaryArray = [];
                 
-                for (var i = 1; i <= 12; i++) {
+                for (var j = 1; j <= 12; j++) {
 
-                    let monthFormat = (i < 10) ? ('0' + i) : (i + '');
+                    let monthFormat = (j < 10) ? ('0' + j) : (j + '');
                     let monthlyExpenditureSummary = 0;
 
                     let data_of_each_month = itemsOfThisYear.filter((items, index, array) => {
@@ -448,7 +444,6 @@ const Charts = (props) => {
                 "disabled": false,
                 "items": [...yearBoxResult]
             };
-
             setYearOptionState(options);
         })
 
@@ -490,7 +485,7 @@ const Charts = (props) => {
         setChartState(item_line_Chart);
 
         let datas = { ...props.initialState };
-        let thisMonth = moment().format('MM');
+        // let thisMonth = moment().format('MM');
         // let monthlyResult = props.getMonthlyData(datas, thisMonth);
 
         let annualResult = props.getAnnualData(datas, thisYear);
