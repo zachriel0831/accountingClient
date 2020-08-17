@@ -173,9 +173,6 @@ const StockModal = React.memo((props) => {
         setLargeTableOpen(false);
     }
 
-
-
-
     const enLargeModal = (e) => {
 
         let modalRefs = modalRef;
@@ -424,7 +421,7 @@ const Stocks = (props) => {
 
         axios({
             method: 'post',
-            baseURL: config.mode === 0 ? config.localTestUrl : config.backEndUrl,
+            baseURL: config.mode === 0 ? config.localTestUrl : config.crawlerService,
             // baseURL: 'http://localhost:5000',
             url: '/stocks/get_stocks',
             'Content-Type': 'application/json',
@@ -474,7 +471,7 @@ const Stocks = (props) => {
 
             axiosObjects.push(axios({
                 method: 'post',
-                baseURL: config.mode === 0 ? config.localTestUrl : config.backEndUrl,
+                baseURL: config.mode === 0 ? config.localTestUrl : config.crawlerService,
                 // baseURL: 'http://localhost:5000',
                 url: '/stocks/get_stocks',
                 'Content-Type': 'application/json',
