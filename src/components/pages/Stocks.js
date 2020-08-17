@@ -8,7 +8,7 @@ import RadioGroup from '../RadioGroup';
 import Select from '../Select'
 import useForm from '../custom-hooks/useForm';
 import _ from 'lodash';
-// import config from '../../configs/config';
+import config from '../../configs/config';
 import Button from '../Button';
 import { useTranslation } from "react-i18next";
 import moment from 'moment';
