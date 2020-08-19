@@ -178,7 +178,7 @@ const BackUp = (props) => {
                     );
                 });
 
-
+                
                 _.each(responseData.stocks, (v, k) => {
                     stockDB.update(v).then(
                         event => {

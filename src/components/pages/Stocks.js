@@ -97,7 +97,9 @@ const StockModal = React.memo((props) => {
                 return false;
             }
         });
-
+        if (!validateResult) {
+            return;
+        }
         values.month = moment(values.date).format('MM');
         values.day = moment(values.date).format('DD');
         values.year = moment(values.date).format('YYYY');
@@ -338,7 +340,9 @@ const Stocks = (props) => {
                 return false;
             }
         });
-
+        if (!validateResult) {
+            return;
+        }
         add(values).then(
             event => {
                 console.log('ID Generated: ', event.target);
@@ -481,7 +485,6 @@ const Stocks = (props) => {
                 },
                 withCredentials: false,
             }).then(function (response) {
-
                 let stockValue = response.data ? response.data.data : '';
                 let shares = v.share;
                 let currentStockValue = parseInt(shares) * parseFloat(stockValue);
@@ -490,7 +493,6 @@ const Stocks = (props) => {
                 v.profit = parseInt(currentStockValue) - parseInt(v.acquisitionPrice);
                 v.roe = ((currentStockValue / parseInt(v.acquisitionPrice) * 100) - 100).toFixed(2) + '%';
                 update(v) 
-
 
             }).catch(function (error) {
                 // handle error

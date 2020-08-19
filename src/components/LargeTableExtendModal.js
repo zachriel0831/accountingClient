@@ -90,8 +90,10 @@ const LargeTableExtendModal = React.memo((props) => {
 
         values.id = rowKey;
         values.date = moment(tableDateState).format('YYYY/MM/DD');
-        values.type = radioGroupState;
 
+        if (props.largeModalType === 'accounting') {
+            values.type = radioGroupState;
+        }
         let validateResult = true;
 
         _.each(values, (v, k) => {
@@ -103,6 +105,10 @@ const LargeTableExtendModal = React.memo((props) => {
                 return false;
             }
         });
+
+        if (!validateResult) {
+            return;
+        }
         values.amount = values.amount.replace(/,/g, '');
         values.month = moment(values.date).format('MM');
         values.day = moment(values.date).format('DD');
