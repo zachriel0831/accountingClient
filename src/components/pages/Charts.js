@@ -104,7 +104,6 @@ const Charts = (props) => {
     // const [countYearState, setCountYearState] = useState(moment(new Date()).format('YYYY').toString());
     // const [countMonthState, setCountMonthState] = useState(moment(new Date()).format('MM').toString());
 
-    // const [radioGroupState, setRadioGroupState] = useState(radioBtnInitVal[0]);
     const initFormState = {
         year: moment(new Date()).format('YYYY'),
 
