@@ -102,7 +102,6 @@ const Charts = (props) => {
     // const [displayBalanceState, setDisplayBalanceState] = useState('none');
 
     // const [countYearState, setCountYearState] = useState(moment(new Date()).format('YYYY').toString());
-    // const [countMonthState, setCountMonthState] = useState(moment(new Date()).format('MM').toString());
 
     const initFormState = {
         year: moment(new Date()).format('YYYY'),
