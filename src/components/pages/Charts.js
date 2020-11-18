@@ -118,27 +118,7 @@ const Charts = (props) => {
 
     function submit(e, formRef) {
 
-        // let category = values.category;
-        // let type = radioGroupState;
-        // let date = moment(dateState).format('YYYY/MM/DD');
-        // // let month = moment(dateState).format('MM');
-        // // let day = moment(dateState).format('DD');
-        // // let year = moment(dateState).format('YYYY');
 
-        // let startDate = moment(startDateState).format('YYYY/MM/DD');
-        // // let startMonth = moment(startDateState).format('MM');
-        // // let startYear = moment(startDateState).format('YYYY');
-        // // let startDay = moment(startDateState).format('DD');
-
-
-        // let endDate = moment(endDateState).format('YYYY/MM/DD');
-        // // let endMonth = moment(endDateState).format('MM');
-        // // let endYear = moment(endDateState).format('YYYY');
-        // // let endDay = moment(endDateState).format('DD');
-
-        // let accountQueriesData = {};
-        // let sumIncome = 0;
-        // let sumExpenditure = 0;
     }
 
     const addYearToChart = (e) => {
