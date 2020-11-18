@@ -65,7 +65,6 @@ const regular_item = {
         }
     ],
     "selectedValue": ""
-
 }
 
 const Home = (props) => {
@@ -111,7 +110,7 @@ const Home = (props) => {
         let amount = values.amount;
         let month = moment(dateState).format('MM');
         let day = moment(dateState).format('DD');
-        let year = moment(dateState).format('YYYY');;
+        let year = moment(dateState).format('YYYY');
         let category = values.category;
         let remark = values.remark;
         let category_new = values.category_new;

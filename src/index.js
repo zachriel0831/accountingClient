@@ -31,7 +31,7 @@ const wakeUpCurrency = () => {
   }).catch(function (error) {
     // handle error
     console.log(error);
-    alert(' failed!')
+    console.log(' failed!')
   }).finally(function () {
     console.log('request finished');
   });
@@ -54,7 +54,7 @@ const wakeUpBackUpServer = () => {
   }).catch(function (error) {
     // handle error
     console.log(error);
-    alert(' failed!')
+    console.log(' failed!')
   }).finally(function () {
     console.log('request finished');
   });

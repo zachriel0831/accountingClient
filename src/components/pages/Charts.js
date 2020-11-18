@@ -167,6 +167,7 @@ const Charts = (props) => {
                 labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
                 datasets: []
             },
+            width:1450,
             options: {
                 responsive: true, // Instruct chart js to respond nicely.
                 maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
@@ -247,6 +248,7 @@ const Charts = (props) => {
                         labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
                         datasets: [...chartDataSetBox]
                     },
+                    width:1450,
                     options: {
                         responsive: true, // Instruct chart js to respond nicely.
                         maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
@@ -297,6 +299,7 @@ const Charts = (props) => {
                             labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
                             datasets: [...chartDataSetBox]
                         },
+                        width:1450,
                         options: {
                             responsive: true, // Instruct chart js to respond nicely.
                             maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
@@ -476,6 +479,7 @@ const Charts = (props) => {
                 labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
                 datasets: []
             },
+            width:1450,
             options: {
                 responsive: true, // Instruct chart js to respond nicely.
                 maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
@@ -526,15 +530,11 @@ const Charts = (props) => {
                     onClick={(e) => addYearToChart(e)}
 
                 />
-            </Segment>
+            </Segment >
 
-
-            <Segment>
-
+            <Segment style={{width:'1500px',height:'200px'}}>
                 <canvas id="lineChart"></canvas>
-
             </Segment>
-
 
             <Segment>
                 <div className="input-group">
@@ -557,7 +557,7 @@ const Charts = (props) => {
                         onClick={(e) => resetItemLineChart(e)}
                     />
                 </div>
-                <div>
+                <div  style={{width:'1500px',height:'200px'}}>
                     <canvas id="itemLineChart"></canvas>
                 </div>
             </Segment>
