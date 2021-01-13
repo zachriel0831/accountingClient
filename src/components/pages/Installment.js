@@ -16,42 +16,44 @@ import validateThis from '../../validationSet/validations';
 import utils from '../../utils/utils';
 import { Segment } from 'semantic-ui-react';
 
-const radioGroupItem = {
-    "items": [{
-        "label": "expenditure",
-        "value": "expenditure",
-        "groupKey": "_none",
-        "disabled": false
-    },
-    {
-        "label": "income",
-        "value": "income",
-        "groupKey": "_none",
-        "disabled": false
-    },],
-    "selectedValue": "expenditure"
-}
-
-let categories = config.categories;
-let categoryBox = [];
-
-_.each(categories, (v, k) => {
-    let items = {
-        label: v,
-        value: v
-    }
-    categoryBox.push(items);
-});
-
-const selectOptions = {
-    "seletedValue": "",
-    "disabled": false,
-    "items": [...categoryBox]
-};
-
 const Installment = (props) => {
-    const { add, getAll } = useIndexedDB('Accountings');
     const { t } = useTranslation();
+
+    const radioGroupItem = {
+        "items": [{
+            "label": t("expenditure"),
+            "value": "expenditure",
+            "groupKey": "_none",
+            "disabled": false
+        },
+        {
+            "label": t("income"),
+            "value": "income",
+            "groupKey": "_none",
+            "disabled": false
+        },],
+        "selectedValue": "expenditure"
+    }
+
+    let categories = config.categories;
+    let categoryBox = [];
+
+    _.each(categories, (v, k) => {
+        let items = {
+            label: t(v),
+            value: v
+        }
+        categoryBox.push(items);
+    });
+
+    const selectOptions = {
+        "seletedValue": "",
+        "disabled": false,
+        "items": [...categoryBox]
+    };
+
+
+    const { add, getAll } = useIndexedDB('Accountings');
 
     const initState = {};
     const [dimmerState, setDimmerState] = useState(false);
@@ -182,7 +184,7 @@ const Installment = (props) => {
             values.date = installmentDate;
             values.month = moment(installmentDate).format('MM');
             values.id = `${moment().unix()}_expenditure_${values.category}_${moment(installmentDate).format('YYYY/MM/DD')}_${values.amount}`;
-            
+
             await add(values).then(
                 event => {
                     console.log('ID Generated: ', event.target);
@@ -227,7 +229,7 @@ const Installment = (props) => {
 
     return (
         <>
-            <Form title='Installment' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
+            <Form title={t("installment")} onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
                 <div className="input-group">
                     <Segment>
                         <div className="input-group">
@@ -251,14 +253,14 @@ const Installment = (props) => {
                             <Select value={values.category} name='category' label='category' options={selectOptions} onChange={handleChange} />
                         </div>
                         <div className="input-group">
-                            <Text icon='sticky note' value={values.times} name='times' label='times' onChange={handleChange} />
+                            <Text icon='sticky note' value={values.times} name='times' label={t('times')} onChange={handleChange} />
                         </div>
                         <div className="input-group">
-                            <Amount icon='dollar sign' value={values.amount} name='amount' label='amount' onChange={handleChange} />
+                            <Amount icon='dollar sign' value={values.amount} name='amount' label={t('amount')} onChange={handleChange} />
                         </div>
 
                         <div className="input-group">
-                            <Text icon='sticky note' value={values.remark} name='remark' label='remark' onChange={handleChange} />
+                            <Text icon='sticky note' value={values.remark} name='remark' label={t('remark')} onChange={handleChange} />
                         </div>
 
                         <Button
@@ -287,14 +289,14 @@ const Installment = (props) => {
                     </Segment>
 
                     <Segment>
-                    
-                        <span className='amount-label'>amount: {estimateAmountState}</span>
+
+                        <span className='amount-label'>{t('amount')}: {estimateAmountState}</span>
                         <br />
-                        <span className='amount-label'>Total Income: {totalIncomeState}</span>
+                        <span className='amount-label'>{t('total_income')}: {totalIncomeState}</span>
                         <br />
-                        <span className='amount-label'>Total Expenditure: {totalExpenditureState}</span>
+                        <span className='amount-label'>{t('total_expenditure')}: {totalExpenditureState}</span>
                         <br />
-                        <span className='amount-label'>Total Assets: {totalAssets} </span>
+                        <span className='amount-label'>{t('total_assets')}: {totalAssets} </span>
                     </Segment>
                 </div>
             </Form>

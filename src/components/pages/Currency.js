@@ -28,19 +28,21 @@ import Amount from '../Amount';
 import validateThis from '../../validationSet/validations';
 
 //initital radio items;
-const radioGroupItem = {
-    "items": [{
-        "label": "foreign exchange",
-        "value": "foreign_exchange",
-        "groupKey": "_none",
-        "disabled": false
-    },
-    ],
-    "selectedValue": "foreign_exchange"
-}
+
 
 const Currency = (props) => {
     const { t } = useTranslation();
+    const radioGroupItem = {
+        "items": [{
+            "label": t("foreign_exchange"),
+            "value": "foreign_exchange",
+            "groupKey": "_none",
+            "disabled": false
+        },
+        ],
+        "selectedValue": "foreign_exchange"
+    }
+
     const initCurrencyState = props.initialState;
     const { add, getAll, deleteRecord } = useIndexedDB('Accountings_Currencies');
     //loading dimmer
@@ -295,11 +297,11 @@ const Currency = (props) => {
     const headerSpec = {
         header: [
             { id: 'id', headerName: 'id', style: { display: 'none' } },
-            { id: 'type', headerName: 'type' },
-            { id: 'category', headerName: 'category' },
-            { id: 'amount', headerName: 'amount' },
-            { id: 'date', headerName: 'date' },
-            { id: 'remark', headerName: 'remark' },
+            { id: 'type', headerName: t('type') },
+            { id: 'category', headerName: t('category') },
+            { id: 'amount', headerName: t('amount') },
+            { id: 'date', headerName: t('date') },
+            { id: 'remark', headerName: t('remark') },
 
         ],
         selectable: true, //開啟checkbox
@@ -402,9 +404,9 @@ const Currency = (props) => {
         setAmountState(val);
     }
     return <>
-        <><Form title='Currency' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
+        <><Form title={t('currency')} onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
             <Segment>
-                <label>enter your foreign currency asset</label>
+                <label>{t('enter_your_foreign_currency_asset')}</label>
 
                 <div className="input-group">
                     <div className="input-group">
@@ -429,7 +431,7 @@ const Currency = (props) => {
 
                     </div>
                     <div className="input-group">
-                        <Amount  showToolTip decimal disabled={values.category ? false : true} warning='select the curreny first' maxLength='20' icon='dollar sign' value={amountState} name='amount' label='amount' onChange={(e) => calculateRate(e)} />
+                        <Amount  showToolTip decimal disabled={values.category ? false : true} warning='select the curreny first' maxLength='20' icon='dollar sign' value={amountState} name='amount' label={t('amount')} onChange={(e) => calculateRate(e)} />
                         {/* <i style={{ display:(!values.category ? 'block' : 'none')}}  className='icon exclamation'></i> */}
 
 
@@ -438,11 +440,11 @@ const Currency = (props) => {
                         <span className='amount-label'>TWD: {calculateTWDState}</span>
                     </div>
                     <div className="input-group">
-                        <Text icon='sticky note' value={values.remark} name='remark' label='remark' onChange={handleChange} />
+                        <Text icon='sticky note' value={values.remark} name='remark' label={t('remark')} onChange={handleChange} />
                     </div>
                     <Button
                         type='submit'
-                        displayName={t("Send")}
+                        displayName={t("send")}
                         className='ui button btn-primary btn-search'
                         icon='icon search'
 
@@ -467,7 +469,7 @@ const Currency = (props) => {
 
                 />
 
-                <PureCheckBox name='checkBox' label='select all' onClick={(e) => selectAllCheckBox(e)} />
+                <PureCheckBox name='checkBox' label={t('select_all')} onClick={(e) => selectAllCheckBox(e)} />
                 <AccountingTable
                     // ref='accountingTable'
                     {...props}

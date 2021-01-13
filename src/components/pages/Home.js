@@ -21,51 +21,7 @@ import validateThis from '../../validationSet/validations';
 // import utils from '../../utils/utils';
 import { Segment } from 'semantic-ui-react';
 
-const radioGroupItem = {
-    "items": [{
-        "label": "expenditure",
-        "value": "expenditure",
-        "groupKey": "_none",
-        "disabled": false
-    },
-    {
-        "label": "income",
-        "value": "income",
-        "groupKey": "_none",
-        "disabled": false
-    },],
-    "selectedValue": "expenditure"
-}
 
-const regular_item = {
-    "items": [
-        {
-            "label": "none",
-            "value": "",
-            "groupKey": "_none",
-            "disabled": false
-        },
-        {
-            "label": "foods",
-            "value": "foods",
-            "groupKey": "_none",
-            "disabled": false
-        },
-        {
-            "label": "entertaining",
-            "value": "entertaining",
-            "groupKey": "_none",
-            "disabled": false
-        },
-        {
-            "label": "travel",
-            "value": "travel",
-            "groupKey": "_none",
-            "disabled": false
-        }
-    ],
-    "selectedValue": ""
-}
 
 const Home = (props) => {
     const { add, getAll, deleteRecord } = useIndexedDB('Accountings');
@@ -77,6 +33,52 @@ const Home = (props) => {
     const [dateState, setDateState] = useState(new Date());
     const [queriesState, setQueriesState] = useState({});
     const [optionsState, setOptionState] = useState({});
+
+    const radioGroupItem = {
+        "items": [{
+            "label": t("expenditure"),
+            "value": "expenditure",
+            "groupKey": "_none",
+            "disabled": false
+        },
+        {
+            "label": t("income"),
+            "value": "income",
+            "groupKey": "_none",
+            "disabled": false
+        },],
+        "selectedValue": "expenditure"
+    }
+
+    const regular_item = {
+        "items": [
+            {
+                "label": t("none"),
+                "value": "",
+                "groupKey": "_none",
+                "disabled": false
+            },
+            {
+                "label": t("foods"),
+                "value": "foods",
+                "groupKey": "_none",
+                "disabled": false
+            },
+            {
+                "label": t("entertaining"),
+                "value": "entertaining",
+                "groupKey": "_none",
+                "disabled": false
+            },
+            {
+                "label": t("travel"),
+                "value": "travel",
+                "groupKey": "_none",
+                "disabled": false
+            }
+        ],
+        "selectedValue": ""
+    }
 
     const [monthlyBalance, setMonthlyBalance] = useState({
         monthlyIncomeState: 0,
@@ -153,7 +155,7 @@ const Home = (props) => {
             validateResult = validateThis(v, k);
 
             if (!validateResult) {
-                alert(`${k} format error!`);
+                alert(`${k} ${t('format_error')}!`);
                 return false;
             }
         });
@@ -242,16 +244,16 @@ const Home = (props) => {
 
     let headerSpec = {
         header: [
-            { id: 'id', headerName: 'id', style: { display: 'none' } },
-            { id: 'type', headerName: 'type' },
-            { id: 'category', headerName: 'category' },
-            { id: 'amount', headerName: 'amount' },
-            { id: 'date', headerName: 'date' },
-            { id: 'remark', headerName: 'remark' },
+            { id: 'id', headerName: t('id'), style: { display: 'none' } },
+            { id: 'type', headerName: t('type') },
+            { id: 'category', headerName: t('category') },
+            { id: 'amount', headerName: t('amount') },
+            { id: 'date', headerName: t('date') },
+            { id: 'remark', headerName: t('remark') },
 
         ],
         selectable: true, //開啟checkbox
-        selectableDisplayName: { id: 'select', headerName: 'check' },
+        selectableDisplayName: { id: 'select', headerName: t('check') },
         onCheckBoxClick: selectedCheckBoxClick,
         getAllCheckBoxVal: (val) => getAllCheckBoxVal(val),
         amountSortingHeaderKey: ["amount"],
@@ -266,7 +268,7 @@ const Home = (props) => {
 
         _.each(categories, (v, k) => {
             let items = {
-                label: v,
+                label: t(v),
                 value: v
             }
             categoryBox.push(items);
@@ -275,7 +277,7 @@ const Home = (props) => {
         categoryDB.getAll().then(categories => {
             _.each(categories, (v, k) => {
                 let items = {
-                    label: v.name,
+                    label: t(v.name),
                     value: v.name
                 }
                 categoryBox.push(
@@ -290,7 +292,7 @@ const Home = (props) => {
             };
 
             setOptionState(options);
-            
+
         });
     }, [])
 
@@ -317,7 +319,7 @@ const Home = (props) => {
 
     return (
         <>
-            <Form title='Home' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
+            <Form title={t('Home')} onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
                 <div className="input-group">
                     <Segment>
                         <div className="input-group">
@@ -349,30 +351,30 @@ const Home = (props) => {
                         </div>
 
                         <div className="input-group">
-                            <Select disabled={regularItemState ? true : false} value={values.category} name='category' label='Category' options={optionsState} onChange={handleChange} />
+                            <Select disabled={regularItemState ? true : false} value={values.category} name='category' label={t('category')} options={optionsState} onChange={handleChange} />
                             {regularItemState ?
                                 <></> :
                                 <Text
                                     icon='pencil alternate'
                                     value={values.category_new}
                                     name='category_new'
-                                    label='new option'
+                                    label={t('new_option')}
                                     onChange={handleChange}
                                     disabled={values.category ? true : false} />}
 
                         </div>
 
                         <div className="input-group">
-                            <Amount icon='dollar sign' value={values.amount} name='amount' label='amount' onChange={handleChange} />
+                            <Amount icon='dollar sign' value={values.amount} name='amount' label={t('amount')} onChange={handleChange} />
                         </div>
 
                         <div className="input-group">
-                            <Text icon='sticky note' value={values.remark} name='remark' label='remark' onChange={handleChange} />
+                            <Text icon='sticky note' value={values.remark} name='remark' label={t('remark')} onChange={handleChange} />
                         </div>
 
                         <Button
                             type='submit'
-                            displayName={t("Send")}
+                            displayName={t("send")}
                             className='ui button btn-primary btn-search'
                             icon='icon search'
 
@@ -381,11 +383,11 @@ const Home = (props) => {
 
                     <Segment>
 
-                        <span className='amount-label'>Monthly Income: {monthlyBalance.monthlyIncome}</span>
+                        <span className='amount-label'>{t('monthly_Income')}: {monthlyBalance.monthlyIncome}</span>
                         <br />
-                        <span className='amount-label'>Monthly Expenditure: {monthlyBalance.monthlyExpenditure} </span>
+                        <span className='amount-label'>{t('monthly_Expenditure')}: {monthlyBalance.monthlyExpenditure} </span>
                         <br />
-                        <span className='amount-label'>Monthly Balance: {monthlyBalance.monthlyBalance}</span>
+                        <span className='amount-label'>{t('monthly_Balance')}: {monthlyBalance.monthlyBalance}</span>
                     </Segment>
                 </div>
 
@@ -399,7 +401,7 @@ const Home = (props) => {
 
                     />
 
-                    <PureCheckBox name='checkBox' label='select all' onClick={(e) => selectAllCheckBox(e)} />
+                    <PureCheckBox name='checkBox' label={t('select_all')} onClick={(e) => selectAllCheckBox(e)} />
                     <AccountingTable
                         // ref='accountingTable'
                         {...props}

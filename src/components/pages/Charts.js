@@ -23,74 +23,70 @@ import utils from '../../utils/utils';
 import { Segment } from 'semantic-ui-react';
 import Chart from 'chart.js';
 
-const radioGroupItem = {
-    "items": [{
-        "label": "expenditure",
-        "value": "expenditure",
-        "groupKey": "_none",
-        "disabled": false
-    },
-    {
-        "label": "income",
-        "value": "income",
-        "groupKey": "_none",
-        "disabled": false
-    },],
-    "selectedValue": "expenditure"
-}
+// const radioGroupItem = {
+//     "items": [{
+//         "label": "expenditure",
+//         "value": "expenditure",
+//         "groupKey": "_none",
+//         "disabled": false
+//     },
+//     {
+//         "label": "income",
+//         "value": "income",
+//         "groupKey": "_none",
+//         "disabled": false
+//     },],
+//     "selectedValue": "expenditure"
+// }
 
-const dataFilterRadioGroupItem = {
-    "items": [
-        {
-            "label": "this month",
-            "value": "month",
-            "groupKey": "_none",
-            "disabled": false
-        }, {
-            "label": "this year",
-            "value": "year",
-            "groupKey": "_none",
-            "disabled": false
-        },
-    ],
-    "selectedValue": "month"
-}
-
-// const yearSelectOptions = {
-//     "seletedValue": moment(new Date()).format('YYYY'),
-//     "disabled": false,
-//     "items": [...(utils.initialYearOptions())]
-// };
+// const dataFilterRadioGroupItem = {
+//     "items": [
+//         {
+//             "label": "this month",
+//             "value": "month",
+//             "groupKey": "_none",
+//             "disabled": false
+//         }, {
+//             "label": "this year",
+//             "value": "year",
+//             "groupKey": "_none",
+//             "disabled": false
+//         },
+//     ],
+//     "selectedValue": "month"
+// }
 
 const Charts = (props) => {
     const { t } = useTranslation();
     const categoryDB = useIndexedDB('Accountings_Categories');
 
-    let radioBtnInitVal = [];
-    if (radioGroupItem) {
-        _.each(radioGroupItem.items, (v, k) => {
-            if (v.value === radioGroupItem.selectedValue) {
-                radioBtnInitVal.push(v.value);
-            }
-        })
-    }
+    // let radioBtnInitVal = [];
+    // if (radioGroupItem) {
+    //     _.each(radioGroupItem.items, (v, k) => {
+    //         if (v.value === radioGroupItem.selectedValue) {
+    //             radioBtnInitVal.push(v.value);
+    //         }
+    //     })
+    // }
 
 
-    let dataFilterRadioBtnInitVal = [];
-    if (dataFilterRadioGroupItem) {
-        _.each(dataFilterRadioGroupItem.items, (v, k) => {
+    // let dataFilterRadioBtnInitVal = [];
+    // if (dataFilterRadioGroupItem) {
+    //     _.each(dataFilterRadioGroupItem.items, (v, k) => {
 
-            if (v.value === dataFilterRadioGroupItem.selectedValue) {
-                dataFilterRadioBtnInitVal.push(v.value);
-            }
-        })
-    }
+    //         if (v.value === dataFilterRadioGroupItem.selectedValue) {
+    //             dataFilterRadioBtnInitVal.push(v.value);
+    //         }
+    //     })
+    // }
 
     const { getAll } = useIndexedDB('Accountings');
     // const { t } = useTranslation();
     // const _this = this;
     // const initialState = props.initialState;
     const [chartState, setChartState] = useState({});
+    const [pieChartState, setPieChartState] = useState({});
+
     const [dimmerState, setDimmerState] = useState(false);
     // const [selectAllState, setSelectAllState] = useState(false);
     // const [checkBoxListState, setCheckBoxListState] = useState([]);
@@ -142,10 +138,10 @@ const Charts = (props) => {
         var item_line_Chart = new Chart(item_ctx_line, {
             type: 'line',
             data: {
-                labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
+                labels: ["Jan", "Feb", "Mar", "April", "May", "June", "July", "Aug", "Sept", "Oct", 'Nov', 'Dec'],
                 datasets: []
             },
-            width:1450,
+            width: 1450,
             options: {
                 responsive: true, // Instruct chart js to respond nicely.
                 maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
@@ -202,7 +198,7 @@ const Charts = (props) => {
 
 
                 chartDataSetBox.push({
-                    label: 'Annual expenditure', // Name the series
+                    label: t('annual_expenditure'), // Name the series
                     data: monthlyExpenditureSummaryArray, // Specify the data values array
                     fill: false,
                     borderColor: '#FF0000', // Add custom color border (Line)
@@ -211,7 +207,7 @@ const Charts = (props) => {
                 });
 
                 chartDataSetBox.push({
-                    label: 'Annual income', // Name the series
+                    label: t('annual_income'), // Name the series
                     data: monthlyIncomeSummaryArray, // Specify the data values array
                     fill: false,
                     borderColor: '#DCB5FF', // Add custom color border (Line)
@@ -223,10 +219,10 @@ const Charts = (props) => {
                 var line_Chart = new Chart(ctx_line, {
                     type: 'line',
                     data: {
-                        labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
+                        labels: ["Jan", "Feb", "Mar", "April", "May", "June", "July", "Aug", "Sept", "Oct", 'Nov', 'Dec'],
                         datasets: [...chartDataSetBox]
                     },
-                    width:1450,
+                    width: 1450,
                     options: {
                         responsive: true, // Instruct chart js to respond nicely.
                         maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
@@ -239,7 +235,7 @@ const Charts = (props) => {
             case 'itemComparisonPerMonth':
                 var item_ctx_line = document.getElementById("itemLineChart");
                 let itemExpenditureSummaryArray = [];
-                
+
                 for (var j = 1; j <= 12; j++) {
 
                     let monthFormat = (j < 10) ? ('0' + j) : (j + '');
@@ -274,10 +270,10 @@ const Charts = (props) => {
                     let newChartState = new Chart(item_ctx_line, {
                         type: 'line',
                         data: {
-                            labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
+                            labels: ["Jan", "Feb", "Mar", "April", "May", "June", "July", "Aug", "Sept", "Oct", 'Nov', 'Dec'],
                             datasets: [...chartDataSetBox]
                         },
-                        width:1450,
+                        width: 1450,
                         options: {
                             responsive: true, // Instruct chart js to respond nicely.
                             maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
@@ -291,6 +287,14 @@ const Charts = (props) => {
             default:
                 break;
         }
+    }
+
+    const changePieChartYear = (e) => {
+        let thisYear = values.pieChartYear;
+        let datas = { ...props.initialState };
+        let annualResult = props.getAnnualData(datas, thisYear);
+
+        generatePieChart(annualResult, 'expenditure');
     }
 
     const generatePieChart = (queryResults, type) => {
@@ -317,7 +321,6 @@ const Charts = (props) => {
         _.each(pieData.queries, (v, k) => {
             let itemCategory = v.category;
             let itemAmount = parseInt(v.amount);
-            // labels = [...labels, itemCategory];
 
             if (labels.length !== 0) {
                 if (labels.includes(itemCategory)) {
@@ -326,7 +329,6 @@ const Charts = (props) => {
                             v.category = itemCategory;
                             let amount = parseInt(v.amount);
                             v.amount = (amount += parseInt(itemAmount));
-                            // categoryBox.push({ category: itemCategory, amount: itemAmount })
                         }
                     });
 
@@ -352,13 +354,17 @@ const Charts = (props) => {
             bgColors.push(generageColor[0]);
             bdColors.push(generageColor[1]);
         })
+        if (!_.isEmpty(pieChartState)) {
+            pieChartState.destroy();
+        }
 
+        //generate chart
         var pieChart = new Chart(ctx, {
             type: 'pie',
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'amount',
+                    label: t('amount'),
                     data: label_data,
                     backgroundColor: bgColors,
                     borderColor: bdColors,
@@ -366,7 +372,6 @@ const Charts = (props) => {
                 }],
             },
             options: {
-
                 events: ['mousemove', 'click', 'touchstart', 'touchmove'],
                 hover: {
                     mode: 'index',
@@ -376,13 +381,12 @@ const Charts = (props) => {
                     display: true,
                 },
                 responsive: true
-
             }
         });
+
+        setPieChartState(pieChart);
         //PIE data Ends =====================================
-
     }
-
 
     useEffect(() => {
         let thisYear = moment().format('YYYY');
@@ -404,7 +408,7 @@ const Charts = (props) => {
             _.each(accountinDatas, (v, k) => {
                 if (!yearBox.includes(v.year) && !(yearBox.length === 0)) {
                     let items = {
-                        label: v.year === thisYear ? v.year + '(default)' : v.year,
+                        label: v.year === thisYear ? v.year + t('default') : v.year,
                         value: v.year
                     }
                     yearBox.push(v.year);
@@ -413,7 +417,7 @@ const Charts = (props) => {
 
 
                     let items = {
-                        label: v.year === thisYear ? v.year + '(default)' : v.year,
+                        label: v.year === thisYear ? v.year + t('default') : v.year,
                         value: v.year
                     }
                     yearBox.push(v.year);
@@ -431,7 +435,7 @@ const Charts = (props) => {
         categoryDB.getAll().then(categories => {
             _.each(categories, (v, k) => {
                 let items = {
-                    label: v.name,
+                    label: t(v.name),
                     value: v.name
                 }
                 categoryBox.push(
@@ -454,10 +458,10 @@ const Charts = (props) => {
         var item_line_Chart = new Chart(item_ctx_line, {
             type: 'line',
             data: {
-                labels: ["Jan.", "Feb.", "March.", "April", "May", "June", "July", "august", "Sept", "Oct", 'Nov', 'Dec'],
+                labels: ["Jan", "Feb", "Mar", "April", "May", "June", "July", "Aug", "Sept", "Oct", 'Nov', 'Dec'],
                 datasets: []
             },
-            width:1450,
+            width: 1450,
             options: {
                 responsive: true, // Instruct chart js to respond nicely.
                 maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
@@ -467,37 +471,17 @@ const Charts = (props) => {
         setChartState(item_line_Chart);
 
         let datas = { ...props.initialState };
-        // let thisMonth = moment().format('MM');
-        // let monthlyResult = props.getMonthlyData(datas, thisMonth);
-
         let annualResult = props.getAnnualData(datas, thisYear);
-        // let totalAssetsResult = props.getTotalData(datas);
-
-        // setAssetsDetailsState(
-        //     {
-        //         monthlyIncomeState: monthlyResult.monthlyIncome,
-        //         monthlyExpenditureState: monthlyResult.monthlyExpenditure,
-        //         monthlyBalance: monthlyResult.monthlyBalance,
-        //         monthlyDatas: monthlyResult.monthlyDatas,
-        //         annualIncomeState: annualResult.annualIncome,
-        //         annualExpenditureState: annualResult.annualExpenditure,
-        //         annualBalance: annualResult.annualBalance,
-        //         annualDatas: annualResult.annualDatas,
-        //         totalIncomeState: totalAssetsResult.totalIncome,
-        //         totalExpenditureState: totalAssetsResult.totalExpenditure,
-        //         totalAssets: totalAssetsResult.totalAssets,
-        //     }
-        // )
 
         generatePieChart(annualResult, 'expenditure');
     }, [])
 
     return <>
-        <><Form title='Charts' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
+        <><Form title={t('charts')} onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
             <Segment>
 
                 <div className="input-group" >
-                    <Select value={values.years} name='years' label='years' options={yearOptionState} onChange={handleChange} />
+                    <Select value={values.years} name='years' label={t('years')} options={yearOptionState} onChange={handleChange} />
                 </div>
 
                 <Button
@@ -510,13 +494,13 @@ const Charts = (props) => {
                 />
             </Segment >
 
-            <Segment style={{width:'1500px',height:'200px'}}>
+            <Segment style={{ width: '1500px', height: '200px' }}>
                 <canvas id="lineChart"></canvas>
             </Segment>
 
             <Segment>
                 <div className="input-group">
-                    <Select value={values.category} name='category' label='category' options={optionsState} onChange={handleChange} />
+                    <Select value={values.category} name='category' label={t('category')} options={optionsState} onChange={handleChange} />
                 </div>
                 <div className="input-group">
                     <Button
@@ -525,7 +509,6 @@ const Charts = (props) => {
                         className='ui button btn-primary btn-search'
                         icon='icon add'
                         onClick={(e) => addItemToChart(e)}
-
                     />
                     <Button
                         type='button'
@@ -535,16 +518,23 @@ const Charts = (props) => {
                         onClick={(e) => resetItemLineChart(e)}
                     />
                 </div>
-                <div  style={{width:'1500px',height:'200px'}}>
+                <div style={{ width: '1500px', height: '200px' }}>
                     <canvas id="itemLineChart"></canvas>
                 </div>
             </Segment>
-
-            <Segment style={{width:'800px',height:'600px'}}>
+            <Segment style={{ width: '800px', height: '600px' }}>
+                <div className="input-group">
+                    <Select value={values.pieChartYear} name='pieChartYear' label={t('pie_chart_year')} options={yearOptionState} onChange={handleChange} />
+                    <Button
+                        type='button'
+                        displayName={t("set_year")}
+                        className='ui button btn-primary btn-search'
+                        icon='icon add'
+                        onClick={(e) => changePieChartYear(e)}
+                    />
+                </div>
                 <canvas id="pieChart"></canvas>
-
             </Segment>
-
         </Form></>
     </>
 }

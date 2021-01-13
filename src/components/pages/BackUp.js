@@ -11,7 +11,7 @@ import useForm from '../custom-hooks/useForm';
 import _ from 'lodash';
 import config from '../../configs/config';
 import Button from '../Button';
-// import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 // import moment from 'moment';
 // import AccountingTable from '../AccountingTable';
 // import DatePicker from '../DatePicker';
@@ -24,7 +24,7 @@ import { Segment } from 'semantic-ui-react';
 import axios from 'axios';
 
 const BackUp = (props) => {
-    // const { t } = useTranslation();
+    const { t } = useTranslation();
     const { update } = useIndexedDB('Accountings');
     const categoryDB = useIndexedDB('Accountings_Categories');
     const stockDB = useIndexedDB('Accountings_Stocks');
@@ -240,16 +240,16 @@ const BackUp = (props) => {
 
     }, [])
     return <>
-        <><Form title='BackUp' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
+        <><Form title={t('backUp')} onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
             <Segment>
-                <label>uploading your datas</label>
+                <label>{t('uploading_your_datas')}</label>
 
                 <Text
                     size='40'
                     value={uuidKeyState}
                     icon='pencil alternate'
                     name='serialNumber'
-                    label='paste your serial key to update or save data'
+                    label={t('paste_your_serial_key_to_update_or_save_data')}
                     maxLength='50'
                     onChange={(e) => {
                         let val = e.currentTarget.value;
@@ -262,33 +262,33 @@ const BackUp = (props) => {
                         type='submit'
                         icon='cloud upload'
                         className='ui button btn-primary btn-search'
-                        displayName='upload'
+                        displayName={t('upload')}
                         onClick={(e) => uploadDatas(e)}
                     />
                 </div>
             </Segment>
             <Segment>
-                <label>did not have one? get serial key first!</label>
+                <label>{t('did_not_have_one_get_serial_key_first')}</label>
                 <div className="input-group">
                     <Button
                         type='submit'
                         icon='key'
                         className='ui button btn-primary btn-search'
-                        displayName='get key'
+                        displayName={t('get_key')}
                         onClick={(e) => getUUID(e)}
                     />
                 </div>
 
             </Segment>
             <Segment>
-                <label>already has backup datas? synchronize your data with your serial key!</label>
+                <label>{t('already_have')}</label>
                 <div className="input-group">
                     <Text
                         value={values.synchronizeKey}
                         name='synchronizeKey'
                         size='40'
                         icon='pencil alternate'
-                        label='paste your serial key to get the data'
+                        label={t('paste_serial_key_here')}
                         onChange={handleChange}
                         maxLength='50'
                     />
@@ -299,7 +299,7 @@ const BackUp = (props) => {
                         type='submit'
                         icon='key'
                         className='ui button btn-primary btn-search'
-                        displayName='get datas'
+                        displayName={t('get_datas')}
                         onClick={(e) => synchronizeData(e)}
                     />
                 </div>

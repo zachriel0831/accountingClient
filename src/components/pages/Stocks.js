@@ -64,7 +64,7 @@ const StockModal = React.memo((props) => {
     }
     function submit(e, formRef) {
         const rowKey = props[0];
-        
+
         values.id = rowKey;
         values.date = moment(props).format('YYYY/MM/DD');
 
@@ -79,7 +79,7 @@ const StockModal = React.memo((props) => {
         values.stockCode = stockCode ? stockCode : '';
         values.remark = remark ? remark : '';
         values.acquisitionPrice = values.acquisitionPrice + '';
-        values.currentStockValue =  parseInt(share) * parseFloat(values.closingPrice);
+        values.currentStockValue = parseInt(share) * parseFloat(values.closingPrice);
         values.profit = props[7];
         values.roe = parseFloat(props[8].replace('%')).toFixed(2);
         values.date = date ? date : '';
@@ -112,7 +112,7 @@ const StockModal = React.memo((props) => {
 
     const shareChanges = (e) => {
         let val = e.currentTarget.value;
-        
+
         let result = parseInt(val) * parseFloat(values.closingPrice);
         values.acquisitionPrice = result.toFixed(2);
         handleChange(e);
@@ -217,9 +217,9 @@ const StockModal = React.memo((props) => {
         </Modal.Header>
         <Modal.Content scrolling>
             <div className="scrolling content">
-                <Form title='Stocks' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
+                <Form title={t('stocks')} onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
                     <Segment>
-                        <label>enter your stock code</label>
+                        <label>{t('enter_your_stock_code')}</label>
                         <div className="input-group">
                             <span>股票代號:</span>
                             <Text
@@ -258,14 +258,14 @@ const StockModal = React.memo((props) => {
                                 icon='dollar sign'
                                 value={values.acquisitionPrice}
                                 name='acquisitionPrice'
-                                label='acquisitionPrice'
+                                label={t('estimate_acquisition_price')}
                             />
 
                         </div>
                         <div className="input-group">
 
                             <span>備註:</span>
-                            <Text icon='sticky note' value={values.remark} name='remark' label='remark' onChange={handleChange} />
+                            <Text icon='sticky note' value={values.remark} name='remark' label={t('remark')} onChange={handleChange} />
                         </div>
                         <div className="input-group">
                             <Button
@@ -286,7 +286,7 @@ const StockModal = React.memo((props) => {
 
 const Stocks = (props) => {
     const { t } = useTranslation();
-    const { add, getAll, update,deleteRecord } = useIndexedDB('Accountings_Stocks');
+    const { add, getAll, update, deleteRecord } = useIndexedDB('Accountings_Stocks');
     //loading dimmer
     const [dimmerState, setDimmerState] = useState(false);
     const [queriesState, setQueriesState] = useState({});
@@ -323,7 +323,7 @@ const Stocks = (props) => {
         values.closingPrice = stockValueState;
         values.marketPrice = stockValueState + '';
         values.acquisitionPrice = acquisitionPriceState;
-        values.currentStockValue =  acquisitionPriceState;
+        values.currentStockValue = acquisitionPriceState;
         values.profit = 0;
         values.roe = 0;
         values.month = month ? month : '';
@@ -410,7 +410,7 @@ const Stocks = (props) => {
 
     const shareChanges = (e) => {
         let val = e.currentTarget.value;
-        
+
         let result = parseInt(val) * parseFloat(stockValueState);
         setAcquisitionPriceState(result.toFixed(2));
         handleChange(e);
@@ -437,11 +437,11 @@ const Stocks = (props) => {
         }).then(function (response) {
             // let responseData = response.data;
             console.log(response.data);
-            if(response.data.error){
+            if (response.data.error) {
                 alert('查詢代號發生錯誤!')
             }
             let stockValue = response.data ? response.data.data : '';
-            
+
             setStockValueState(stockValue);
             // handle success
         }).catch(function (error) {
@@ -492,7 +492,7 @@ const Stocks = (props) => {
                 v.currentStockValue = currentStockValue.toFixed(2);
                 v.profit = parseInt(currentStockValue) - parseInt(v.acquisitionPrice);
                 v.roe = ((currentStockValue / parseInt(v.acquisitionPrice) * 100) - 100).toFixed(2) + '%';
-                update(v) 
+                update(v)
 
             }).catch(function (error) {
                 // handle error
@@ -523,19 +523,19 @@ const Stocks = (props) => {
     const headerSpec = {
         header: [
             { id: 'id', headerName: 'id', style: { display: 'none' } },
-            { id: 'stockCode', headerName: '股票代號' },
-            { id: 'share', headerName: '股數' },
-            { id: 'closingPrice', headerName: '成交均價' },
-            { id: 'marketPrice', headerName: '市價' },
-            { id: 'acquisitionPrice', headerName: '成交價格' },
-            { id: 'currentStockValue', headerName: '預估現值' },
+            { id: 'stockCode', headerName: t('stock_code') },
+            { id: 'share', headerName: t('share') },
+            { id: 'closingPrice', headerName: t('closing_price') },
+            { id: 'marketPrice', headerName: t('market_price') },
+            { id: 'acquisitionPrice', headerName: t('acquisition_price') },
+            { id: 'currentStockValue', headerName: t('current_stock_value') },
             { id: 'profit', headerName: '預估損益' },
             { id: 'roe', headerName: '報酬率' },
-            { id: 'date', headerName: 'date' },
-            { id: 'remark', headerName: 'remark' },
+            { id: 'date', headerName: t('date') },
+            { id: 'remark', headerName: t('remark') },
         ],
         selectable: true, //開啟checkbox
-        selectableDisplayName: { id: 'select', headerName: 'check' },
+        selectableDisplayName: { id: 'select', headerName: t('check') },
         onCheckBoxClick: selectedCheckBoxClick,
         getAllCheckBoxVal: (val) => getAllCheckBoxVal(val),
         amountSortingHeaderKey: ["amount"],
@@ -601,7 +601,7 @@ const Stocks = (props) => {
                         icon='dollar sign'
                         value={acquisitionPriceState}
                         name='acquisitionPrice'
-                        label='acquisitionPrice'
+                        label={t('acquisition_price')}
 
                     />
 
@@ -609,7 +609,7 @@ const Stocks = (props) => {
                 <div className="input-group">
 
                     <span>備註:</span>
-                    <Text icon='sticky note' value={values.remark} name='remark' label='remark' onChange={handleChange} />
+                    <Text icon='sticky note' value={values.remark} name='remark' label={t('remark')} onChange={handleChange} />
                 </div>
                 <div className="input-group">
                     <Button
@@ -632,13 +632,13 @@ const Stocks = (props) => {
                 />
                 <Button
                     type='button'
-                    displayName={t("refreshAll")}
+                    displayName={t("refresh_all")}
                     className='ui button btn-primary '
                     icon='icon times circle'
                     onClick={() => refreshAll()}
 
                 />
-                <PureCheckBox name='checkBox' label='select all' onClick={(e) => selectAllCheckBox(e)} />
+                <PureCheckBox name='checkBox' label={t('select_all')} onClick={(e) => selectAllCheckBox(e)} />
                 <AccountingTable
                     // ref='accountingTable'
                     {...props}
