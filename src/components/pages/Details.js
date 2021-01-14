@@ -21,64 +21,6 @@ import PureCheckBox from '../PureCheckBox';
 import utils from '../../utils/utils';
 import { Segment, Divider, Radio } from 'semantic-ui-react';
 
-const radioGroupItem = {
-    "items": [{
-        "label": "show all",
-        "value": "all",
-        "groupKey": "_none",
-        "disabled": false
-    }, {
-        "label": "expenditure",
-        "value": "expenditure",
-        "groupKey": "_none",
-        "disabled": false
-    },
-    {
-        "label": "income",
-        "value": "income",
-        "groupKey": "_none",
-        "disabled": false
-    },
-    ],
-    "selectedValue": "all"
-}
-
-const dataFilterRadioGroupItem = {
-    "items": [
-        {
-            "label": "this month",
-            "value": "month",
-            "groupKey": "_none",
-            "disabled": false
-        }, {
-            "label": "this year",
-            "value": "year",
-            "groupKey": "_none",
-            "disabled": false
-        },
-        {
-            "label": "certain day",
-            "value": "certain_day",
-            "groupKey": "_none",
-            "disabled": false
-        },
-        {
-            "label": "period",
-            "value": "period",
-            "groupKey": "_none",
-            "disabled": false
-        },
-        {
-            "label": "byYear",
-            "value": "byYear",
-            "groupKey": "_none",
-            "disabled": false
-        },
-
-    ],
-    "selectedValue": "month"
-}
-
 const yearSelectOptions = {
     "seletedValue": moment(new Date()).format('YYYY'),
     "disabled": false,
@@ -93,6 +35,65 @@ const Details = (props) => {
     const stockDB = useIndexedDB('Accountings_Stocks');
 
     const { t } = useTranslation();
+
+    const dataFilterRadioGroupItem = {
+        "items": [
+            {
+                "label": t("this_month"),
+                "value": "month",
+                "groupKey": "_none",
+                "disabled": false
+            }, {
+                "label": t("this_year"),
+                "value": "year",
+                "groupKey": "_none",
+                "disabled": false
+            },
+            {
+                "label": t("certain_day"),
+                "value": "certain_day",
+                "groupKey": "_none",
+                "disabled": false
+            },
+            {
+                "label": t("period"),
+                "value": "period",
+                "groupKey": "_none",
+                "disabled": false
+            },
+            {
+                "label": t("byYear"),
+                "value": "byYear",
+                "groupKey": "_none",
+                "disabled": false
+            },
+    
+        ],
+        "selectedValue": "month"
+    }
+
+    const radioGroupItem = {
+        "items": [{
+            "label": t("show_all"),
+            "value": "all",
+            "groupKey": "_none",
+            "disabled": false
+        }, {
+            "label": t("expenditure"),
+            "value": "expenditure",
+            "groupKey": "_none",
+            "disabled": false
+        },
+        {
+            "label": t("income"),
+            "value": "income",
+            "groupKey": "_none",
+            "disabled": false
+        },
+        ],
+        "selectedValue": "all"
+    }
+    
 
     let radioBtnInitVal = [];
     if (radioGroupItem) {
@@ -391,7 +392,7 @@ const Details = (props) => {
 
         _.each(categories, (v, k) => {
             let items = {
-                label: v,
+                label: t(v),
                 value: v
             }
             categoryBox.push(items);
@@ -455,7 +456,7 @@ const Details = (props) => {
     useEffect(() => {
         if (assetsDetailState.totalAssets !== 0 && stockSumState.totalCurrentStockValue !== undefined) {
             let totalAssetsResult = assetsDetailState.totalAssets;
-            
+
             totalAssetsResult = totalAssetsResult.replace(/,/g, '');
             let stockProfit = stockSumState.totalCurrentStockValue;
             let sumsUp = stockProfit + parseInt(totalAssetsResult);
@@ -463,7 +464,7 @@ const Details = (props) => {
             setTotalAssetState(formatResult);
         }
 
-    }, [assetsDetailState,stockSumState])
+    }, [assetsDetailState, stockSumState])
 
     const selectAllCheckBox = (e) => {
         setSelectAllState(!selectAllState);
@@ -595,15 +596,15 @@ const Details = (props) => {
     let headerSpec = {
         header: [
             { id: 'id', headerName: 'id', style: { display: 'none' } },
-            { id: 'type', headerName: 'type' },
-            { id: 'category', headerName: 'category' },
-            { id: 'amount', headerName: 'amount' },
-            { id: 'date', headerName: 'date' },
-            { id: 'remark', headerName: 'remark' },
+            { id: 'type', headerName: t('type') },
+            { id: 'category', headerName: t('category') },
+            { id: 'amount', headerName: t('amount') },
+            { id: 'date', headerName: t('date') },
+            { id: 'remark', headerName: t('remark') },
 
         ],
         selectable: true, //開啟checkbox
-        selectableDisplayName: { id: 'select', headerName: 'check' },
+        selectableDisplayName: { id: 'select', headerName: t('check') },
         onCheckBoxClick: selectedCheckBoxClick,
         getAllCheckBoxVal: (val) => getAllCheckBoxVal(val),
         amountSortingHeaderKey: ["amount"],
@@ -652,11 +653,11 @@ const Details = (props) => {
                     }} />
             </div>
             <div className="input-group">
-                <Select value={values.category} name='category' label='category' options={optionsState} onChange={handleChange} />
+                <Select value={values.category} name='category' label={t('category')} options={optionsState} onChange={handleChange} />
             </div>
 
             <div className="input-group" style={{ display: (dataFilterRadioGroupState === 'byYear') ? 'block' : 'none' }}>
-                <Select value={values.year} name='year' label='year' options={yearSelectOptions} onChange={handleChange} />
+                <Select value={values.year} name='year' label={t('year')} options={yearSelectOptions} onChange={handleChange} />
             </div>
             <div className="input-group" style={{ display: (dataFilterRadioGroupState === 'certain_day') ? 'block' : 'none' }}>
 
@@ -700,46 +701,45 @@ const Details = (props) => {
                 />
             </div>
         </Segment>
-        <Radio toggle label='toogle balance detail' onChange={(e) => {
+        <Radio toggle label={t('toogle_balance_detail')} onChange={(e) => {
 
             setDisplayBalanceState((displayBalanceState === 'none') ? 'block' : 'none');
         }} />
         <Segment style={{ display: displayBalanceState }}>
             {/*TODO put a select here to choose the year; */}
-            <span className='amount-label'>Total Income: {assetsDetailState.totalIncomeState}</span>
+            <span className='amount-label'>{t('total_income')}: {assetsDetailState.totalIncomeState}</span>
             <br />
-            <span className='amount-label'>Total Expenditure: {assetsDetailState.totalExpenditureState}</span>
+            <span className='amount-label'>{t('total_expenditure')}: {assetsDetailState.totalExpenditureState}</span>
             <br />
-            <span className='amount-label'>Total : {assetsDetailState.totalAssets} </span>
+            <span className='amount-label'>{t('total')} : {assetsDetailState.totalAssets} </span>
             {/* <br /> */}
             {/* <span className='amount-label'>Total Forein Currency: {currencyState}</span> */}
             <br />
-            <span className='amount-label'>Total Stock Value: {stockSumState.totalCurrentStockValue} </span>
+            <span className='amount-label'>{t('total_stock_value')}: {stockSumState.totalCurrentStockValue} </span>
             <br />
-            <span className='amount-label'>Total Assets: {totalAssetState}</span>
-
-
-            <Divider section />
-            <span className='amount-label'>Annual Income: {assetsDetailState.annualIncomeState}</span>
-            <br />
-            <span className='amount-label'>Annual Expenditure:{assetsDetailState.annualExpenditureState}</span>
-            <br />
-            <span className='amount-label'>Annual Balance: {assetsDetailState.annualBalance}</span>
-            <br />
-            <span className='amount-label'>average Income/month: {(parseInt(assetsDetailState.annualIncomeState.toString().replace(/,/g, '')) / 12).toFixed(2)}</span>
-            <br />
-            <span className='amount-label'>average Expenditure/month : {(parseInt(assetsDetailState.annualExpenditureState.toString().replace(/,/g, '')) / 12).toFixed(2)} </span>
+            <span className='amount-label'>{t('total_assets')}: {totalAssetState}</span>
 
             <Divider section />
-            <span className='amount-label'>Monthly Income: {assetsDetailState.monthlyIncomeState}</span>
+            <span className='amount-label'>{t('annual_income')}: {assetsDetailState.annualIncomeState}</span>
             <br />
-            <span className='amount-label'>Monthly Expenditure: {assetsDetailState.monthlyExpenditureState} </span>
+            <span className='amount-label'>{t('annual_expenditure')}:{assetsDetailState.annualExpenditureState}</span>
             <br />
-            <span className='amount-label'>Monthly Balance: {assetsDetailState.monthlyBalance}</span>
+            <span className='amount-label'>{t('annual_balance')}: {assetsDetailState.annualBalance}</span>
             <br />
-            <span className='amount-label'>average Income/day: {(parseInt(assetsDetailState.monthlyIncomeState.toString().replace(/,/g, '')) / 30).toFixed(2)}</span>
+            <span className='amount-label'>{t('average_income')}/{t('month')}: {(parseInt(assetsDetailState.annualIncomeState.toString().replace(/,/g, '')) / 12).toFixed(2)}</span>
             <br />
-            <span className='amount-label'>average Expenditure/day : {(parseInt(assetsDetailState.monthlyExpenditureState.toString().replace(/,/g, '')) / 30).toFixed(2)} </span>
+            <span className='amount-label'>{t('average_expenditure')}/{t('month')} : {(parseInt(assetsDetailState.annualExpenditureState.toString().replace(/,/g, '')) / 12).toFixed(2)} </span>
+
+            <Divider section />
+            <span className='amount-label'>{t('monthly_income')}: {assetsDetailState.monthlyIncomeState}</span>
+            <br />
+            <span className='amount-label'>{t('monthly_expenditure')}: {assetsDetailState.monthlyExpenditureState} </span>
+            <br />
+            <span className='amount-label'>{t('monthly_balance')}: {assetsDetailState.monthlyBalance}</span>
+            <br />
+            <span className='amount-label'>{t('average_income')}/{t('day')}: {(parseInt(assetsDetailState.monthlyIncomeState.toString().replace(/,/g, '')) / 30).toFixed(2)}</span>
+            <br />
+            <span className='amount-label'>{t('average_expenditure')}/{t('day')} : {(parseInt(assetsDetailState.monthlyExpenditureState.toString().replace(/,/g, '')) / 30).toFixed(2)} </span>
             <Divider section />
 
         </Segment>
@@ -770,7 +770,7 @@ const Details = (props) => {
             />
             <PureCheckBox name='checkBox' label='select all' onClick={(e) => selectAllCheckBox(e)} />
             <br />
-            <span style={{ fontSize: 'large', fontWeight: 'bold' }}>year: {countYearState} / month:{countMonthState}</span>
+            <span style={{ fontSize: 'large', fontWeight: 'bold' }}>{t('year')}: {countYearState} / {t('month')}:{countMonthState}</span>
             <AccountingTable
                 // ref='accountingTable'
                 {...props}

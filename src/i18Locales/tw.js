@@ -93,6 +93,25 @@ const index_tw = {
     already_have: '已經有備份資料了? 用您的金鑰同步帳務!',
     paste_serial_key_here: '貼上你的金鑰來取得資料',
     get_datas: '取得資料',
+    total : '總結餘',
+    total_stock_value : '股票預估總值',
+    annual_balance : '年度結餘',
+    average_income : '平均收入',
+    average_expenditure : '平均支出',
+    monthly_income : '月收入',
+    monthly_expenditure : '月支出',
+    monthly_balance : '月結算',
+    day : '日',
+    month : '月',
+    toogle_balance_detail : '打開結算明細',
+    this_month : '本月',
+    this_year : '今年',
+    certain_day : '特定日期',
+    period : '期間',
+    byYear : '以年份搜尋',
+    show_all : '全部'
+
+
 }
 
 export default index_tw;

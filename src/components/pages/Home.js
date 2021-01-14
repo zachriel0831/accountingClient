@@ -201,13 +201,13 @@ const Home = (props) => {
 
             accountQueriesData.queries = AccountingData;
             accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS')
-            accountQueriesData.count = AccountingData.length;
 
             let monthlyResult = props.getMonthlyData(accountQueriesData, thisMonth);
 
             setMonthlyBalance(monthlyResult)
 
             accountQueriesData.queries = [...monthlyResult.monthlyDatas];
+            accountQueriesData.count = accountQueriesData.queries.length;
 
             setQueriesState(accountQueriesData);
         });
