@@ -293,7 +293,7 @@ const AccountingTable = React.memo((props) => {
         return ths;
     }
     let tds = [];
-    //TODO 之後會有需要編輯的table 會再更改
+
     const trGenerator = (value) => {
 
         const trClick = (e) => {
@@ -308,9 +308,7 @@ const AccountingTable = React.memo((props) => {
                         return;
                     }
                 }
-
                 trValues.push(v.textContent);
-
             });
 
             if (typeof props.rowSpec.customOnRowDoubleClick === 'function') {
@@ -351,12 +349,17 @@ const AccountingTable = React.memo((props) => {
                 if (h.style !== undefined) {
                     style = h.style;
                 }
+
                 _.each(item, (v, k) => {
                     tdValue = v;
                     tdKey = k;
 
                     if (tdKey === 'amount') {
                         tdValue = utils.transferToAmountFormat(tdValue);
+                    }
+
+                    if(tdKey === 'type' || tdKey === 'category'){
+                        tdValue = t(tdValue);
                     }
 
                     // header key值與data key值做比對

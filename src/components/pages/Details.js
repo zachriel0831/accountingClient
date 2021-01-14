@@ -67,7 +67,7 @@ const Details = (props) => {
                 "groupKey": "_none",
                 "disabled": false
             },
-    
+
         ],
         "selectedValue": "month"
     }
@@ -93,7 +93,7 @@ const Details = (props) => {
         ],
         "selectedValue": "all"
     }
-    
+
 
     let radioBtnInitVal = [];
     if (radioGroupItem) {
@@ -633,7 +633,7 @@ const Details = (props) => {
     }
 
 
-    return <><Form title='Details' onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
+    return <><Form title={t('details')} onSubmit={handleSubmit} onReset={handleReset} toggleDimmer={dimmerState}>
         <Segment>
             <div className="input-group">
                 <RadioGroup
@@ -768,7 +768,7 @@ const Details = (props) => {
                 onClick={(e) => nextBtnClick(e)}
 
             />
-            <PureCheckBox name='checkBox' label='select all' onClick={(e) => selectAllCheckBox(e)} />
+            <PureCheckBox name='checkBox' label={t('select_all')} onClick={(e) => selectAllCheckBox(e)} />
             <br />
             <span style={{ fontSize: 'large', fontWeight: 'bold' }}>{t('year')}: {countYearState} / {t('month')}:{countMonthState}</span>
             <AccountingTable
