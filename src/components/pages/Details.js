@@ -104,7 +104,6 @@ const Details = (props) => {
         })
     }
 
-
     let dataFilterRadioBtnInitVal = [];
     if (dataFilterRadioGroupItem) {
         _.each(dataFilterRadioGroupItem.items, (v, k) => {
@@ -115,11 +114,7 @@ const Details = (props) => {
         })
     }
 
-    // const { getAll } = useIndexedDB('Accountings');
-    // const { t } = useTranslation();
-    // const _this = this;
     const initialState = props.initialState;
-
     const [dimmerState, setDimmerState] = useState(false);
     const [selectAllState, setSelectAllState] = useState(false);
     const [checkBoxListState, setCheckBoxListState] = useState([]);
@@ -163,7 +158,6 @@ const Details = (props) => {
 
     };
 
-
     const { values, handleChange, handleSubmit, handleReset } = useForm(resetForm, submit, initFormState);
 
     function resetForm() {
@@ -173,21 +167,8 @@ const Details = (props) => {
         let category = values.category;
         let type = radioGroupState;
         let date = moment(dateState).format('YYYY/MM/DD');
-        // let month = moment(dateState).format('MM');
-        // let day = moment(dateState).format('DD');
-        // let year = moment(dateState).format('YYYY');
-
         let startDate = moment(startDateState).format('YYYY/MM/DD');
-        // let startMonth = moment(startDateState).format('MM');
-        // let startYear = moment(startDateState).format('YYYY');
-        // let startDay = moment(startDateState).format('DD');
-
-
         let endDate = moment(endDateState).format('YYYY/MM/DD');
-        // let endMonth = moment(endDateState).format('MM');
-        // let endYear = moment(endDateState).format('YYYY');
-        // let endDay = moment(endDateState).format('DD');
-
         let accountQueriesData = {};
         let sumIncome = 0;
         let sumExpenditure = 0;
@@ -246,7 +227,6 @@ const Details = (props) => {
             }
         });
 
-
         // accountQueriesData.queries = [...initialState.queries];
         accountQueriesData.count = accountQueriesData.queries.length;
         accountQueriesData.time = moment().format('YYYY/MM/DD MM:SS');
@@ -254,7 +234,6 @@ const Details = (props) => {
         accountQueriesData.expenditureSummary = sumExpenditure;
 
         setQueriesState(accountQueriesData);
-
     }
 
     const getAllData = () => {
@@ -296,21 +275,8 @@ const Details = (props) => {
             let category = values.category;
             let type = radioGroupState;
             let date = moment(dateState).format('YYYY/MM/DD');
-            // let month = moment(dateState).format('MM');
-            // let day = moment(dateState).format('DD');
-            // let year = moment(dateState).format('YYYY');
-
             let startDate = moment(startDateState).format('YYYY/MM/DD');
-            // let startMonth = moment(startDateState).format('MM');
-            // let startYear = moment(startDateState).format('YYYY');
-            // let startDay = moment(startDateState).format('DD');
-
-
             let endDate = moment(endDateState).format('YYYY/MM/DD');
-            // let endMonth = moment(endDateState).format('MM');
-            // let endYear = moment(endDateState).format('YYYY');
-            // let endDay = moment(endDateState).format('DD');
-
             let sumIncome = 0;
             let sumExpenditure = 0;
 
@@ -325,10 +291,7 @@ const Details = (props) => {
                     });
 
                     break;
-
                 case 'year':
-
-
                     accountQueriesData.queries = [...annualResult.annualDatas];
 
                     accountQueriesData.queries = accountQueriesData.queries.filter((items, index, array) => {
@@ -336,9 +299,7 @@ const Details = (props) => {
                         return ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                     });
 
-
                     break;
-
                 case 'certain_day':
                     accountQueriesData.queries = allDataState.filter((items, index, array) => {
 
@@ -346,14 +307,11 @@ const Details = (props) => {
                     });
 
                     break;
-
                 case 'period':
                     accountQueriesData.queries = accountQueriesData.queries.filter((items, index, array) => {
 
                         return moment(items.date).isAfter(startDate) && moment(items.date).isBefore(endDate) && ((category) ? (items.category === category) : true) && (!(type === 'all') ? (items.type === type) : true);
                     });
-
-
                     break;
 
                 case 'byYear':
@@ -417,14 +375,6 @@ const Details = (props) => {
             setOptionState(options);
         });
 
-        // currencyDB.getAll().then(currency =>{
-
-
-
-        //     // setCurrencyState();
-
-        // })
-
         stockDB.getAll().then(stocks => {
 
             let totalStockCost = 0;
@@ -445,12 +395,7 @@ const Details = (props) => {
                 roe: roe,
                 profit: profit
             });
-            // setStockState();
         })
-
-
-
-        // setTotalAssetState();
     }, []);
 
     useEffect(() => {

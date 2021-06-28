@@ -33,6 +33,7 @@ const Home = (props) => {
     const [dateState, setDateState] = useState(new Date());
     const [queriesState, setQueriesState] = useState({});
     const [optionsState, setOptionState] = useState({});
+    const [pureCheckBoxState, setPureCheckBoxState] = useState([]);
 
     const radioGroupItem = {
         "items": [{
@@ -215,18 +216,20 @@ const Home = (props) => {
 
     const selectedCheckBoxClick = (e, val, checked, checkedTarget) => {
 
-        if (checked) {
-            checkBoxListState.push(val);
-            setCheckBoxListState(checkBoxListState);
-        } else {
-            let newArray = checkBoxListState.filter(function (item, index, array) {
-                console.log(item[0]);
+        // if (checked) {
+        //     checkBoxListState.push(val);
+        //     setCheckBoxListState(checkBoxListState);
+        // } else {
+        //     let newArray = checkBoxListState.filter(function (item, index, array) {
+        //         console.log(item[0]);
 
-                return checkedTarget[0] !== item[0];
-            });
-            // checkBoxListState = [...newArray];
-            setCheckBoxListState(newArray);
-        }
+        //         return checkedTarget[0] !== item[0];
+        //     });
+        //     setCheckBoxListState(newArray);
+        // }
+
+        setPureCheckBoxState({ 'val': val, 'checked': checked, 'checkedTarget': checkedTarget });
+
     }
 
     const getAllCheckBoxVal = (val) => {
@@ -257,7 +260,6 @@ const Home = (props) => {
         onCheckBoxClick: selectedCheckBoxClick,
         getAllCheckBoxVal: (val) => getAllCheckBoxVal(val),
         amountSortingHeaderKey: ["amount"],
-        // requestDataHeaderKey: [ "num", "msg_num" ]
     }
 
     useEffect(() => {
@@ -294,7 +296,30 @@ const Home = (props) => {
             setOptionState(options);
 
         });
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        if (pureCheckBoxState) {
+            let checked = pureCheckBoxState.checked;
+            let val = pureCheckBoxState.val;
+            let checkedTarget = pureCheckBoxState.checkedTarget;
+
+            let newArray;
+            if (checked) {
+
+                newArray = [...checkBoxListState, val[0]];
+            } else {
+                newArray = checkBoxListState.filter(function (item, index, array) {
+                    console.log(item[0]);
+
+                    return checkedTarget[0] !== item;
+                });
+            }
+            setCheckBoxListState(newArray);
+        }
+
+    }, [pureCheckBoxState]);
+
 
     let columnSpec = [
         {
@@ -305,7 +330,6 @@ const Home = (props) => {
 
     const doubleClick = (e, trValues) => {
         console.log('click row data: ', trValues);
-
     }
 
     let rowSpec = {
@@ -403,15 +427,12 @@ const Home = (props) => {
 
                     <PureCheckBox name='checkBox' label={t('select_all')} onClick={(e) => selectAllCheckBox(e)} />
                     <AccountingTable
-                        // ref='accountingTable'
                         {...props}
-                        largeModalType='accounting'
                         categoryOptions={optionsState}
                         headerSpec={headerSpec}
                         queriesData={queriesState.queries}
                         selectAll={selectAllState}
                         count={queriesState.count}
-                        // time={queriesState.time}
                         columnSpec={columnSpec}
                         rowSpec={rowSpec}
                     />

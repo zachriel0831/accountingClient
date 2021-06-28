@@ -68,23 +68,21 @@ const PureCheckBox = React.memo((props) => {
 
 
 const propsEquality = (preProps, nextProps) => {
-    //TODO make it more specific , zack
-
     //selectAll變了通行
     if (preProps.selectAll !== nextProps.selectAll) {
         return false;
-    }else if(preProps.categoryOptions !== nextProps.categoryOptions){
+    } else if (preProps.categoryOptions !== nextProps.categoryOptions) {
 
         return false;
     } else if (preProps.queriesData === nextProps.queriesData) {
 
         return true;
     }
-    
+
     return false;
 }
 const AccountingTable = React.memo((props) => {
-    
+
     const [state, setState] = useState(props.queriesData);
     const [showContent, setShowContent] = useState(true);
     const [sortingType, setSortingType] = useState('');
@@ -136,18 +134,14 @@ const AccountingTable = React.memo((props) => {
     const TRdata = (props) => {
         const setStyleOnDoubleClick = (e) => {
             if (selectedValue) {
-                //非同步下無法取得currentTarget
                 let getAllRow = e.currentTarget.parentElement.children;
-                
                 //重置所有row style
                 _.each(getAllRow, (v, k) => {
                     v.style.backgroundColor = 'white';
                 })
-
                 //反白選取的row
                 e.currentTarget.style.backgroundColor = '#cce2ff';
             }
-
             props.onDoubleClick(e)
         }
 
@@ -206,6 +200,7 @@ const AccountingTable = React.memo((props) => {
             )
         }
     }
+    
     TDdata.defaultProps = {
         modal: false,
         large_modal: false,
@@ -243,7 +238,6 @@ const AccountingTable = React.memo((props) => {
 
         try {
             _.each(header, (h) => {
-
                 let headerStyle = {};
                 let orderByAmount = false;
                 let amountHeaderName = '';
@@ -358,7 +352,7 @@ const AccountingTable = React.memo((props) => {
                         tdValue = utils.transferToAmountFormat(tdValue);
                     }
 
-                    if(tdKey === 'type' || tdKey === 'category'){
+                    if (tdKey === 'type' || tdKey === 'category') {
                         tdValue = t(tdValue);
                     }
 
@@ -468,7 +462,7 @@ const AccountingTable = React.memo((props) => {
                         <td key={utils.generateUID()}><PureCheckBox key={utils.generateUID()} checked={checkBoxSelectAllState} onClick={checkBoxClick} /></td>);
                 }
                 let trElements = tdValueBox;
-                
+
                 trs.push(<TRdata key={utils.generateUID()} {...props} trElements={trElements} rowKey={rowKey} onDoubleClick={trClick}>{tds}</TRdata>);
                 tds = [];
             }
@@ -526,19 +520,18 @@ const AccountingTable = React.memo((props) => {
     let queryResult = [];
 
     if (rowCounts === 0) {
-        queryResult.push(<div key={utils.generateUID()} className="">***{t("tableNoData")}***</div>)
+        queryResult.push(<div key={utils.generateUID()}>***{t("tableNoData")}***</div>)
     } else {
-        queryResult.push(<div key={utils.generateUID()} className="">{t("data")} <span className="query__sum">{props.count ? props.count : 0}</span> {t("count")}</div>);
+        queryResult.push(<div key={utils.generateUID()}>{t("data")} <span className="query__sum">{props.count ? props.count : 0}</span> {t("count")}</div>);
     }
 
     return (
         <>
-            <div className="">
+            <div>
                 {queryResult}
-                {/* <div className="">{t("time")}: <span className="query__time">{props.time}</span></div> */}
                 <div style={{ display: (props.displaySummaryBlockFlag) ? 'block' : 'none' }}><span >{t("income")}:{props.incomeSummary}</span> <br /><span>{t("expenditure")}:{props.expenditureSummary}</span></div>
             </div>
-            <div className="">
+            <div>
                 <table ref={tableRef} className="ui selectable sortable small striped celled compact table">
                     <thead>
                         <tr>
@@ -571,8 +564,6 @@ AccountingTable.defaultProps = {
     },
     selectAll: false,
     displaySummaryBlockFlag: false,
-    largeModalType:'accounting'
-
 }
 
 export default AccountingTable;
