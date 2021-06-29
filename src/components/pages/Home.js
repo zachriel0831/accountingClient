@@ -185,7 +185,7 @@ const Home = (props) => {
 
     const deleteItems = (e) => {
         _.each(checkBoxListState, (v, k) => {
-            let id = v[0];
+            let id = v;
             deleteRecord(id).then(event => {
                 console.log('Deleted!');
             });
